@@ -65,7 +65,7 @@ const gameAreaWidth = 60000; // The new game area width
         // Check if the ball is hitting the ground
         if (newTop >= 550) {
           newTop = 550; // Stop the ball at 580px
-          newVerticalVelocity = -newVerticalVelocity * 0.7; // Bounce with 70% of the velocity
+          newVerticalVelocity = -newVerticalVelocity * 0.5; // Bounce with 70% of the velocity
           newHorizontalVelocity *= (1 - 0.1); // Apply ground friction
         } else if (isHit) {
           // Apply normal air resistance if the ball has been hit and is in the air
@@ -89,7 +89,7 @@ const gameAreaWidth = 60000; // The new game area width
   
         return { top: newTop, left: newLeft };
       });
-    }, 20); // Run this interval every 20 ms
+    }, 10); // Run this interval every 20 ms
   
     return () => clearInterval(interval);
   }, [verticalVelocity, horizontalVelocity, isHit]);
