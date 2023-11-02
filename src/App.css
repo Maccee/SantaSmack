@@ -1,31 +1,40 @@
 .game-area {
-    height: 600px;
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-  }
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow-x: hidden; /* Disable horizontal scrollbar if not needed */
+  overflow-y: hidden; /* Disable vertical scrollbar */
+  scrollbar-width: none; /* This is for Firefox */
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  z-index: -20;
+}
+.santa {
+  width: 200px;
+  transform: translateX(-50%);
+  transform: translateY(-100%);
+  border: 1px solid blue;
+}
+.ball {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  position: absolute;
+    
+  transform: translateX(-50%);
+  transform: translateY(-100%);
+  background-color: #d23;
+}
+.scroll-container {
+  position: relative;
   
-  .bat {
-    width: 100px;
-    height: 20px;
-    position: absolute;
-    left: 30px;
-    top: 500px; /* Bat's vertical position */
-    background-color: #333;
-  }
-  
-  .ball {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    position: absolute;
-    left: 50%; /* Ball's horizontal start position */
-    transform: translateX(-50%);
-    background-color: #d23;
-  }
-  .scroll-container {
-    position: absolute;
-    /* ... */
-  }
+}
+.ground {
+  background-color: rgb(255, 255, 255);
+  height: 100px;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  z-index: -10;
+}
