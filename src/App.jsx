@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import SantaImg from "./assets/pukki.png";
+import KylttiImg from "./assets/kyltti.png";
 
 const Santa = ({
   showHitbox,
@@ -58,7 +59,7 @@ const Markers = ({ markers }) => {
             left: `${distance}px`,
           }}
         >
-          <img src="../src/assets/kyltti.png"></img>
+          <img src={KylttiImg}></img>
           <div>{distance / 100}m</div>
         </div>
       ))}
