@@ -2,39 +2,62 @@
   box-sizing: border-box;
   height: 100vh;
   width: 100%;
+
   position: relative;
-  overflow-x: hidden; /* Disable horizontal scrollbar if not needed */
-  overflow-y: hidden; /* Disable vertical scrollbar */
-  scrollbar-width: none; /* This is for Firefox */
+  overflow-x: hidden;
+  overflow-y: hidden;
+  scrollbar-width: none;
   background-color: #f0f0f0;
-  border: 1px solid #ddd;
-  z-index: -20;
 }
 .santa {
   width: 200px;
   transform: translateX(-50%);
   transform: translateY(-100%);
-  border: 1px solid blue;
-}
-.ball {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
   position: absolute;
-    
-  transform: translateX(-50%);
-  transform: translateY(-100%);
-  background-color: #d23;
 }
-.scroll-container {
-  position: relative;
-  
+
+@keyframes spin {
+  0% {
+    transform: translateY(-50%) rotate(0deg);
+  }
+  100% {
+    transform: translateY(-50%) rotate(360deg);
+  }
 }
-.ground {
-  background-color: rgb(255, 255, 255);
+
+.ball {
+  width: 70px;
   height: 100px;
   position: absolute;
+  background-image: url("./assets/Paavo.png");
+  background-size: cover;
+  transform: translateY(-250%);
+  animation: spin 2s linear infinite; /* Apply the animation here */
+}
+
+.scroll-container {
+  position: relative;
   width: 100%;
+  height: 100vh;
+}
+.ground {
+  background-color: rgba(255, 255, 255, 0);
+  height: 45px;
+  position: absolute;
+  width: 16000px;
   bottom: 0;
+  background-image: url("./assets/bg.png");
+  background-size: contain;
   z-index: -10;
+}
+.hud {
+  z-index: 1000;
+}
+.background {
+  background-image: url("./assets/bg2.png");
+  background-repeat: repeat;
+  width: 16000px;
+  height: 100%;
+  z-index: -20;
+  position: relative;
 }
