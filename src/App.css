@@ -2,12 +2,11 @@
   box-sizing: border-box;
   height: 100vh;
   width: 100%;
-
   position: relative;
   overflow-x: hidden;
   overflow-y: hidden;
   scrollbar-width: none;
-  background-color: #f0f0f0;
+  
 }
 .santa {
   width: 200px;
@@ -31,9 +30,10 @@
   position: absolute;
   background-image: url("./assets/Paavo.png");
   background-size: cover;
-  transform: translateY(-250%);
-  animation: spin 2s linear infinite; /* Apply the animation here */
+  transform: translateY(-50%);
+  animation: spin 1s linear infinite;
 }
+
 
 .scroll-container {
   position: relative;
@@ -55,9 +55,12 @@
 }
 .background {
   background-image: url("./assets/bg2.png");
-  background-repeat: repeat;
+  background-repeat: repeat-x; 
   width: 16000px;
-  height: 100%;
-  z-index: -20;
-  position: relative;
+  height: 100vh;
+  
+  position: absolute; 
+  bottom: 0;
+  left: 0;
 }
+
