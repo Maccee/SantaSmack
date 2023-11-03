@@ -3,6 +3,11 @@ body {
   background-color: blue;
 }
 
+.game-area h2 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
 .game-area {
   box-sizing: border-box;
   height: 100vh;
@@ -39,7 +44,7 @@ body {
   height: 100px;
   border-radius: 100px;
   position: relative;
-  background-image: url("./assets/elf.svg");
+  background-image: url("./assets/Juha.png");
   background-size: contain;
   transform: translateY(-50%);
   animation: spin 1s linear infinite;

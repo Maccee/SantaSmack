@@ -49,7 +49,7 @@ const Ball = ({ top, left, isSpinning, distance }) => {
   const distanceStyle = {
     top: `${top - 100}px`,
     left: `${left + 10}px`,
-    
+
   };
 
   return (
@@ -99,7 +99,7 @@ function App() {
 
   const [showHitbox, setShowHitbox] = useState(true);
   const hitboxTopBoundary = bottomLimit - 200;
-  const hitboxBottomBoundary = bottomLimit - 0;
+  const hitboxBottomBoundary = bottomLimit + 30;
 
   const gravity = 0.1;
   const airResistance = 0.9999;
@@ -114,8 +114,10 @@ function App() {
   const [isSpinning, setIsSpinning] = useState(false);
   const markers = generateMarkers(gameAreaWidth, 1000);
 
-  const [highScore, setHighScore] = useState("0");
+  const [highScore, setHighScore] = useState(0);
   const [distance, setDistance] = useState("0")
+
+  const [mouseDownTime, setMouseDownTime] = useState(0);
 
   useEffect(() => {
     if (gameAreaRef.current) {
@@ -176,15 +178,22 @@ function App() {
           newTop = bottomLimit;
           newVerticalVelocity = -newVerticalVelocity * bounce;
           newHorizontalVelocity *= 1 - 0.1;
+
         } else if (isHit) {
           newHorizontalVelocity *= airResistance;
         }
 
         // PYSÄYTÄ PYÖRIMINEN!
-        if (Math.abs(newHorizontalVelocity) < 0.1 && isHit) {
+        if (Math.abs(newHorizontalVelocity) < 0.2 && Math.abs(newHorizontalVelocity) > 0) {
           newHorizontalVelocity = 0;
-          if ((ballPosition.left / 100).toFixed(2) > highScore) {
-            setHighScore((ballPosition.left / 100).toFixed(2));
+          console.log((ballPosition.left / 100).toFixed(2), highScore);
+
+          const currentScore = parseFloat((ballPosition.left / 100).toFixed(2));
+          const currentHighScore = parseFloat(highScore.toFixed(2));
+
+          if (currentScore > currentHighScore) {
+            // If the current score is higher, update the high score
+            setHighScore(currentScore);
           }
         }
         if (Math.abs(newHorizontalVelocity) < 1 && isHit) {
@@ -215,16 +224,21 @@ function App() {
     gameAreaHeight,
   ]);
 
-  // HIT HIT HIT!!!!
   const handleMouseDown = () => {
+    setMouseDownTime(performance.now());
+  }
+  // HIT HIT HIT!!!!
+  const handleMouseUp = () => {
     if (isHit) {
       resetGame();
       return;
     }
+    const mouseUpTime = performance.now();
     setIsHit(true);
+    const reactionTime = mouseUpTime - mouseDownTime;
     const clicked = performance.now();
-    console.log("clicked:", clicked);
-    const hitboxTransitTime = 400;
+
+    const hitboxTransitTime = 300;
     if (
       clicked >= hitboxEntryTime &&
       clicked <= hitboxEntryTime + hitboxTransitTime
@@ -233,7 +247,8 @@ function App() {
       const timeIntoHitbox = clicked - hitboxEntryTime;
       const angle = 90 - (timeIntoHitbox / hitboxTransitTime) * 180;
       const radians = (angle * Math.PI) / 180;
-      const hitStrength = 15;
+      const hitStrength = calculateHitStrength(reactionTime);
+      console.log("hit strength", hitStrength);
       const verticalVelocityComponent = hitStrength * Math.sin(radians);
       const horizontalVelocityComponent = hitStrength * Math.cos(radians);
 
@@ -243,6 +258,26 @@ function App() {
       setLastHitPosition({ top: ballPosition.top, left: ballPosition.left });
       setHitAngle(angle);
     }
+  };
+
+  // Define your minimum and maximum reaction times
+  const minReactionTime = 20; // fastest expected reaction time
+  const maxReactionTime = 180; // slowest expected reaction time
+
+  // Define your minimum and maximum hit strengths
+  const minHitStrength = 10;
+  const maxHitStrength = 45;
+
+  // Calculate hit strength based on reaction time
+  const calculateHitStrength = (reactionTime) => {
+    // Clamp reaction time within the expected range for safety
+    const clampedReactionTime = Math.min(Math.max(reactionTime, minReactionTime), maxReactionTime);
+
+    // Invert the reaction time to get the hit strength such that a lower reaction time gives a higher hit strength
+    const normalizedTime = (clampedReactionTime - minReactionTime) / (maxReactionTime - minReactionTime);
+    const hitStrength = maxHitStrength - normalizedTime * (maxHitStrength - minHitStrength);
+
+    return hitStrength;
   };
 
   const resetGame = () => {
@@ -270,7 +305,7 @@ function App() {
   }
 
   return (
-    <div ref={gameAreaRef} className="game-area" onMouseDown={handleMouseDown}>
+    <div ref={gameAreaRef} className="game-area" onMouseUp={handleMouseUp} onMouseDown={handleMouseDown}>
       <div
         className="background"
         style={{ transform: `translateX(-${scrollLeft / 5}px)` }}
@@ -280,6 +315,7 @@ function App() {
         style={{ transform: `translateX(-${scrollLeft / 10}px)` }}
       ></div>
       <div className="hud" style={{ position: "fixed", top: 0, right: 0 }}>
+        <p><h2>Debug Console</h2></p>
         <p>
           Last Hit Position: {lastHitPosition.top.toFixed(0)}px from top,
           {lastHitPosition.left.toFixed(0)}px from left
@@ -293,7 +329,9 @@ function App() {
         <p>IsHit: {isHit ? "true" : "false"}</p>
         <br />
         <p>Highscore: {highScore}m</p>
-        <button onClick={resetGame}>Restart</button>
+        <p>{reactionTime}</p>
+        <button onClick={resetGame}>Debug Restart</button>
+
       </div>
 
       <div
