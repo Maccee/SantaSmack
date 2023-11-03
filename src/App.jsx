@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
-import SantaSVG from "./assets/santa.svg";
+import SantaImg from "./assets/pukki.png";
 
-const Bat = ({ showHitbox, hitboxTopBoundary, hitboxBottomBoundary, bottomLimit }) => {
+const Santa = ({
+  showHitbox,
+  hitboxTopBoundary,
+  hitboxBottomBoundary,
+  bottomLimit,
+}) => {
   const santaStyle = {
-    position: "absolute",
-    top: `${bottomLimit + 40}px`,
+    top: `${bottomLimit + 23}px`,
     left: "0px",
   };
 
@@ -22,36 +26,56 @@ const Bat = ({ showHitbox, hitboxTopBoundary, hitboxBottomBoundary, bottomLimit 
   return (
     <div>
       <div className="santa" style={santaStyle}>
-        <img src={SantaSVG} alt="Santa" />
+        <img src={SantaImg} alt="Santa" />
       </div>
       <div style={hitboxStyle}></div>
     </div>
   );
 };
 
+const Bat = ({ isHit }) => {
+  const batClass = isHit ? "bat hit" : "bat";
+  return <div className={batClass} />;
+};
+
 const Ball = ({ top, left, isSpinning }) => {
   const ballStyle = {
     top: `${top}px`,
     left: `${left}px`,
-    animationPlayState: isSpinning ? 'running' : 'paused', // Control the animation state
+    animationPlayState: isSpinning ? "running" : "paused", // Control the animation state
   };
-
-  return (
-    <div className="ball" style={ballStyle} />
-  );
+  return <div className="ball" style={ballStyle} />;
 };
 
+const Markers = ({ markers }) => {
+  return (
+    <>
+      {markers.map((distance, index) => (
+        <div
+          key={index}
+          className="marker"
+          style={{
+            left: `${distance}px`,
+          }}
+        >
+          <img src="../src/assets/kyltti.png"></img>
+          <div>{distance / 100}m</div>
+        </div>
+      ))}
+    </>
+  );
+};
 
 function App() {
   const [verticalVelocity, setVerticalVelocity] = useState(-7);
   const [horizontalVelocity, setHorizontalVelocity] = useState(0);
   const [hitAngle, setHitAngle] = useState(0);
   const [isHit, setIsHit] = useState(false);
-  const [showHitbox, setShowHitbox] = useState(true);
+  const [showHitbox, setShowHitbox] = useState(false);
   const [lastHitPosition, setLastHitPosition] = useState({ top: 0, left: 0 });
   const [scrollLeft, setScrollLeft] = useState(0);
 
-  const gameAreaWidth = 16000;
+  const gameAreaWidth = 116000;
   const [gameAreaHeight, setGameAreaHeight] = useState(window.innerHeight);
 
   const bottomLimit = gameAreaHeight - 70;
@@ -72,8 +96,10 @@ function App() {
     left: 100,
   });
 
-  const [isSpinning, setIsSpinning] = useState(true);
+  const [isSpinning, setIsSpinning] = useState(false);
+  const markers = generateMarkers(gameAreaWidth, 1000);
 
+  const [highScore, setHighScore] = useState("0");
 
   useEffect(() => {
     if (gameAreaRef.current) {
@@ -101,7 +127,6 @@ function App() {
       verticalVelocity > 0
     ) {
       setHitboxEntryTime(performance.now());
-      
     }
     if (
       ballPosition.top > hitboxBottomBoundary &&
@@ -109,7 +134,6 @@ function App() {
       verticalVelocity > 1
     ) {
       setHitboxExitTime(performance.now());
-      
     }
   }, [ballPosition.top, ballPosition.left, verticalVelocity, bottomLimit]);
 
@@ -117,7 +141,7 @@ function App() {
     let animationFrameId;
     const updatePosition = () => {
       animationFrameId = requestAnimationFrame(updatePosition);
-     
+
       setBallPosition((prevPosition) => {
         let newVerticalVelocity = verticalVelocity;
         let newHorizontalVelocity = horizontalVelocity;
@@ -136,10 +160,11 @@ function App() {
         // PYSÄYTÄ PYÖRIMINEN!
         if (Math.abs(newHorizontalVelocity) < 0.1 && isHit) {
           newHorizontalVelocity = 0;
-          
+          if ((ballPosition.left / 100).toFixed(2) > highScore) {
+            setHighScore((ballPosition.left / 100).toFixed(2));
+          }
         }
         if (Math.abs(newHorizontalVelocity) < 1 && isHit) {
-          
           setIsSpinning(false); // Stop spinning
         }
 
@@ -169,6 +194,11 @@ function App() {
 
   // HIT HIT HIT!!!!
   const handleMouseDown = () => {
+    if (isHit) {
+      resetGame();
+      return;
+    }
+    setIsHit(true);
     const clicked = performance.now();
     console.log("clicked:", clicked);
     const hitboxTransitTime = 200;
@@ -176,7 +206,7 @@ function App() {
       clicked >= hitboxEntryTime &&
       clicked <= hitboxEntryTime + hitboxTransitTime
     ) {
-      setIsHit(true);
+      setIsSpinning(true);
       const timeIntoHitbox = clicked - hitboxEntryTime;
       const angle = 90 - (timeIntoHitbox / hitboxTransitTime) * 180;
       const radians = (angle * Math.PI) / 180;
@@ -199,20 +229,31 @@ function App() {
     setIsHit(false); // Reset hit status
     setLastHitPosition({ top: 0, left: 0 }); // Reset the last hit position
     setScrollLeft(0); // Reset scroll position
-    setIsSpinning(true);
+    setIsSpinning(false);
     // Add any other state resets you need here
-  
+
     // Also reset the ball's position to the starting point
     setBallPosition({
       top: bottomLimit - 250,
       left: 100,
     });
   };
-  
+
+  function generateMarkers(length, interval) {
+    const count = Math.floor(length / interval);
+    return Array.from({ length: count }, (_, index) => (index + 1) * interval);
+  }
 
   return (
     <div ref={gameAreaRef} className="game-area" onMouseDown={handleMouseDown}>
-      <div className="background" style={{ transform: `translateX(-${scrollLeft / 5}px)` }}></div>
+      <div
+        className="background"
+        style={{ transform: `translateX(-${scrollLeft / 5}px)` }}
+      ></div>
+      <div
+        className="background2"
+        style={{ transform: `translateX(-${scrollLeft / 10}px)` }}
+      ></div>
       <div className="hud" style={{ position: "fixed", top: 0, right: 0 }}>
         <p>
           Last Hit Position: {lastHitPosition.top.toFixed(0)}px from top,
@@ -223,23 +264,30 @@ function App() {
         <p>Horizontal Velocity: {horizontalVelocity.toFixed(2)}px/frame</p>
         <p>Distance Right: {ballPosition.left.toFixed(0)}px</p>
         <p>Bottom: {bottomLimit}</p>
+        <p>IsHit: {isHit ? "true" : "false"}</p>
+        <br />
+        <p>Highscore: {highScore}m</p>
         <button onClick={resetGame}>Restart</button>
       </div>
-      
+
       <div
         className="scroll-container"
         style={{ transform: `translateX(-${scrollLeft}px)` }}
       >
-        <Bat
+        <Markers markers={markers} />
+        <Santa
           showHitbox={showHitbox}
           hitboxTopBoundary={hitboxTopBoundary}
           hitboxBottomBoundary={hitboxBottomBoundary}
           bottomLimit={bottomLimit}
         />
-        <Ball top={ballPosition.top} left={ballPosition.left} isSpinning={isSpinning} />
-
+        <Ball
+          top={ballPosition.top}
+          left={ballPosition.left}
+          isSpinning={isSpinning}
+        />
+        <Bat isHit={isHit} />
         <div className="ground"></div>
-        
       </div>
     </div>
   );

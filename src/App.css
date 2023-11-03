@@ -1,3 +1,8 @@
+body {
+  font-family: "Mountains of Christmas", serif;
+  background-color: blue;
+}
+
 .game-area {
   box-sizing: border-box;
   height: 100vh;
@@ -6,13 +11,15 @@
   overflow-x: hidden;
   overflow-y: hidden;
   scrollbar-width: none;
-  
 }
 .santa {
   width: 200px;
   transform: translateX(-50%);
   transform: translateY(-100%);
   position: absolute;
+}
+.santa img {
+  width: 150px;
 }
 
 @keyframes spin {
@@ -25,15 +32,43 @@
 }
 
 .ball {
-  width: 70px;
+  width: 100px;
   height: 100px;
+  border-radius: 100px;
   position: absolute;
-  background-image: url("./assets/Paavo.png");
-  background-size: cover;
+  background-image: url("./assets/Juha.png");
+  background-size: contain;
   transform: translateY(-50%);
   animation: spin 1s linear infinite;
+  z-index: 2;
 }
 
+@keyframes hit {
+  0% {
+    transform: scaleX(1) rotate(-90deg); /* Start position facing left */
+    left: 50px;
+  }
+  100% {
+    transform: scaleX(-1) rotate(-90deg); /* End position, bat is mirrored and rotated right */
+    left: 135px;
+  }
+}
+
+.bat {
+  transform: rotate(-90deg);
+    width: 100px;
+  height: 100px;
+  background-image: url("./assets/maila.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  bottom: 95px;
+  left: 50px;
+  z-index: 1;
+}
+.hit {
+  animation: hit 0.05s forwards;
+}
 
 .scroll-container {
   position: relative;
@@ -42,9 +77,9 @@
 }
 .ground {
   background-color: rgba(255, 255, 255, 0);
-  height: 45px;
+  height: 50px;
   position: absolute;
-  width: 16000px;
+  width: 116000px;
   bottom: 0;
   background-image: url("./assets/bg.png");
   background-size: contain;
@@ -52,15 +87,46 @@
 }
 .hud {
   z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.777);
+  padding: 1rem;
 }
 .background {
+  background-image: url("./assets/bg3.png");
+  background-size: contain;
+  background-repeat: repeat-x;
+  height: 400px;
+  width: 116000px;
+  bottom: 50px;
+  position: absolute;
+}
+.background2 {
   background-image: url("./assets/bg2.png");
-  background-repeat: repeat-x; 
+  background-size: contain;
+  background-repeat: repeat-x;
+
   width: 16000px;
-  height: 100vh;
-  
-  position: absolute; 
-  bottom: 0;
-  left: 0;
+  height: 80vh;
+
+  position: absolute;
+  z-index: -10;
 }
 
+.marker {
+  position: absolute;
+  bottom: 20px;
+}
+.marker img {
+  width: 200px;
+}
+.marker div {
+  background-color: rgba(255, 255, 255, 0.477);
+  border-radius: 10px;
+  padding: 0 2.5rem 0 2.3rem;
+  position: absolute;
+  bottom: 77px;
+  left: 10px;
+  font-size: 3.9rem;
+  color: rgb(0, 0, 0);
+  font-weight: 700;
+  font-family: "Mountains of Christmas", serif;
+}
