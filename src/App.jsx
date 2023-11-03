@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
-import SantaImg from "./assets/pukki.png";
+import SantaImg from "./assets/santa.svg";
 import KylttiImg from "./assets/kyltti.png";
 
 const Santa = ({
@@ -329,7 +329,7 @@ function App() {
         <p>IsHit: {isHit ? "true" : "false"}</p>
         <br />
         <p>Highscore: {highScore}m</p>
-        <p>{reactionTime}</p>
+        
         <button onClick={resetGame}>Debug Restart</button>
 
       </div>
