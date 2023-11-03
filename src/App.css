@@ -3,19 +3,17 @@ body {
   background-color: blue;
 }
 
-.game-area h2 {
-  font-size: 2rem;
-  font-weight: 700;
-}
-
 .game-area {
   box-sizing: border-box;
-  height: 100vh;
-  width: 100%;
   position: relative;
   overflow-x: hidden;
   overflow-y: hidden;
   scrollbar-width: none;
+}
+
+.game-area h2 {
+  font-size: 2rem;
+  font-weight: 700;
 }
 
 .santa {
@@ -49,11 +47,9 @@ body {
   transform: translateY(-50%);
   animation: spin 1s linear infinite;
   z-index: 2;
-  
 }
 
 .distance {
-  
   position: absolute;
   z-index: 3;
   font-size: 2rem;
@@ -101,6 +97,12 @@ body {
   height: 100vh;
 }
 
+.hud {
+  z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.777);
+  padding: 1rem;
+}
+
 .ground {
   background-color: rgba(255, 255, 255, 0);
   height: 50px;
@@ -110,12 +112,6 @@ body {
   background-image: url("./assets/bg.png");
   background-size: contain;
   z-index: -10;
-}
-
-.hud {
-  z-index: 1000;
-  background-color: rgba(255, 255, 255, 0.777);
-  padding: 1rem;
 }
 
 .background {
@@ -132,10 +128,8 @@ body {
   background-image: url("./assets/bg2.png");
   background-size: contain;
   background-repeat: repeat-x;
-
   width: 16000px;
   height: 80vh;
-
   position: absolute;
   z-index: -10;
 }
