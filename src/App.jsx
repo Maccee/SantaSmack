@@ -39,14 +39,27 @@ const Bat = ({ isHit }) => {
   return <div className={batClass} />;
 };
 
-const Ball = ({ top, left, isSpinning }) => {
+const Ball = ({ top, left, isSpinning, distance }) => {
   const ballStyle = {
     top: `${top}px`,
     left: `${left}px`,
     animationPlayState: isSpinning ? "running" : "paused", // Control the animation state
   };
-  return <div className="ball" style={ballStyle} />;
+
+  const distanceStyle = {
+    top: `${top - 100}px`,
+    left: `${left + 10}px`,
+    
+  };
+
+  return (
+    <>
+      <div className="ball" style={ballStyle}></div>
+      <div className="distance" style={distanceStyle}>{distance}</div>
+    </>
+  );
 };
+
 
 const Markers = ({ markers }) => {
   return (
@@ -72,7 +85,7 @@ function App() {
   const [horizontalVelocity, setHorizontalVelocity] = useState(0);
   const [hitAngle, setHitAngle] = useState(0);
   const [isHit, setIsHit] = useState(false);
-  const [showHitbox, setShowHitbox] = useState(false);
+
   const [lastHitPosition, setLastHitPosition] = useState({ top: 0, left: 0 });
   const [scrollLeft, setScrollLeft] = useState(0);
 
@@ -84,8 +97,9 @@ function App() {
   const [hitboxEntryTime, setHitboxEntryTime] = useState(null);
   const [hitboxExitTime, setHitboxExitTime] = useState(null);
 
-  const hitboxTopBoundary = bottomLimit - 120;
-  const hitboxBottomBoundary = bottomLimit - 20;
+  const [showHitbox, setShowHitbox] = useState(true);
+  const hitboxTopBoundary = bottomLimit - 200;
+  const hitboxBottomBoundary = bottomLimit - 0;
 
   const gravity = 0.1;
   const airResistance = 0.9999;
@@ -101,6 +115,7 @@ function App() {
   const markers = generateMarkers(gameAreaWidth, 1000);
 
   const [highScore, setHighScore] = useState("0");
+  const [distance, setDistance] = useState("0")
 
   useEffect(() => {
     if (gameAreaRef.current) {
@@ -142,13 +157,20 @@ function App() {
     let animationFrameId;
     const updatePosition = () => {
       animationFrameId = requestAnimationFrame(updatePosition);
+      if (hitboxEntryTime) {
 
+      }
+      if (hitboxExitTime) {
+
+      }
       setBallPosition((prevPosition) => {
         let newVerticalVelocity = verticalVelocity;
         let newHorizontalVelocity = horizontalVelocity;
         newVerticalVelocity += gravity;
         let newTop = prevPosition.top + newVerticalVelocity;
         let newLeft = prevPosition.left + newHorizontalVelocity;
+
+
 
         if (newTop >= bottomLimit) {
           newTop = bottomLimit;
@@ -168,7 +190,7 @@ function App() {
         if (Math.abs(newHorizontalVelocity) < 1 && isHit) {
           setIsSpinning(false); // Stop spinning
         }
-
+        setDistance((ballPosition.left / 100).toFixed(2));
         setVerticalVelocity(newVerticalVelocity);
         setHorizontalVelocity(newHorizontalVelocity);
         setScrollLeft((prevScrollLeft) => {
@@ -202,7 +224,7 @@ function App() {
     setIsHit(true);
     const clicked = performance.now();
     console.log("clicked:", clicked);
-    const hitboxTransitTime = 200;
+    const hitboxTransitTime = 400;
     if (
       clicked >= hitboxEntryTime &&
       clicked <= hitboxEntryTime + hitboxTransitTime
@@ -231,6 +253,8 @@ function App() {
     setLastHitPosition({ top: 0, left: 0 }); // Reset the last hit position
     setScrollLeft(0); // Reset scroll position
     setIsSpinning(false);
+    setHitboxEntryTime(null)
+    setHitboxExitTime(null)
     // Add any other state resets you need here
 
     // Also reset the ball's position to the starting point
@@ -264,6 +288,7 @@ function App() {
         <p>Hit Angle: {hitAngle.toFixed(0)}°</p>
         <p>Horizontal Velocity: {horizontalVelocity.toFixed(2)}px/frame</p>
         <p>Distance Right: {ballPosition.left.toFixed(0)}px</p>
+        <p>Distance meters: {distance}</p>
         <p>Bottom: {bottomLimit}</p>
         <p>IsHit: {isHit ? "true" : "false"}</p>
         <br />
@@ -286,6 +311,7 @@ function App() {
           top={ballPosition.top}
           left={ballPosition.left}
           isSpinning={isSpinning}
+          distance={distance}
         />
         <Bat isHit={isHit} />
         <div className="ground"></div>
