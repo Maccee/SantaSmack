@@ -14,6 +14,7 @@ const App = () => {
   const gameAreaWidth = 116000; // in px
   const [gameAreaHeight, setGameAreaHeight] = useState(window.innerHeight); // Client browser window height
   const bottomLimit = gameAreaHeight - 70; // 70px from bottom
+  const [keyActive, setKeyActive] = useState(false);
 
   // BALL MOVEMENT
   // Ball position, start position set 250px from bottom and 100px from left
@@ -46,14 +47,15 @@ const App = () => {
   const airResistance = 0.9999; // Resistance to slow the ball in the air
   const bounce = 0.5; // 50% bounce strength
 
-  // For hitStrenght calculations
+  // For hitStrength calculations
+  const [hitStrength, setHitStrength] = useState(0);
   const [mouseDownTime, setMouseDownTime] = useState(0); // The performance.now time when mouse is pressed down
   // Define your minimum and maximum reaction times
-  const minReactionTime = 25; // fastest expected reaction time
+  const minReactionTime = 20; // fastest expected reaction time
   const maxReactionTime = 100; // slowest expected reaction time
   // Define your minimum and maximum hit strengths
-  const minHitStrength = 25;
-  const maxHitStrength = 45;
+  const minHitStrength = 15;
+  const maxHitStrength = 120;
 
   // SCROLLING
   const gameAreaRef = useRef(null); // Game area reference for scrolling
@@ -219,7 +221,7 @@ const App = () => {
       const radians = (angle * Math.PI) / 180;
 
       // HitStrength is defined by how was the player can click.
-      const hitStrength = calculateHitStrength(reactionTime);
+      setHitStrength(calculateHitStrength(reactionTime));
       // console.log("hit strength", hitStrength);
 
       // Set direction of velocity. Same speed for up and right.
@@ -281,6 +283,9 @@ const App = () => {
       if (event.keyCode === 220 || event.keyCode === 192) {
         toggleHUD();
       }
+      if (event.keyCode === 32) {
+        handleMouseUp();
+      }
     };
 
     // Add event listener
@@ -290,11 +295,28 @@ const App = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  const handleKeyDown = (event) => {
+    if (event.keyCode === 32 && !keyActive) {
+      
+      //event.preventDefault(); // Prevent the default action to avoid scrolling the page
+      handleMouseDown();
+      setKeyActive(true);
+    }
+  };
+
+  const handleKeyUp = (event) => {
+    if (event.keyCode === 32) {
+      
+      //event.preventDefault(); // Prevent the default action to avoid scrolling the page
+      handleMouseUp();
+      setKeyActive(false);
+    }
+  };
 
 
   // APP RENDER
   return (
-    <div ref={gameAreaRef} className="game-area" onMouseUp={handleMouseUp} onMouseDown={handleMouseDown}>
+    <div ref={gameAreaRef} className="game-area" tabIndex={0} onMouseUp={handleMouseUp} onMouseDown={handleMouseDown} onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} onBlur={() => setKeyActive(false)}>
 
       {/* Background layers with parallax scrolling effect */}
       <div
@@ -336,6 +358,8 @@ const App = () => {
             <button onClick={toggleShowHitbox}>Display Hitbox</button>
             {/* Display the high score */}
             <p>Highscore: {highScore}m</p>
+            <p>{hitStrength}</p>
+            <p>{keyActive ? "true" : "false"}</p>
           </>
         )}
       </div>
