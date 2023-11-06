@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./App.css";
+import { postDataToAzureFunction, getDataFromAzureFunction } from "./ApiUtils";
 
 // Component Imports
 import Santa from "./components/Santa";
@@ -9,7 +10,6 @@ import Ball from "./components/Ball";
 
 // APP COMPONENT
 const App = () => {
-
   // Define game area width, height and ground level
   const gameAreaWidth = 116000; // in px
   const [gameAreaHeight, setGameAreaHeight] = useState(window.innerHeight); // Client browser window height
@@ -24,7 +24,7 @@ const App = () => {
   });
   const [verticalVelocity, setVerticalVelocity] = useState(-7); // Ball vertical speed, set to -7 for upward movement before swing
   const [horizontalVelocity, setHorizontalVelocity] = useState(0); // Ball horizontal speed
-  const [hitAngle, setHitAngle] = useState(0); // Hit angle calculated between -90 and 90 deg. 
+  const [hitAngle, setHitAngle] = useState(0); // Hit angle calculated between -90 and 90 deg.
   const [isHit, setIsHit] = useState(false); // Check if swinged
   const [isSpinning, setIsSpinning] = useState(false); // Ball spinning after swing
 
@@ -32,13 +32,13 @@ const App = () => {
   const [showHUD, setShowHUD] = useState(false);
   const [lastHitPosition, setLastHitPosition] = useState({ top: 0, left: 0 });
   const [highScore, setHighScore] = useState(0);
-  const [distance, setDistance] = useState("0")
+  const [distance, setDistance] = useState(0);
 
   // Hitbox
   const [showHitbox, setShowHitbox] = useState(false); // Toggle visibility
   const [hitboxEntryTime, setHitboxEntryTime] = useState(null); // Time when ball enters hitbox in ms since refresh
   const [hitboxExitTime, setHitboxExitTime] = useState(null); // Time when ball exits hitbox in ms since refresh
-  const hitboxTopBoundary = bottomLimit - 180; // Hitbox top 
+  const hitboxTopBoundary = bottomLimit - 180; // Hitbox top
   const hitboxBottomBoundary = bottomLimit + 0; // Hitbox bottom
   const hitboxTransitTime = 250; // The time in ms the ball travels through hitbox
 
@@ -55,7 +55,12 @@ const App = () => {
   const maxReactionTime = 100; // slowest expected reaction time
   // Define your minimum and maximum hit strengths
   const minHitStrength = 15;
-  const maxHitStrength = 45;
+  const maxHitStrength = 17;
+
+  // Name
+  const [name, setName] = useState("Makke");
+  const postedRef = useRef(false);
+  const [database, setDatabase] = useState([]);
 
   // SCROLLING
   const gameAreaRef = useRef(null); // Game area reference for scrolling
@@ -66,6 +71,20 @@ const App = () => {
       const element = gameAreaRef.current;
       element.scrollTop = element.scrollHeight - element.clientHeight;
     }
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let result = await getDataFromAzureFunction();
+        result = result.sort((a, b) => b.distance - a.distance);
+        setDatabase(result);
+        console.log(database);
+      } catch (error) {
+        console.error("There was an error fetching the data:", error);
+      }
+    };
+    fetchData();
   }, []);
 
   // Event listener if screen height changes during playing
@@ -79,7 +98,7 @@ const App = () => {
   }, []);
 
   // Define hitbox entry and compare it to mouseUP to determine ball swing angle
-  // Hitbox exit is just used for reference for future 
+  // Hitbox exit is just used for reference for future
   useEffect(() => {
     if (
       ballPosition.top > hitboxTopBoundary &&
@@ -99,7 +118,6 @@ const App = () => {
       // console.log("exit", performance.now());
     }
   }, [ballPosition.top, ballPosition.left, verticalVelocity, bottomLimit]);
-
 
   // MAIN BALL MOVEMENT AND FLIGHT PHYSICS, SUCH
   useEffect(() => {
@@ -134,15 +152,26 @@ const App = () => {
         }
 
         // Stop motion.
-        // If speed is between 0 and 0.2, stop movement completely and check for highscore
-        if (Math.abs(newHorizontalVelocity) < 0.2 && Math.abs(newHorizontalVelocity) > 0) {
+        // If speed is between 0 and 1, stop movement completely and check for highscore
+        if (
+          Math.abs(newHorizontalVelocity) < 1 &&
+          Math.abs(newHorizontalVelocity) > 0
+        ) {
           newHorizontalVelocity = 0; // Stop movement
 
-          const currentScore = parseFloat((ballPosition.left / 100).toFixed(2)); // Swing distance
-          const currentHighScore = parseFloat(highScore.toFixed(2)); // Highscore distance
-          if (currentScore > currentHighScore) {
-            // If the current score is higher, update the high score
-            setHighScore(currentScore);
+          // CHECK FOR NEW HIGHSCORE
+          if (distance > highScore && !postedRef.current) {
+            postedRef.current = true;
+            setHighScore(distance);
+            const data = {
+              name, // Assume 'name' is available in the component's state or props
+              hitAngle, // Assume 'hitAngle' is available in the component's state or props
+              hitStrength, // Assume 'hitStrength' is available in the component's state or props
+              gameAreaHeight, // Assume 'gameAreaHeight' is available in the component's state or props
+              distance, // Convert it to a string if needed
+            };
+            // console.log("posting" , data);
+            postDataToAzureFunction(data);
           }
         }
 
@@ -182,7 +211,7 @@ const App = () => {
   // Get performance time in ms when user press mouseDOWN
   const handleMouseDown = () => {
     setMouseDownTime(performance.now());
-  }
+  };
   // Do the swing when mouseUP
   const handleMouseUp = () => {
     // If you want to restart, just click again after swing
@@ -209,7 +238,6 @@ const App = () => {
       clicked >= hitboxEntryTime &&
       clicked <= hitboxEntryTime + hitboxTransitTime
     ) {
-
       setIsSpinning(true); // start spinning the ball
 
       // This calculates the angle. Using last example, if if player can click at 3000ms performance.now time,
@@ -240,10 +268,16 @@ const App = () => {
   // Calculate hit strength based on reaction time. ChatGPT at its best.
   const calculateHitStrength = (reactionTime) => {
     // Clamp reaction time within the expected range for safety. I think ~20ms is the fastest i have got.
-    const clampedReactionTime = Math.min(Math.max(reactionTime, minReactionTime), maxReactionTime);
+    const clampedReactionTime = Math.min(
+      Math.max(reactionTime, minReactionTime),
+      maxReactionTime
+    );
     // Invert the reaction time to get the hit strength such that a lower reaction time gives a higher hit strength
-    const normalizedTime = (clampedReactionTime - minReactionTime) / (maxReactionTime - minReactionTime);
-    const hitStrength = maxHitStrength - normalizedTime * (maxHitStrength - minHitStrength);
+    const normalizedTime =
+      (clampedReactionTime - minReactionTime) /
+      (maxReactionTime - minReactionTime);
+    const hitStrength =
+      maxHitStrength - normalizedTime * (maxHitStrength - minHitStrength);
     console.log(reactionTime, hitStrength);
     return hitStrength;
   };
@@ -257,8 +291,10 @@ const App = () => {
     setLastHitPosition({ top: 0, left: 0 }); // Reset the last hit position
     setScrollLeft(0); // Reset scroll position
     setIsSpinning(false); // No spinning anymore
-    setHitboxEntryTime(null) // reset the hitbox entry times
-    setHitboxExitTime(null)
+    setHitboxEntryTime(null); // reset the hitbox entry times
+    setHitboxExitTime(null);
+    setDistance(0);
+    postedRef.current = false;
 
     // Reset the ball position to the start
     setBallPosition({
@@ -269,12 +305,12 @@ const App = () => {
 
   // Hitbox toggle function
   const toggleShowHitbox = () => {
-    setShowHitbox(prevShowHitbox => !prevShowHitbox);
+    setShowHitbox((prevShowHitbox) => !prevShowHitbox);
   };
 
   // Toggle HUD
   const toggleHUD = () => {
-    setShowHUD(prevShowHUD => !prevShowHUD);
+    setShowHUD((prevShowHUD) => !prevShowHUD);
   };
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -283,19 +319,17 @@ const App = () => {
       if (event.keyCode === 220 || event.keyCode === 192) {
         toggleHUD();
       }
-      
     };
 
     // Add event listener
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
 
     // Remove event listener on cleanup
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   const handleKeyDown = (event) => {
     if (event.keyCode === 32 && !keyActive) {
-      
       //event.preventDefault(); // Prevent the default action to avoid scrolling the page
       handleMouseDown();
       setKeyActive(true);
@@ -304,18 +338,24 @@ const App = () => {
 
   const handleKeyUp = (event) => {
     if (event.keyCode === 32) {
-      
       //event.preventDefault(); // Prevent the default action to avoid scrolling the page
       handleMouseUp();
       setKeyActive(false);
     }
   };
 
-
   // APP RENDER
   return (
-    <div ref={gameAreaRef} className="game-area" tabIndex={0} onMouseUp={handleMouseUp} onMouseDown={handleMouseDown} onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} onBlur={() => setKeyActive(false)}>
-
+    <div
+      ref={gameAreaRef}
+      className="game-area"
+      tabIndex={0}
+      onMouseUp={handleMouseUp}
+      onMouseDown={handleMouseDown}
+      onKeyDown={handleKeyDown}
+      onKeyUp={handleKeyUp}
+      onBlur={() => setKeyActive(false)}
+    >
       {/* Background layers with parallax scrolling effect */}
       <div
         className="background"
@@ -325,7 +365,6 @@ const App = () => {
         className="background2"
         style={{ transform: `translateX(-${scrollLeft / 10}px)` }}
       ></div>
-
 
       {/* HUD (Heads-Up Display) for displaying game stats and controls */}
       <div className="hud" style={{ position: "fixed", top: 0, right: 0 }}>
@@ -343,7 +382,8 @@ const App = () => {
             <p> Hit Angle: {hitAngle.toFixed(0)}° </p>
             {/* Display the horizontal velocity of the ball */}
             <p>Horizontal Velocity: {horizontalVelocity.toFixed(2)}px/frame</p>
-            <p>Vertical Velocity: {verticalVelocity.toFixed(2)}px/frame</p> {/* Corrected the duplicate "Horizontal Velocity" label */}
+            <p>Vertical Velocity: {verticalVelocity.toFixed(2)}px/frame</p>{" "}
+            {/* Corrected the duplicate "Horizontal Velocity" label */}
             {/* Display the current distance traveled by the ball */}
             <p>Distance Right: {ballPosition.left.toFixed(0)}px</p>
             {/* Display the current distance in meters (assuming 100px = 1m) */}
@@ -357,18 +397,32 @@ const App = () => {
             {/* Display the high score */}
             <p>Highscore: {highScore}m</p>
             <p>{hitStrength}</p>
-            <p>{keyActive ? "true" : "false"}</p>
+            <>
+              {database ? (
+                database.map((item, index) => (
+                  <div key={index}>
+                    <p>Distance: {item.distance}</p>
+                  </div>
+                ))
+              ) : (
+                <p>Loading data...</p>
+              )}
+            </>
           </>
         )}
       </div>
 
-
-      <div className="highScoreContainer" style={{ position: "fixed", bottom: "10px", right: "10px" }}>
+      <div
+        className="highScoreContainer"
+        style={{ position: "fixed", bottom: "10px", right: "10px" }}
+      >
         <p>Highscore: {highScore}</p>
       </div>
       {/* Scrollable container for the game elements to allow for a larger virtual play area */}
-      <div className="scroll-container" style={{ transform: `translateX(-${scrollLeft}px)` }}>
-
+      <div
+        className="scroll-container"
+        style={{ transform: `translateX(-${scrollLeft}px)` }}
+      >
         {/* Game markers indicating distance and render sign positions */}
         <Markers gameAreaWidth={gameAreaWidth} />
 
@@ -393,11 +447,9 @@ const App = () => {
 
         {/* Visual representation of the ground */}
         <div className="ground"></div>
-
       </div>
     </div>
   );
-
-}
+};
 
 export default App;
