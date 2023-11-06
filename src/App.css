@@ -100,7 +100,6 @@ body {
 .hud {
   z-index: 1000;
   background-color: rgba(255, 255, 255, 0.777);
-  
 }
 
 .ground {
@@ -156,9 +155,35 @@ body {
   font-family: "Mountains of Christmas", serif;
 }
 .highScoreContainer {
+  position: fixed;
+  bottom: 0.4rem;
+  right: 0.4rem;
+  display: flex;
+  gap: 3rem;
   font-family: "Mountains of Christmas", serif;
   font-size: 2rem;
   font-weight: 700;
   z-index: 1000;
   color: yellow;
+}
+.highscorewindow {
+  display: block;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* Additional styles for aesthetics */
+  width: 100%; /* Adjust width as needed */
+  max-width: 300px;
+  background: rgb(143, 143, 143); /* Background color */
+  border: 1px solid #ccc; /* Border */
+  border-radius: 4px; /* Rounded corners */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow for a "lifted" effect */
+  text-align: center; /* Center text by default */
+  z-index: 1000; /* Ensure it's above other elements */
+  overflow: auto; /* In case of overflow */
+  max-height: 80vh; /* Limit the height to 80% of the viewport height */
+}
+.highscorewindow.hidden {
+  display: none;
 }

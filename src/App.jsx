@@ -7,6 +7,9 @@ import Santa from "./components/Santa";
 import Bat from "./components/Bat";
 import Markers from "./components/Markers";
 import Ball from "./components/Ball";
+import HighScoreData from "./components/HighScoreData";
+import HUD from "./components/HUD";
+import Background from "./components/Background";
 
 // APP COMPONENT
 const App = () => {
@@ -43,9 +46,10 @@ const App = () => {
   const hitboxTransitTime = 250; // The time in ms the ball travels through hitbox
 
   // Physics
-  const gravity = 0.1; // Downward force that pulls ball down while flying
+  const [gravity, setGravity] = useState(0.1); // Downward force that pulls ball down while flying
   const airResistance = 0.9999; // Resistance to slow the ball in the air
   const bounce = 0.5; // 50% bounce strength
+  const [isAtRest, setIsAtRest] = useState(false);
 
   // For hitStrength calculations
   const [hitStrength, setHitStrength] = useState(0);
@@ -59,32 +63,32 @@ const App = () => {
 
   // Name
   const [name, setName] = useState("Makke");
-  const postedRef = useRef(false);
-  const [database, setDatabase] = useState([]);
+  const [highScoreData, setHighScoreData] = useState({});
+  const [showHighScoreData, setShowHighScoreData] = useState(false);
 
   // SCROLLING
   const gameAreaRef = useRef(null); // Game area reference for scrolling
   const [scrollLeft, setScrollLeft] = useState(0); // Scroll position
+
+  console.log("Component render", {
+    verticalVelocity,
+    horizontalVelocity,
+    gravity,
+    airResistance,
+    gameAreaWidth,
+    isHit,
+    gameAreaHeight,
+  });
 
   useEffect(() => {
     if (gameAreaRef.current) {
       const element = gameAreaRef.current;
       element.scrollTop = element.scrollHeight - element.clientHeight;
     }
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let result = await getDataFromAzureFunction();
-        result = result.sort((a, b) => b.distance - a.distance);
-        setDatabase(result);
-        console.log(database);
-      } catch (error) {
-        console.error("There was an error fetching the data:", error);
-      }
-    };
-    fetchData();
+    // GET HIGHSCOREDATA ON REFRESH AND PAGE LOAD
+    getDataFromAzureFunction().then((sortedResult) => {
+      setHighScoreData(sortedResult);
+    });
   }, []);
 
   // Event listener if screen height changes during playing
@@ -95,6 +99,18 @@ const App = () => {
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // TOGGLE HUD
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      console.log(event.key, event.keyCode);
+      if (event.keyCode === 220 || event.keyCode === 192) {
+        toggleHUD();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   // Define hitbox entry and compare it to mouseUP to determine ball swing angle
@@ -119,94 +135,63 @@ const App = () => {
     }
   }, [ballPosition.top, ballPosition.left, verticalVelocity, bottomLimit]);
 
-  // MAIN BALL MOVEMENT AND FLIGHT PHYSICS, SUCH
+  // MAIN BALL MOVEMENT AND FLIGHT PHYSICS
   useEffect(() => {
-    let animationFrameId;
+    const verticalVelocityRef = useRef(verticalVelocity);
+    const horizontalVelocityRef = useRef(horizontalVelocity);
+    const ballPositionRef = useRef(ballPosition); // Use the current state as the initial value
+
+    let animationFrameId; // This will hold our frame ID from requestAnimationFrame
+
     const updatePosition = () => {
-      animationFrameId = requestAnimationFrame(updatePosition);
+      // Calculate the new velocity
+      verticalVelocityRef.current += gravity;
+      horizontalVelocityRef.current *= isHit ? airResistance : 1;
 
-      // For debug
-      if (hitboxEntryTime) {
-      }
-      if (hitboxExitTime) {
-      }
+      // Calculate the new position
+      let newTop = ballPositionRef.current.top + verticalVelocityRef.current;
+      let newLeft =
+        ballPositionRef.current.left + horizontalVelocityRef.current;
 
-      // Update ball position
-      setBallPosition((prevPosition) => {
-        let newVerticalVelocity = verticalVelocity;
-        let newHorizontalVelocity = horizontalVelocity;
-        newVerticalVelocity += gravity;
-        let newTop = prevPosition.top + newVerticalVelocity;
-        let newLeft = prevPosition.left + newHorizontalVelocity;
-
-        // CHECKS
-        // If Ball hits bottomLimit, it bounces, and slows down
-        if (newTop >= bottomLimit) {
-          newTop = bottomLimit;
-          newVerticalVelocity = -newVerticalVelocity * bounce;
-          newHorizontalVelocity *= 1 - 0.1;
-
-          // While in the air, apply air resistance
-        } else if (isHit) {
-          newHorizontalVelocity *= airResistance;
-        }
-
-        // Stop motion.
-        // If speed is between 0 and 1, stop movement completely and check for highscore
-        if (
-          Math.abs(newHorizontalVelocity) < 1 &&
-          Math.abs(newHorizontalVelocity) > 0
-        ) {
-          newHorizontalVelocity = 0; // Stop movement
-
-          // CHECK FOR NEW HIGHSCORE
-          if (distance > highScore && !postedRef.current) {
-            postedRef.current = true;
-            setHighScore(distance);
-            const data = {
-              name, // Assume 'name' is available in the component's state or props
-              hitAngle, // Assume 'hitAngle' is available in the component's state or props
-              hitStrength, // Assume 'hitStrength' is available in the component's state or props
-              gameAreaHeight, // Assume 'gameAreaHeight' is available in the component's state or props
-              distance, // Convert it to a string if needed
-            };
-            // console.log("posting" , data);
-            postDataToAzureFunction(data);
-          }
-        }
-
-        // Stop ball spinning slightly before stopping
-        if (Math.abs(newHorizontalVelocity) < 1 && isHit) {
+      // Apply checks and make changes if necessary
+      if (newTop >= bottomLimit) {
+        newTop = bottomLimit;
+        verticalVelocityRef.current *= -bounce;
+        horizontalVelocityRef.current *= 1 - 0.1;
+        if (Math.abs(horizontalVelocityRef.current) < 1) {
           setIsSpinning(false); // Stop spinning
         }
+      }
 
-        setDistance((ballPosition.left / 100).toFixed(2)); // Set distance from pixels to makeshift metres and remove decimal
-        setVerticalVelocity(newVerticalVelocity); // update speed
-        setHorizontalVelocity(newHorizontalVelocity); // update speed
+      // Update the ref with the new position
+      ballPositionRef.current = { top: newTop, left: newLeft };
 
-        // Scroll
-        setScrollLeft((prevScrollLeft) => {
-          const newScrollLeft = newLeft - window.innerWidth / 5; // Ball position while scrolling
-          return Math.max(
-            0,
-            Math.min(newScrollLeft, gameAreaWidth - window.innerWidth)
-          );
-        });
-        // Updating the state with the new ball position, which will be used in the component to position the ball
-        return { top: newTop, left: newLeft };
-      });
+      // Set state that should cause re-render
+      setBallPosition(ballPositionRef.current);
+      setVerticalVelocity(verticalVelocityRef.current);
+      setHorizontalVelocity(horizontalVelocityRef.current);
+      setDistance((newLeft / 100).toFixed(2)); // Update distance based on new left position
+
+      // Request next animation frame
+      animationFrameId = requestAnimationFrame(updatePosition);
     };
+
+    // Start the animation loop
     animationFrameId = requestAnimationFrame(updatePosition);
-    return () => cancelAnimationFrame(animationFrameId);
+
+    // Clean up function
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
   }, [
-    verticalVelocity,
-    horizontalVelocity,
     gravity,
     airResistance,
-    gameAreaWidth,
+    bounce,
+    bottomLimit,
     isHit,
-    gameAreaHeight,
-  ]);
+    setDistance,
+    setIsSpinning,
+  ]); // Only include values and setter functions that should trigger the effect to restart
 
   // Get performance time in ms when user press mouseDOWN
   const handleMouseDown = () => {
@@ -219,46 +204,27 @@ const App = () => {
       resetGame();
       return;
     }
-
     setIsHit(true); // toggle swing, animation etc.
-
     const mouseUpTime = performance.now(); // Performance time in ms when mouseUP
     const reactionTime = mouseUpTime - mouseDownTime; // Calculate how fast user clicks mouse
-
     const clicked = performance.now(); // This is old, but I use it to calculate the swing angle.
-
-    // console.log("clicked", performance.now());
-
-    // For current hitbox settings it takes roughly 300ms for the ball to travel through the hitbox.
-    // Within that hitboxTransitTime the player should be able to swing.
-    // In here we check if the 'clicked' is within the transitTime by comparing it to the hitbox entry time.
-    // Example, entry time is 3000ms, exit time is 3000ms + hitboxTransitTime = 3300ms.
-    // If the 'clicked' time in ms is between 3000ms and 3300ms the player will hit the ball.
     if (
       clicked >= hitboxEntryTime &&
       clicked <= hitboxEntryTime + hitboxTransitTime
     ) {
       setIsSpinning(true); // start spinning the ball
-
-      // This calculates the angle. Using last example, if if player can click at 3000ms performance.now time,
-      // the angle is 90deg, which in this case swings the ball straight upwards. If player is able to click at
-      // 3300ms, -90deg, the swing is straight down. 3150ms is 0deg which is straight right. Sweetspot (45deg) is
-      // 3075ms. So 75ms after ball enters the hitbox.
       const timeIntoHitbox = clicked - hitboxEntryTime;
       const angle = 90 - (timeIntoHitbox / hitboxTransitTime) * 180;
       const radians = (angle * Math.PI) / 180;
-
       // HitStrength is defined by how was the player can click.
       setHitStrength(calculateHitStrength(reactionTime));
       // console.log("hit strength", hitStrength);
-
       // Set direction of velocity. Same speed for up and right.
       // MAIN BALL MOVEMENT useEffect has these dependancies and updates when these change.
       const verticalVelocityComponent = hitStrength * Math.sin(radians);
       const horizontalVelocityComponent = hitStrength * Math.cos(radians);
       setVerticalVelocity(-verticalVelocityComponent);
       setHorizontalVelocity(horizontalVelocityComponent);
-
       // For HUD
       setLastHitPosition({ top: ballPosition.top, left: ballPosition.left });
       setHitAngle(angle);
@@ -294,7 +260,6 @@ const App = () => {
     setHitboxEntryTime(null); // reset the hitbox entry times
     setHitboxExitTime(null);
     setDistance(0);
-    postedRef.current = false;
 
     // Reset the ball position to the start
     setBallPosition({
@@ -312,143 +277,77 @@ const App = () => {
   const toggleHUD = () => {
     setShowHUD((prevShowHUD) => !prevShowHUD);
   };
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      console.log(event.key, event.keyCode);
-      // The tilde key's keyCode is 220
-      if (event.keyCode === 220 || event.keyCode === 192) {
-        toggleHUD();
-      }
-    };
-
-    // Add event listener
-    window.addEventListener("keydown", handleKeyDown);
-
-    // Remove event listener on cleanup
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
-  const handleKeyDown = (event) => {
-    if (event.keyCode === 32 && !keyActive) {
-      //event.preventDefault(); // Prevent the default action to avoid scrolling the page
-      handleMouseDown();
-      setKeyActive(true);
-    }
-  };
-
-  const handleKeyUp = (event) => {
-    if (event.keyCode === 32) {
-      //event.preventDefault(); // Prevent the default action to avoid scrolling the page
-      handleMouseUp();
-      setKeyActive(false);
-    }
-  };
 
   // APP RENDER
   return (
-    <div
-      ref={gameAreaRef}
-      className="game-area"
-      tabIndex={0}
-      onMouseUp={handleMouseUp}
-      onMouseDown={handleMouseDown}
-      onKeyDown={handleKeyDown}
-      onKeyUp={handleKeyUp}
-      onBlur={() => setKeyActive(false)}
-    >
-      {/* Background layers with parallax scrolling effect */}
-      <div
-        className="background"
-        style={{ transform: `translateX(-${scrollLeft / 5}px)` }}
-      ></div>
-      <div
-        className="background2"
-        style={{ transform: `translateX(-${scrollLeft / 10}px)` }}
-      ></div>
-
+    <>
+      <HighScoreData
+        highScoreData={highScoreData}
+        showHighScoreData={showHighScoreData}
+      />
+      <div className="highScoreContainer">
+        <button onClick={() => setShowHighScoreData((prev) => !prev)}>
+          Toggle Highscore
+        </button>
+        <p>Your Distance: {highScore}m</p>
+      </div>
       {/* HUD (Heads-Up Display) for displaying game stats and controls */}
-      <div className="hud" style={{ position: "fixed", top: 0, right: 0 }}>
-        {showHUD && (
-          <>
-            <h2>Debug Console</h2>
-            {/* Display the last hit position */}
-            <p>
-              Last Hit Position: {lastHitPosition.top.toFixed(0)}px from top,
-              {lastHitPosition.left.toFixed(0)}px from left
-            </p>
-            {/* Display the current ball position */}
-            <p>Ball Position: {ballPosition.top.toFixed(0)}px</p>
-            {/* Display the angle at which the ball was hit */}
-            <p> Hit Angle: {hitAngle.toFixed(0)}° </p>
-            {/* Display the horizontal velocity of the ball */}
-            <p>Horizontal Velocity: {horizontalVelocity.toFixed(2)}px/frame</p>
-            <p>Vertical Velocity: {verticalVelocity.toFixed(2)}px/frame</p>{" "}
-            {/* Corrected the duplicate "Horizontal Velocity" label */}
-            {/* Display the current distance traveled by the ball */}
-            <p>Distance Right: {ballPosition.left.toFixed(0)}px</p>
-            {/* Display the current distance in meters (assuming 100px = 1m) */}
-            <p>Distance meters: {distance}</p>
-            {/* Display the bottom limit of the game area */}
-            <p>Bottom: {bottomLimit}</p>
-            {/* Indicate whether the ball has been hit */}
-            <p>IsHit: {isHit ? "true" : "false"}</p>
-            {/* Restart button for debugging purposes */}
-            <button onClick={toggleShowHitbox}>Display Hitbox</button>
-            {/* Display the high score */}
-            <p>Highscore: {highScore}m</p>
-            <p>{hitStrength}</p>
-            <>
-              {database ? (
-                database.map((item, index) => (
-                  <div key={index}>
-                    <p>Distance: {item.distance}</p>
-                  </div>
-                ))
-              ) : (
-                <p>Loading data...</p>
-              )}
-            </>
-          </>
-        )}
-      </div>
-
+      <HUD
+        showHUD={showHUD}
+        lastHitPosition={lastHitPosition}
+        ballPosition={ballPosition}
+        hitAngle={hitAngle}
+        horizontalVelocity={horizontalVelocity}
+        verticalVelocity={verticalVelocity}
+        distance={distance}
+        bottomLimit={bottomLimit}
+        isHit={isHit}
+        highScore={highScore}
+        hitStrength={hitStrength}
+        toggleShowHitbox={toggleShowHitbox}
+      />
       <div
-        className="highScoreContainer"
-        style={{ position: "fixed", bottom: "10px", right: "10px" }}
+        ref={gameAreaRef}
+        className="game-area"
+        tabIndex={0}
+        onMouseUp={handleMouseUp}
+        onMouseDown={handleMouseDown}
       >
-        <p>Highscore: {highScore}</p>
+        {/* Background layers with parallax scrolling effect */}
+        <Background scrollLeft={scrollLeft} />
+
+        {/* Scrollable container for the game elements to allow for a larger virtual play area */}
+        <div
+          className="scroll-container"
+          style={{ transform: `translateX(-${scrollLeft}px)` }}
+        >
+          {/* Game markers indicating distance and render sign positions */}
+          <Markers gameAreaWidth={gameAreaWidth} />
+
+          {/* The Santa component, just Santa. :) Debug hitbox is in this component */}
+          <Santa
+            showHitbox={showHitbox}
+            hitboxTopBoundary={hitboxTopBoundary}
+            hitboxBottomBoundary={hitboxBottomBoundary}
+            bottomLimit={bottomLimit}
+          />
+
+          {/* The Ball component, representing the object being hit in the game */}
+          <Ball
+            top={ballPosition.top}
+            left={ballPosition.left}
+            isSpinning={isSpinning}
+            distance={distance}
+          />
+
+          {/* The Bat component, controlled by the player to hit the ball */}
+          <Bat isHit={isHit} />
+
+          {/* Visual representation of the ground */}
+          <div className="ground"></div>
+        </div>
       </div>
-      {/* Scrollable container for the game elements to allow for a larger virtual play area */}
-      <div
-        className="scroll-container"
-        style={{ transform: `translateX(-${scrollLeft}px)` }}
-      >
-        {/* Game markers indicating distance and render sign positions */}
-        <Markers gameAreaWidth={gameAreaWidth} />
-
-        {/* The Santa component, just Santa. :) Debug hitbox is in this component */}
-        <Santa
-          showHitbox={showHitbox}
-          hitboxTopBoundary={hitboxTopBoundary}
-          hitboxBottomBoundary={hitboxBottomBoundary}
-          bottomLimit={bottomLimit}
-        />
-
-        {/* The Ball component, representing the object being hit in the game */}
-        <Ball
-          top={ballPosition.top}
-          left={ballPosition.left}
-          isSpinning={isSpinning}
-          distance={distance}
-        />
-
-        {/* The Bat component, controlled by the player to hit the ball */}
-        <Bat isHit={isHit} />
-
-        {/* Visual representation of the ground */}
-        <div className="ground"></div>
-      </div>
-    </div>
+    </>
   );
 };
 
