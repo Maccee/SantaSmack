@@ -55,7 +55,7 @@ const App = () => {
   const maxReactionTime = 100; // slowest expected reaction time
   // Define your minimum and maximum hit strengths
   const minHitStrength = 15;
-  const maxHitStrength = 120;
+  const maxHitStrength = 45;
 
   // SCROLLING
   const gameAreaRef = useRef(null); // Game area reference for scrolling
@@ -283,9 +283,7 @@ const App = () => {
       if (event.keyCode === 220 || event.keyCode === 192) {
         toggleHUD();
       }
-      if (event.keyCode === 32) {
-        handleMouseUp();
-      }
+      
     };
 
     // Add event listener
