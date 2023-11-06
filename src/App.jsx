@@ -28,16 +28,18 @@ const App = () => {
   const [isSpinning, setIsSpinning] = useState(false); // Ball spinning after swing
 
   // Debug console
+  const [showHUD, setShowHUD] = useState(false);
   const [lastHitPosition, setLastHitPosition] = useState({ top: 0, left: 0 });
   const [highScore, setHighScore] = useState(0);
   const [distance, setDistance] = useState("0")
 
   // Hitbox
-  const [showHitbox, setShowHitbox] = useState(true); // Toggle visibility
+  const [showHitbox, setShowHitbox] = useState(false); // Toggle visibility
   const [hitboxEntryTime, setHitboxEntryTime] = useState(null); // Time when ball enters hitbox in ms since refresh
   const [hitboxExitTime, setHitboxExitTime] = useState(null); // Time when ball exits hitbox in ms since refresh
-  const hitboxTopBoundary = bottomLimit - 200; // Hitbox top 
-  const hitboxBottomBoundary = bottomLimit + 30; // Hitbox bottom
+  const hitboxTopBoundary = bottomLimit - 180; // Hitbox top 
+  const hitboxBottomBoundary = bottomLimit + 0; // Hitbox bottom
+  const hitboxTransitTime = 250; // The time in ms the ball travels through hitbox
 
   // Physics
   const gravity = 0.1; // Downward force that pulls ball down while flying
@@ -47,10 +49,10 @@ const App = () => {
   // For hitStrenght calculations
   const [mouseDownTime, setMouseDownTime] = useState(0); // The performance.now time when mouse is pressed down
   // Define your minimum and maximum reaction times
-  const minReactionTime = 20; // fastest expected reaction time
-  const maxReactionTime = 180; // slowest expected reaction time
+  const minReactionTime = 25; // fastest expected reaction time
+  const maxReactionTime = 100; // slowest expected reaction time
   // Define your minimum and maximum hit strengths
-  const minHitStrength = 10;
+  const minHitStrength = 25;
   const maxHitStrength = 45;
 
   // SCROLLING
@@ -84,6 +86,7 @@ const App = () => {
       verticalVelocity > 0
     ) {
       setHitboxEntryTime(performance.now());
+      // console.log("enter", performance.now());
     }
     if (
       ballPosition.top > hitboxBottomBoundary &&
@@ -91,6 +94,7 @@ const App = () => {
       verticalVelocity > 1
     ) {
       setHitboxExitTime(performance.now());
+      // console.log("exit", performance.now());
     }
   }, [ballPosition.top, ballPosition.left, verticalVelocity, bottomLimit]);
 
@@ -189,15 +193,16 @@ const App = () => {
 
     const mouseUpTime = performance.now(); // Performance time in ms when mouseUP
     const reactionTime = mouseUpTime - mouseDownTime; // Calculate how fast user clicks mouse
-    
+
     const clicked = performance.now(); // This is old, but I use it to calculate the swing angle.
 
+    // console.log("clicked", performance.now());
+
     // For current hitbox settings it takes roughly 300ms for the ball to travel through the hitbox.
-    // Within that time the player should be able to swing.
+    // Within that hitboxTransitTime the player should be able to swing.
     // In here we check if the 'clicked' is within the transitTime by comparing it to the hitbox entry time.
     // Example, entry time is 3000ms, exit time is 3000ms + hitboxTransitTime = 3300ms.
     // If the 'clicked' time in ms is between 3000ms and 3300ms the player will hit the ball.
-    const hitboxTransitTime = 300;
     if (
       clicked >= hitboxEntryTime &&
       clicked <= hitboxEntryTime + hitboxTransitTime
@@ -237,6 +242,7 @@ const App = () => {
     // Invert the reaction time to get the hit strength such that a lower reaction time gives a higher hit strength
     const normalizedTime = (clampedReactionTime - minReactionTime) / (maxReactionTime - minReactionTime);
     const hitStrength = maxHitStrength - normalizedTime * (maxHitStrength - minHitStrength);
+    console.log(reactionTime, hitStrength);
     return hitStrength;
   };
 
@@ -251,13 +257,39 @@ const App = () => {
     setIsSpinning(false); // No spinning anymore
     setHitboxEntryTime(null) // reset the hitbox entry times
     setHitboxExitTime(null)
-    
+
     // Reset the ball position to the start
     setBallPosition({
       top: bottomLimit - 250,
       left: 100,
     });
   };
+
+  // Hitbox toggle function
+  const toggleShowHitbox = () => {
+    setShowHitbox(prevShowHitbox => !prevShowHitbox);
+  };
+
+  // Toggle HUD
+  const toggleHUD = () => {
+    setShowHUD(prevShowHUD => !prevShowHUD);
+  };
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      // console.log(event.key, event.keyCode);
+      // The tilde key's keyCode is 220
+      if (event.keyCode === 220) {
+        toggleHUD();
+      }
+    };
+
+    // Add event listener
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Remove event listener on cleanup
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
 
 
   // APP RENDER
@@ -274,34 +306,44 @@ const App = () => {
         style={{ transform: `translateX(-${scrollLeft / 10}px)` }}
       ></div>
 
+
       {/* HUD (Heads-Up Display) for displaying game stats and controls */}
-      <div className="hud" style={{ position: "fixed", top: 0, left: 0 }}>
-        <h2>Debug Console</h2>
-        {/* Display the last hit position */}
-        <p>
-          Last Hit Position: {lastHitPosition.top.toFixed(0)}px from top,
-          {lastHitPosition.left.toFixed(0)}px from left
-        </p>
-        {/* Display the current ball position */}
-        <p>Ball Position: {ballPosition.top.toFixed(0)}px</p>
-        {/* Display the angle at which the ball was hit */}
-        <p>Hit Angle: {hitAngle.toFixed(0)}°</p>
-        {/* Display the horizontal velocity of the ball */}
-        <p>Horizontal Velocity: {horizontalVelocity.toFixed(2)}px/frame</p>
-        {/* Display the current distance traveled by the ball */}
-        <p>Distance Right: {ballPosition.left.toFixed(0)}px</p>
-        {/* Display the current distance in meters (assuming 100px = 1m) */}
-        <p>Distance meters: {distance}</p>
-        {/* Display the bottom limit of the game area */}
-        <p>Bottom: {bottomLimit}</p>
-        {/* Indicate whether the ball has been hit */}
-        <p>IsHit: {isHit ? "true" : "false"}</p>
-        {/* Restart button for debugging purposes */}
-        <button onClick={resetGame}>Debug Restart</button>
-        {/* Display the high score */}
-        <p>Highscore: {highScore}m</p>
+      <div className="hud" style={{ position: "fixed", top: 0, right: 0 }}>
+        {showHUD && (
+          <>
+            <h2>Debug Console</h2>
+            {/* Display the last hit position */}
+            <p>
+              Last Hit Position: {lastHitPosition.top.toFixed(0)}px from top,
+              {lastHitPosition.left.toFixed(0)}px from left
+            </p>
+            {/* Display the current ball position */}
+            <p>Ball Position: {ballPosition.top.toFixed(0)}px</p>
+            {/* Display the angle at which the ball was hit */}
+            <p> Hit Angle: {hitAngle.toFixed(0)}° </p>
+            {/* Display the horizontal velocity of the ball */}
+            <p>Horizontal Velocity: {horizontalVelocity.toFixed(2)}px/frame</p>
+            <p>Vertical Velocity: {verticalVelocity.toFixed(2)}px/frame</p> {/* Corrected the duplicate "Horizontal Velocity" label */}
+            {/* Display the current distance traveled by the ball */}
+            <p>Distance Right: {ballPosition.left.toFixed(0)}px</p>
+            {/* Display the current distance in meters (assuming 100px = 1m) */}
+            <p>Distance meters: {distance}</p>
+            {/* Display the bottom limit of the game area */}
+            <p>Bottom: {bottomLimit}</p>
+            {/* Indicate whether the ball has been hit */}
+            <p>IsHit: {isHit ? "true" : "false"}</p>
+            {/* Restart button for debugging purposes */}
+            <button onClick={toggleShowHitbox}>Display Hitbox</button>
+            {/* Display the high score */}
+            <p>Highscore: {highScore}m</p>
+          </>
+        )}
       </div>
 
+
+      <div className="highScoreContainer" style={{ position: "fixed", bottom: "10px", right: "10px" }}>
+        <p>Highscore: {highScore}</p>
+      </div>
       {/* Scrollable container for the game elements to allow for a larger virtual play area */}
       <div className="scroll-container" style={{ transform: `translateX(-${scrollLeft}px)` }}>
 

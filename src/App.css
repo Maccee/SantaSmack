@@ -42,7 +42,7 @@ body {
   height: 100px;
   border-radius: 100px;
   position: relative;
-  background-image: url("./assets/Juha.png");
+  background-image: url("./assets/elf.svg");
   background-size: contain;
   transform: translateY(-50%);
   animation: spin 1s linear infinite;
@@ -100,7 +100,7 @@ body {
 .hud {
   z-index: 1000;
   background-color: rgba(255, 255, 255, 0.777);
-  padding: 1rem;
+  
 }
 
 .ground {
@@ -154,4 +154,11 @@ body {
   color: rgb(0, 0, 0);
   font-weight: 700;
   font-family: "Mountains of Christmas", serif;
+}
+.highScoreContainer {
+  font-family: "Mountains of Christmas", serif;
+  font-size: 2rem;
+  font-weight: 700;
+  z-index: 1000;
+  color: yellow;
 }
