@@ -278,7 +278,7 @@ const App = () => {
     const handleKeyDown = (event) => {
       console.log(event.key, event.keyCode);
       // The tilde key's keyCode is 220
-      if (event.keyCode === 220 || 192) {
+      if (event.keyCode === 220 || event.keyCode === 192) {
         toggleHUD();
       }
     };
