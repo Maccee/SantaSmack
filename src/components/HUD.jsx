@@ -22,7 +22,8 @@ const HUD = ({
     <div className="hud" style={{ position: "fixed", top: 0, right: 0 }}>
       <h2>Debug Console</h2>
       <p>Hit Position from top: {lastHitPosition.top.toFixed(0)}px</p>
-      <p>Ball Position: {ballPosition.top.toFixed(0)}px</p>
+      <p>Ball Position Top: {ballPosition.top.toFixed(0)}px</p>
+      <p>Ball Position Left: {ballPosition.left.toFixed(0)}px</p>
       <p>Hit Angle: {hitAngle.toFixed(0)}°</p>
       <p>
         Horizontal Velocity: {horizontalVelocityRef.current.toFixed(2)} /{" "}

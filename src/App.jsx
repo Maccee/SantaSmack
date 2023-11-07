@@ -64,8 +64,8 @@ const App = () => {
   const minHitStrength = 15;
   const maxHitStrength = 45;
 
-  // Name
-  const [name, setName] = useState("Makke");
+  // HIGHSCORE
+  
   const [highScoreData, setHighScoreData] = useState({});
   const [showHighScoreData, setShowHighScoreData] = useState(false);
 
@@ -147,7 +147,7 @@ const App = () => {
         setHighScoreData(updatedScores);
       }
     };
-
+    
     if (isHit && horizontalVelocityRef.current === 0) {
       // Check if the distance is greater than the last high score data entry
       if (
@@ -155,7 +155,6 @@ const App = () => {
         parseFloat(distance) >
           parseFloat(highScoreData[highScoreData.length - 1].distance)
       ) {
-        console.log("posting");
         handleNewHighScore();
       }
     }
@@ -187,16 +186,7 @@ const App = () => {
       // Check horizontal velocity and stop the ball if below threshold
       if (Math.abs(horizontalVelocityRef.current) < 1) {
         horizontalVelocityRef.current = 0;
-
-        console.log(
-          (ballPositionRef.current.left / 100).toFixed(2),
-          highScore
-        );
-
         setIsSpinning(false);
-      }
-      if ((ballPositionRef.current.left / 100).toFixed(2) > highScore) {
-        setHighScore((ballPositionRef.current.left / 100).toFixed(2));
       }
       // Scroll
       setScrollLeft(() => {
@@ -207,13 +197,14 @@ const App = () => {
         );
       });
 
-      if (horizontalVelocityRef.current > 0) {
+      if (Math.abs(horizontalVelocityRef.current) > 0) {
         setDistance((ballPositionRef.current.left / 100).toFixed(2));
+        if (distance > highScore) {
+          setHighScore((ballPositionRef.current.left / 100).toFixed(2));
+        }
       }
-
       // Update position state
       setBallPosition({ top: newTop, left: newLeft });
-
       // Update refs
       ballPositionRef.current = { top: newTop, left: newLeft };
       // Request next frame
@@ -308,7 +299,7 @@ const App = () => {
         <button onClick={() => setShowHighScoreData((prev) => !prev)}>
           Toggle Highscore
         </button>
-        <p>Your Session High: {parseFloat(highScore)}m</p>
+        <p>Your Session High: {highScore}m</p>
       </div>
       {/* HUD (Heads-Up Display) for displaying game stats and controls */}
       <HUD
