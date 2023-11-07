@@ -5,10 +5,14 @@ const HighScoreData = ({ highScoreData, showHighScoreData }) => {
 
   return (
     <div className="highscorewindow">
+      HIGHSCORES
+      <br/><br/>
+      
       {highScoreData ? (
         highScoreData.map((item, index) => (
           <div key={index}>
-            <p>Distance: {item.distance}</p>
+            <p>{item.name} {item.distance}</p>
+            
           </div>
         ))
       ) : (

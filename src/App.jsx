@@ -131,10 +131,43 @@ const App = () => {
 
   // CHECK FOR YOUR DISTANCE OF THE SESSION!
   useEffect(() => {
-    if (parseFloat(distance) > parseFloat(highScore)) {
+    const handleNewHighScore = async () => {
+      const name = prompt("Congrats on the high score! Enter your name:");
+      if (name) {
+        const data = {
+          name: name,
+          angle: hitAngle, // Assuming hitAngle is available in this scope
+          hitStrength: hitStrength, // Same assumption as above
+          gameAreaHeight: gameAreaHeight, // Same assumption as above
+          distance: distance,
+        };
+        await postDataToAzureFunction(data);
+        // Optionally, you can refresh the highScoreData after posting
+        const updatedScores = await getDataFromAzureFunction();
+        setHighScoreData(updatedScores);
+      }
+    };
+
+    if (distance > highScore) {
       setHighScore(distance);
     }
-  }, [distance]);
+    
+    if (
+      isHit &&
+      horizontalVelocityRef.current === 0
+    ) {
+      
+      // Check if the distance is greater than the last high score data entry
+      if (
+        highScoreData.length < 10 ||
+        parseFloat(distance) >
+          parseFloat(highScoreData[highScoreData.length - 1].distance)
+      ) {
+        console.log("posting")
+        handleNewHighScore();
+      }
+    }
+  }, [distance, horizontalVelocityRef.current]);
 
   // MAIN BALL MOVEMENT AND FLIGHT PHYSICS
   useEffect(() => {
@@ -263,6 +296,7 @@ const App = () => {
   // Toggle HUD
   const toggleHUD = () => {
     setShowHUD((prevShowHUD) => !prevShowHUD);
+    
   };
 
   // APP RENDER
