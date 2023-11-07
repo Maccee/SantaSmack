@@ -1,4 +1,4 @@
-const Ball = ({ top, left, isSpinning, distance }) => {
+const Ball = ({ top, left, isSpinning, distance, isHit }) => {
   // Conditionally prevent the distance marker of the ball to go offscreen.
   const minTopPosition = 0; 
   const distanceTop = top < minTopPosition ? minTopPosition : top - 100;
@@ -17,7 +17,9 @@ const Ball = ({ top, left, isSpinning, distance }) => {
   return (
     <>
       <div className="ball" style={ballStyle}></div>
-      <div className="distance" style={distanceStyle}>{distance}</div>
+      {isHit && (
+        <div className="distance" style={distanceStyle}>{distance}</div>
+      )}
     </>
   );
 };

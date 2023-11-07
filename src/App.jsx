@@ -16,7 +16,7 @@ const App = () => {
   // Define game area width, height and ground level
   const gameAreaWidth = 116000; // in px
   const [gameAreaHeight, setGameAreaHeight] = useState(window.innerHeight); // Client browser window height
-  const bottomLimit = gameAreaHeight - 70; // 70px from bottom
+  const [bottomLimit, setBottomLimit] = useState(gameAreaHeight - 70); // 70px from bottom
 
   // BALL MOVEMENT
   // Ball position, start position set 250px from bottom and 100px from left
@@ -52,7 +52,7 @@ const App = () => {
   const [gravity, setGravity] = useState(0.1); // Downward force that pulls ball down while flying
   const airResistance = 0.001; // Resistance to slow the ball in the air
   const bounce = 0.5; // 50% bounce strength
-  const [isAtRest, setIsAtRest] = useState(false);
+  
 
   // For hitStrength calculations
   const [hitStrength, setHitStrength] = useState(0);
@@ -86,13 +86,15 @@ const App = () => {
 
   // Event listener if screen height changes during playing
   useEffect(() => {
+    console.log("resize", bottomLimit)
     const handleResize = () => {
       setGameAreaHeight(window.innerHeight);
+      setBottomLimit(gameAreaHeight -70);
     };
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [gameAreaHeight]);
 
   // TOGGLE HUD
   useEffect(() => {
@@ -189,7 +191,7 @@ const App = () => {
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [bottomLimit]);
 
   // Get performance time in ms when user press mouseDOWN
   const handleMouseDown = () => {
@@ -346,6 +348,7 @@ const App = () => {
             left={ballPosition.left}
             isSpinning={isSpinning}
             distance={distance}
+            isHit={isHit}
           />
 
           {/* The Bat component, controlled by the player to hit the ball */}
