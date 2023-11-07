@@ -25,13 +25,15 @@ const getDataFromAzureFunction = async () => {
       throw new Error("The fetched data is not an array.");
     }
 
-    return data.sort((a, b) => b.distance - a.distance);
+    // Sort the data and then slice the top 10
+    const sortedData = data.sort((a, b) => b.distance - a.distance).slice(0, 10);
+
+    return sortedData;
   } catch (error) {
     console.error("Error getting or sorting data from Azure Function:", error);
-    // Handle the error appropriately here
-    // For instance, you might want to return an empty array if there's an error
-    return []; // Or re-throw a custom error, or handle it some other way
+    return []; // Return an empty array or handle the error as needed
   }
 };
+
 
 export { postDataToAzureFunction, getDataFromAzureFunction };
