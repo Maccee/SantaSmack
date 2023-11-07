@@ -17,7 +17,6 @@ const App = () => {
   const gameAreaWidth = 116000; // in px
   const [gameAreaHeight, setGameAreaHeight] = useState(window.innerHeight); // Client browser window height
   const bottomLimit = gameAreaHeight - 70; // 70px from bottom
-  const [keyActive, setKeyActive] = useState(false);
 
   // BALL MOVEMENT
   // Ball position, start position set 250px from bottom and 100px from left
@@ -31,23 +30,27 @@ const App = () => {
   const [isHit, setIsHit] = useState(false); // Check if swinged
   const [isSpinning, setIsSpinning] = useState(false); // Ball spinning after swing
 
+  const verticalVelocityRef = useRef(verticalVelocity);
+  const horizontalVelocityRef = useRef(horizontalVelocity);
+  const ballPositionRef = useRef(ballPosition);
+
   // Debug console
-  const [showHUD, setShowHUD] = useState(false);
+  const [showHUD, setShowHUD] = useState(true);
   const [lastHitPosition, setLastHitPosition] = useState({ top: 0, left: 0 });
   const [highScore, setHighScore] = useState(0);
   const [distance, setDistance] = useState(0);
 
   // Hitbox
-  const [showHitbox, setShowHitbox] = useState(false); // Toggle visibility
+  const [showHitbox, setShowHitbox] = useState(true); // Toggle visibility
   const [hitboxEntryTime, setHitboxEntryTime] = useState(null); // Time when ball enters hitbox in ms since refresh
   const [hitboxExitTime, setHitboxExitTime] = useState(null); // Time when ball exits hitbox in ms since refresh
-  const hitboxTopBoundary = bottomLimit - 180; // Hitbox top
-  const hitboxBottomBoundary = bottomLimit + 0; // Hitbox bottom
+  const hitboxTopBoundary = bottomLimit - 200; // Hitbox top
+  const hitboxBottomBoundary = bottomLimit - 20; // Hitbox bottom
   const hitboxTransitTime = 250; // The time in ms the ball travels through hitbox
 
   // Physics
   const [gravity, setGravity] = useState(0.1); // Downward force that pulls ball down while flying
-  const airResistance = 0.9999; // Resistance to slow the ball in the air
+  const airResistance = 0.001; // Resistance to slow the ball in the air
   const bounce = 0.5; // 50% bounce strength
   const [isAtRest, setIsAtRest] = useState(false);
 
@@ -59,7 +62,7 @@ const App = () => {
   const maxReactionTime = 100; // slowest expected reaction time
   // Define your minimum and maximum hit strengths
   const minHitStrength = 15;
-  const maxHitStrength = 17;
+  const maxHitStrength = 45;
 
   // Name
   const [name, setName] = useState("Makke");
@@ -69,16 +72,6 @@ const App = () => {
   // SCROLLING
   const gameAreaRef = useRef(null); // Game area reference for scrolling
   const [scrollLeft, setScrollLeft] = useState(0); // Scroll position
-
-  console.log("Component render", {
-    verticalVelocity,
-    horizontalVelocity,
-    gravity,
-    airResistance,
-    gameAreaWidth,
-    isHit,
-    gameAreaHeight,
-  });
 
   useEffect(() => {
     if (gameAreaRef.current) {
@@ -113,122 +106,132 @@ const App = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Define hitbox entry and compare it to mouseUP to determine ball swing angle
-  // Hitbox exit is just used for reference for future
+  // HITBOX
   useEffect(() => {
     if (
       ballPosition.top > hitboxTopBoundary &&
       ballPosition.top < hitboxTopBoundary + 25 &&
       ballPosition.left === 100 &&
-      verticalVelocity > 0
+      verticalVelocityRef.current > 1
     ) {
       setHitboxEntryTime(performance.now());
-      // console.log("enter", performance.now());
+      //console.log("enter", performance.now());
     }
     if (
-      ballPosition.top > hitboxBottomBoundary &&
+      ballPosition.top > hitboxBottomBoundary - 25 &&
       ballPosition.left === 100 &&
-      verticalVelocity > 1
+      verticalVelocityRef.current > 0
     ) {
       setHitboxExitTime(performance.now());
-      // console.log("exit", performance.now());
+      //console.log("exit", performance.now());
     }
-  }, [ballPosition.top, ballPosition.left, verticalVelocity, bottomLimit]);
+  }, [ballPosition.top]);
+
+  // CHECK FOR YOUR DISTANCE OF THE SESSION!
+  useEffect(() => {
+    if (parseFloat(distance) > parseFloat(highScore)) {
+      setHighScore(distance);
+    }
+  }, [distance]);
 
   // MAIN BALL MOVEMENT AND FLIGHT PHYSICS
   useEffect(() => {
-    const verticalVelocityRef = useRef(verticalVelocity);
-    const horizontalVelocityRef = useRef(horizontalVelocity);
-    const ballPositionRef = useRef(ballPosition); // Use the current state as the initial value
-
-    let animationFrameId; // This will hold our frame ID from requestAnimationFrame
-
+    let animationFrameId;
     const updatePosition = () => {
-      // Calculate the new velocity
-      verticalVelocityRef.current += gravity;
-      horizontalVelocityRef.current *= isHit ? airResistance : 1;
+      // Update velocities
+      verticalVelocityRef.current += gravity; // gravity should pull the ball down, so it should be added to the velocity
+      horizontalVelocityRef.current *= 1 - airResistance; // air resistance should slow the ball down, so it's subtracted
 
-      // Calculate the new position
+      // Update position
       let newTop = ballPositionRef.current.top + verticalVelocityRef.current;
       let newLeft =
         ballPositionRef.current.left + horizontalVelocityRef.current;
 
-      // Apply checks and make changes if necessary
+      // Check for bounce
       if (newTop >= bottomLimit) {
         newTop = bottomLimit;
-        verticalVelocityRef.current *= -bounce;
-        horizontalVelocityRef.current *= 1 - 0.1;
-        if (Math.abs(horizontalVelocityRef.current) < 1) {
-          setIsSpinning(false); // Stop spinning
+        verticalVelocityRef.current = -verticalVelocityRef.current * bounce;
+        if (Math.abs(verticalVelocityRef.current) < bounce) {
+          verticalVelocityRef.current = 0;
         }
+        horizontalVelocityRef.current *= 1 - airResistance - 0.1;
       }
 
-      // Update the ref with the new position
+      // Check horizontal velocity and stop the ball if below threshold
+      if (Math.abs(horizontalVelocityRef.current) < 1) {
+        horizontalVelocityRef.current = 0;
+        
+        setIsSpinning(false);
+      }
+
+      // Scroll
+      setScrollLeft((prevScrollLeft) => {
+        const newScrollLeft = newLeft - window.innerWidth / 5; // Ball position while scrolling
+        return Math.max(
+          0,
+          Math.min(newScrollLeft, gameAreaWidth - window.innerWidth)
+        );
+      });
+
+      if (horizontalVelocityRef.current > 0) {
+        setDistance((ballPositionRef.current.left / 100).toFixed(2));
+      }
+
+      // Update position state
+      setBallPosition({ top: newTop, left: newLeft });
+
+      // Update refs
       ballPositionRef.current = { top: newTop, left: newLeft };
-
-      // Set state that should cause re-render
-      setBallPosition(ballPositionRef.current);
-      setVerticalVelocity(verticalVelocityRef.current);
-      setHorizontalVelocity(horizontalVelocityRef.current);
-      setDistance((newLeft / 100).toFixed(2)); // Update distance based on new left position
-
-      // Request next animation frame
+      // Request next frame
       animationFrameId = requestAnimationFrame(updatePosition);
     };
-
-    // Start the animation loop
     animationFrameId = requestAnimationFrame(updatePosition);
-
-    // Clean up function
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [
-    gravity,
-    airResistance,
-    bounce,
-    bottomLimit,
-    isHit,
-    setDistance,
-    setIsSpinning,
-  ]); // Only include values and setter functions that should trigger the effect to restart
+  }, []);
 
   // Get performance time in ms when user press mouseDOWN
   const handleMouseDown = () => {
     setMouseDownTime(performance.now());
+    //console.log("mousedown", mouseDownTime);
   };
-  // Do the swing when mouseUP
   const handleMouseUp = () => {
-    // If you want to restart, just click again after swing
+    setIsHit(true);
     if (isHit) {
       resetGame();
-      return;
     }
-    setIsHit(true); // toggle swing, animation etc.
-    const mouseUpTime = performance.now(); // Performance time in ms when mouseUP
-    const reactionTime = mouseUpTime - mouseDownTime; // Calculate how fast user clicks mouse
-    const clicked = performance.now(); // This is old, but I use it to calculate the swing angle.
+    const mouseUpTime = performance.now();
+    const reactionTime = mouseUpTime - mouseDownTime;
+
     if (
-      clicked >= hitboxEntryTime &&
-      clicked <= hitboxEntryTime + hitboxTransitTime
+      !isHit &&
+      mouseUpTime >= hitboxEntryTime &&
+      mouseUpTime <= hitboxEntryTime + hitboxTransitTime
     ) {
-      setIsSpinning(true); // start spinning the ball
-      const timeIntoHitbox = clicked - hitboxEntryTime;
-      const angle = 90 - (timeIntoHitbox / hitboxTransitTime) * 180;
+      setIsHit(true);
+      setIsSpinning(true);
+
+      const hitStrengthValue = calculateHitStrength(reactionTime);
+      setHitStrength(hitStrengthValue);
+
+      const angle =
+        90 - ((mouseUpTime - hitboxEntryTime) / hitboxTransitTime) * 180;
       const radians = (angle * Math.PI) / 180;
-      // HitStrength is defined by how was the player can click.
-      setHitStrength(calculateHitStrength(reactionTime));
-      // console.log("hit strength", hitStrength);
-      // Set direction of velocity. Same speed for up and right.
-      // MAIN BALL MOVEMENT useEffect has these dependancies and updates when these change.
-      const verticalVelocityComponent = hitStrength * Math.sin(radians);
-      const horizontalVelocityComponent = hitStrength * Math.cos(radians);
+      const verticalVelocityComponent = hitStrengthValue * Math.sin(radians);
+      const horizontalVelocityComponent = hitStrengthValue * Math.cos(radians);
+
       setVerticalVelocity(-verticalVelocityComponent);
       setHorizontalVelocity(horizontalVelocityComponent);
-      // For HUD
+
+      verticalVelocityRef.current = -verticalVelocityComponent;
+      horizontalVelocityRef.current = horizontalVelocityComponent;
+
+      // FOR HUD ONLY
       setLastHitPosition({ top: ballPosition.top, left: ballPosition.left });
       setHitAngle(angle);
     }
+    
   };
 
   // Calculate hit strength based on reaction time. ChatGPT at its best.
@@ -244,14 +247,15 @@ const App = () => {
       (maxReactionTime - minReactionTime);
     const hitStrength =
       maxHitStrength - normalizedTime * (maxHitStrength - minHitStrength);
-    console.log(reactionTime, hitStrength);
+    //console.log("Reactiontime", reactionTime, "Hitstrenght", hitStrength);
     return hitStrength;
   };
 
   // New swing actually. Reset to initial positions and states.
   const resetGame = () => {
-    setVerticalVelocity(-7); // Reset to initial vertical velocity
-    setHorizontalVelocity(0); // Reset to initial horizontal velocity
+    const resetTop = bottomLimit - 250;
+    const resetLeft = 100;
+
     setHitAngle(0); // Reset hit angle
     setIsHit(false); // Reset hit status
     setLastHitPosition({ top: 0, left: 0 }); // Reset the last hit position
@@ -259,13 +263,17 @@ const App = () => {
     setIsSpinning(false); // No spinning anymore
     setHitboxEntryTime(null); // reset the hitbox entry times
     setHitboxExitTime(null);
-    setDistance(0);
-
-    // Reset the ball position to the start
+    setDistance(1);
     setBallPosition({
-      top: bottomLimit - 250,
-      left: 100,
+      top: resetTop,
+      left: resetLeft,
     });
+    ballPositionRef.current = {
+      top: resetTop,
+      left: resetLeft,
+    };
+    verticalVelocityRef.current = -7;
+    horizontalVelocityRef.current = 0;
   };
 
   // Hitbox toggle function
