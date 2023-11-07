@@ -198,11 +198,11 @@ const App = () => {
       });
 
       if (Math.abs(horizontalVelocityRef.current) > 0) {
-        setDistance((ballPositionRef.current.left / 100).toFixed(2));
-        if (distance > highScore) {
-          setHighScore((ballPositionRef.current.left / 100).toFixed(2));
-        }
+        const newDistance = parseFloat((ballPositionRef.current.left / 100).toFixed(2));
+        setDistance(newDistance);
+        setHighScore(prevHighScore => Math.max(prevHighScore, newDistance));
       }
+      
       // Update position state
       setBallPosition({ top: newTop, left: newLeft });
       // Update refs
@@ -299,7 +299,7 @@ const App = () => {
         <button onClick={() => setShowHighScoreData((prev) => !prev)}>
           Toggle Highscore
         </button>
-        <p>Your Session High: {highScore}m</p>
+        <p>Your Session High: {highScore.toFixed(2)}m</p>
       </div>
       {/* HUD (Heads-Up Display) for displaying game stats and controls */}
       <HUD
