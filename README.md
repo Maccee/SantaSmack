@@ -1,5 +1,7 @@
 # Santa Hit
 
 ## TODO:
-- [ ] Implement HUDi
-- [ ] Add highscore functionality, including all bells and whistles.
+- [ ] Joku hudi
+- [ ] Top10 parhaat.
+- [ ] Muotoilut
+- [ ] äänet.
