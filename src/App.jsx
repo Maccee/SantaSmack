@@ -148,22 +148,14 @@ const App = () => {
       }
     };
 
-    if (distance > highScore) {
-      setHighScore(distance);
-    }
-    
-    if (
-      isHit &&
-      horizontalVelocityRef.current === 0
-    ) {
-      
+    if (isHit && horizontalVelocityRef.current === 0) {
       // Check if the distance is greater than the last high score data entry
       if (
         highScoreData.length < 10 ||
         parseFloat(distance) >
           parseFloat(highScoreData[highScoreData.length - 1].distance)
       ) {
-        console.log("posting")
+        console.log("posting");
         handleNewHighScore();
       }
     }
@@ -196,9 +188,16 @@ const App = () => {
       if (Math.abs(horizontalVelocityRef.current) < 1) {
         horizontalVelocityRef.current = 0;
 
+        console.log(
+          (ballPositionRef.current.left / 100).toFixed(2),
+          highScore
+        );
+
         setIsSpinning(false);
       }
-
+      if ((ballPositionRef.current.left / 100).toFixed(2) > highScore) {
+        setHighScore((ballPositionRef.current.left / 100).toFixed(2));
+      }
       // Scroll
       setScrollLeft(() => {
         const newScrollLeft = newLeft - window.innerWidth / 5; // Ball position while scrolling
@@ -296,7 +295,6 @@ const App = () => {
   // Toggle HUD
   const toggleHUD = () => {
     setShowHUD((prevShowHUD) => !prevShowHUD);
-    
   };
 
   // APP RENDER
@@ -310,7 +308,7 @@ const App = () => {
         <button onClick={() => setShowHighScoreData((prev) => !prev)}>
           Toggle Highscore
         </button>
-        <p>Your Distance: {highScore}m</p>
+        <p>Your Session High: {parseFloat(highScore)}m</p>
       </div>
       {/* HUD (Heads-Up Display) for displaying game stats and controls */}
       <HUD
