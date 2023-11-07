@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./App.css";
 import { postDataToAzureFunction, getDataFromAzureFunction } from "./ApiUtils";
-import { calculateHitStrength, resetGame } from './Utils';
+import { calculateHitStrength, resetGame } from "./Utils";
 
 // Component Imports
 import Santa from "./components/Santa";
@@ -36,13 +36,13 @@ const App = () => {
   const ballPositionRef = useRef(ballPosition);
 
   // Debug console
-  const [showHUD, setShowHUD] = useState(true);
+  const [showHUD, setShowHUD] = useState(false);
   const [lastHitPosition, setLastHitPosition] = useState({ top: 0, left: 0 });
   const [highScore, setHighScore] = useState(0);
   const [distance, setDistance] = useState(0);
 
   // Hitbox
-  const [showHitbox, setShowHitbox] = useState(true); // Toggle visibility
+  const [showHitbox, setShowHitbox] = useState(false); // Toggle visibility
   const [hitboxEntryTime, setHitboxEntryTime] = useState(null); // Time when ball enters hitbox in ms since refresh
   const [hitboxExitTime, setHitboxExitTime] = useState(null); // Time when ball exits hitbox in ms since refresh
   const hitboxTopBoundary = bottomLimit - 200; // Hitbox top
@@ -77,7 +77,7 @@ const App = () => {
   useEffect(() => {
     // Handle key down for HUD toggle
     const handleKeyDown = (event) => {
-      console.log(event.key, event.keyCode);
+      //console.log(event.key, event.keyCode);
       if (event.keyCode === 220 || event.keyCode === 192) {
         toggleHUD();
       }
@@ -89,7 +89,7 @@ const App = () => {
       const element = gameAreaRef.current;
       element.scrollTop = element.scrollHeight - element.clientHeight;
     }
-    console.log("init")
+
     getDataFromAzureFunction().then((sortedResult) => {
       setHighScoreData(sortedResult);
     });
@@ -202,18 +202,18 @@ const App = () => {
     setIsHit(true);
     if (isHit) {
       resetGame(
-        setHitAngle, 
-        setIsHit, 
-        setLastHitPosition, 
-        setScrollLeft, 
-        setIsSpinning, 
-        setHitboxEntryTime, 
-        setHitboxExitTime, 
-        setDistance, 
-        setBallPosition, 
-        ballPositionRef, 
-        verticalVelocityRef, 
-        horizontalVelocityRef, 
+        setHitAngle,
+        setIsHit,
+        setLastHitPosition,
+        setScrollLeft,
+        setIsSpinning,
+        setHitboxEntryTime,
+        setHitboxExitTime,
+        setDistance,
+        setBallPosition,
+        ballPositionRef,
+        verticalVelocityRef,
+        horizontalVelocityRef,
         bottomLimit
       );
     }
@@ -228,7 +228,13 @@ const App = () => {
       setIsHit(true);
       setIsSpinning(true);
 
-      const hitStrengthValue = calculateHitStrength(reactionTime, minReactionTime, maxReactionTime, minHitStrength, maxHitStrength);
+      const hitStrengthValue = calculateHitStrength(
+        reactionTime,
+        minReactionTime,
+        maxReactionTime,
+        minHitStrength,
+        maxHitStrength
+      );
       setHitStrength(hitStrengthValue);
 
       const angle =
@@ -244,14 +250,10 @@ const App = () => {
       horizontalVelocityRef.current = horizontalVelocityComponent;
 
       // FOR HUD ONLY
-      setLastHitPosition({ top: ballPosition.top});
+      setLastHitPosition({ top: ballPosition.top });
       setHitAngle(angle);
     }
   };
-
-  
-
-  
 
   // Hitbox toggle function
   const toggleShowHitbox = () => {
