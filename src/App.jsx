@@ -136,7 +136,7 @@ const App = () => {
       if (name) {
         const data = {
           name: name,
-          angle: hitAngle, // Assuming hitAngle is available in this scope
+          hitAngle: hitAngle, // Assuming hitAngle is available in this scope
           hitStrength: hitStrength, // Same assumption as above
           gameAreaHeight: gameAreaHeight, // Same assumption as above
           distance: distance,
