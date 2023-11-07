@@ -4,7 +4,9 @@ const HUD = ({
   ballPosition,
   hitAngle,
   horizontalVelocity,
+  horizontalVelocityRef,
   verticalVelocity,
+  verticalVelocityRef,
   distance,
   bottomLimit,
   isHit,
@@ -20,20 +22,19 @@ const HUD = ({
     <div className="hud" style={{ position: "fixed", top: 0, right: 0 }}>
       <h2>Debug Console</h2>
       <p>
-        Last Hit Position: {lastHitPosition.top.toFixed(0)}px from top,
-        {lastHitPosition.left.toFixed(0)}px from left
+        Hit Position from top: {lastHitPosition.top.toFixed(0)}px
       </p>
       <p>Ball Position: {ballPosition.top.toFixed(0)}px</p>
       <p>Hit Angle: {hitAngle.toFixed(0)}°</p>
-      <p>Horizontal Velocity: {horizontalVelocity.toFixed(2)}px/frame</p>
-      <p>Vertical Velocity: {verticalVelocity.toFixed(2)}px/frame</p>
+      <p>Horizontal Velocity: {horizontalVelocityRef.current.toFixed(2)} / {horizontalVelocity.toFixed(2)}px/frame</p>
+      <p>Vertical Velocity: {verticalVelocityRef.current.toFixed(2)} / {verticalVelocity.toFixed(2)}px/frame</p>
       <p>Distance Right: {ballPosition.left.toFixed(0)}px</p>
       <p>Distance meters: {distance}</p>
       <p>Bottom: {bottomLimit}</p>
       <p>IsHit: {isHit ? "true" : "false"}</p>
       <button onClick={toggleShowHitbox}>Display Hitbox</button>
       <p>Highscore: {highScore}m</p>
-      <p>{hitStrength}</p>
+      <p>Hitstrength: {hitStrength}</p>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./App.css";
 import { postDataToAzureFunction, getDataFromAzureFunction } from "./ApiUtils";
+import { calculateHitStrength, resetGame } from './Utils';
 
 // Component Imports
 import Santa from "./components/Santa";
@@ -52,7 +53,6 @@ const App = () => {
   const [gravity, setGravity] = useState(0.1); // Downward force that pulls ball down while flying
   const airResistance = 0.001; // Resistance to slow the ball in the air
   const bounce = 0.5; // 50% bounce strength
-  
 
   // For hitStrength calculations
   const [hitStrength, setHitStrength] = useState(0);
@@ -73,40 +73,40 @@ const App = () => {
   const gameAreaRef = useRef(null); // Game area reference for scrolling
   const [scrollLeft, setScrollLeft] = useState(0); // Scroll position
 
+  // SET GAMEAREA // TOGGLE HUD // INITALIZATION
   useEffect(() => {
-    if (gameAreaRef.current) {
-      const element = gameAreaRef.current;
-      element.scrollTop = element.scrollHeight - element.clientHeight;
-    }
-    // GET HIGHSCOREDATA ON REFRESH AND PAGE LOAD
-    getDataFromAzureFunction().then((sortedResult) => {
-      setHighScoreData(sortedResult);
-    });
-  }, []);
-
-  // Event listener if screen height changes during playing
-  useEffect(() => {
-    console.log("resize", bottomLimit)
-    const handleResize = () => {
-      setGameAreaHeight(window.innerHeight);
-      setBottomLimit(gameAreaHeight -70);
-    };
-    window.addEventListener("resize", handleResize);
-    handleResize();
-    return () => window.removeEventListener("resize", handleResize);
-  }, [gameAreaHeight]);
-
-  // TOGGLE HUD
-  useEffect(() => {
+    // Handle key down for HUD toggle
     const handleKeyDown = (event) => {
       console.log(event.key, event.keyCode);
       if (event.keyCode === 220 || event.keyCode === 192) {
         toggleHUD();
       }
     };
+    // Attach keydown event listener
     window.addEventListener("keydown", handleKeyDown);
+    // Set game area scroll position and get high score data
+    if (gameAreaRef.current) {
+      const element = gameAreaRef.current;
+      element.scrollTop = element.scrollHeight - element.clientHeight;
+    }
+    console.log("init")
+    getDataFromAzureFunction().then((sortedResult) => {
+      setHighScoreData(sortedResult);
+    });
+    // Cleanup function to remove event listener
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
+
+  // Event listener if screen height changes during playing
+  useEffect(() => {
+    const handleResize = () => {
+      setGameAreaHeight(window.innerHeight);
+      setBottomLimit(gameAreaHeight - 70);
+    };
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, [gameAreaHeight]);
 
   // HITBOX
   useEffect(() => {
@@ -162,12 +162,12 @@ const App = () => {
       // Check horizontal velocity and stop the ball if below threshold
       if (Math.abs(horizontalVelocityRef.current) < 1) {
         horizontalVelocityRef.current = 0;
-        
+
         setIsSpinning(false);
       }
 
       // Scroll
-      setScrollLeft((prevScrollLeft) => {
+      setScrollLeft(() => {
         const newScrollLeft = newLeft - window.innerWidth / 5; // Ball position while scrolling
         return Math.max(
           0,
@@ -201,7 +201,21 @@ const App = () => {
   const handleMouseUp = () => {
     setIsHit(true);
     if (isHit) {
-      resetGame();
+      resetGame(
+        setHitAngle, 
+        setIsHit, 
+        setLastHitPosition, 
+        setScrollLeft, 
+        setIsSpinning, 
+        setHitboxEntryTime, 
+        setHitboxExitTime, 
+        setDistance, 
+        setBallPosition, 
+        ballPositionRef, 
+        verticalVelocityRef, 
+        horizontalVelocityRef, 
+        bottomLimit
+      );
     }
     const mouseUpTime = performance.now();
     const reactionTime = mouseUpTime - mouseDownTime;
@@ -214,7 +228,7 @@ const App = () => {
       setIsHit(true);
       setIsSpinning(true);
 
-      const hitStrengthValue = calculateHitStrength(reactionTime);
+      const hitStrengthValue = calculateHitStrength(reactionTime, minReactionTime, maxReactionTime, minHitStrength, maxHitStrength);
       setHitStrength(hitStrengthValue);
 
       const angle =
@@ -230,53 +244,14 @@ const App = () => {
       horizontalVelocityRef.current = horizontalVelocityComponent;
 
       // FOR HUD ONLY
-      setLastHitPosition({ top: ballPosition.top, left: ballPosition.left });
+      setLastHitPosition({ top: ballPosition.top});
       setHitAngle(angle);
     }
-    
   };
 
-  // Calculate hit strength based on reaction time. ChatGPT at its best.
-  const calculateHitStrength = (reactionTime) => {
-    // Clamp reaction time within the expected range for safety. I think ~20ms is the fastest i have got.
-    const clampedReactionTime = Math.min(
-      Math.max(reactionTime, minReactionTime),
-      maxReactionTime
-    );
-    // Invert the reaction time to get the hit strength such that a lower reaction time gives a higher hit strength
-    const normalizedTime =
-      (clampedReactionTime - minReactionTime) /
-      (maxReactionTime - minReactionTime);
-    const hitStrength =
-      maxHitStrength - normalizedTime * (maxHitStrength - minHitStrength);
-    //console.log("Reactiontime", reactionTime, "Hitstrenght", hitStrength);
-    return hitStrength;
-  };
+  
 
-  // New swing actually. Reset to initial positions and states.
-  const resetGame = () => {
-    const resetTop = bottomLimit - 250;
-    const resetLeft = 100;
-
-    setHitAngle(0); // Reset hit angle
-    setIsHit(false); // Reset hit status
-    setLastHitPosition({ top: 0, left: 0 }); // Reset the last hit position
-    setScrollLeft(0); // Reset scroll position
-    setIsSpinning(false); // No spinning anymore
-    setHitboxEntryTime(null); // reset the hitbox entry times
-    setHitboxExitTime(null);
-    setDistance(1);
-    setBallPosition({
-      top: resetTop,
-      left: resetLeft,
-    });
-    ballPositionRef.current = {
-      top: resetTop,
-      left: resetLeft,
-    };
-    verticalVelocityRef.current = -7;
-    horizontalVelocityRef.current = 0;
-  };
+  
 
   // Hitbox toggle function
   const toggleShowHitbox = () => {
@@ -308,7 +283,9 @@ const App = () => {
         ballPosition={ballPosition}
         hitAngle={hitAngle}
         horizontalVelocity={horizontalVelocity}
+        horizontalVelocityRef={horizontalVelocityRef}
         verticalVelocity={verticalVelocity}
+        verticalVelocityRef={verticalVelocityRef}
         distance={distance}
         bottomLimit={bottomLimit}
         isHit={isHit}
