@@ -42,7 +42,7 @@ body {
   height: 100px;
   border-radius: 100px;
   position: relative;
-  background-image: url("./assets/Juha.png");
+  background-image: url("./assets/elf.svg");
   background-size: contain;
   transform: translateY(-50%);
   animation: spin 1s linear infinite;
