@@ -11,6 +11,7 @@ import Ball from "./components/Ball";
 import HighScoreData from "./components/HighScoreData";
 import HUD from "./components/HUD";
 import Background from "./components/Background";
+import MusicPlayer from "./components/MusicPlayer";
 
 // APP COMPONENT
 const App = () => {
@@ -315,6 +316,7 @@ const App = () => {
         showHighScoreData={showHighScoreData}
       />
       <div className="highScoreContainer">
+        <MusicPlayer />
         <button onClick={() => setShowHighScoreData((prev) => !prev)}>
           Toggle Highscore
         </button>

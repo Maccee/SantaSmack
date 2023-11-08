@@ -21,8 +21,18 @@ export const calculateHitStrength = (
 
 export const defineHitStrength = () => {
   const hitStrength = (Math.random() * (75 - 25) + 25).toFixed(2);
-  return parseFloat(hitStrength);
+  const parsedHitStrength = parseFloat(hitStrength);
+
+  // Check if hitStrength is below 50
+  if (parsedHitStrength > 20) {
+    // Create a new audio object and play the sound
+    const audio = new Audio('bighit.mp3'); // Update the path to where your audio file is located
+    audio.play();
+  }
+
+  return parsedHitStrength;
 };
+
 
 export const resetGame = (
   setHitAngle,
