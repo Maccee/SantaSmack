@@ -163,61 +163,79 @@ const App = () => {
     }
   }, [distance, horizontalVelocityRef.current]);
 
+  let lastTime;
   // MAIN BALL MOVEMENT AND FLIGHT PHYSICS
   useEffect(() => {
     let animationFrameId;
-    const updatePosition = () => {
-      // Update velocities
-      verticalVelocityRef.current += gravity; // gravity should pull the ball down, so it should be added to the velocity
-      horizontalVelocityRef.current *= 1 - airResistance; // air resistance should slow the ball down, so it's subtracted
 
-      // Update position
-      let newTop = ballPositionRef.current.top + verticalVelocityRef.current;
-      let newLeft =
-        ballPositionRef.current.left + horizontalVelocityRef.current;
+    // Make sure to accept the 'time' parameter here
+    const updatePosition = (time) => {
+      if (lastTime !== undefined) {
+        const timeDelta = (time - lastTime) / 7; // Convert to seconds
 
-      // Check for bounce
-      if (newTop >= bottomLimit) {
-        newTop = bottomLimit;
-        verticalVelocityRef.current = -verticalVelocityRef.current * bounce;
-        if (Math.abs(verticalVelocityRef.current) < bounce) {
-          verticalVelocityRef.current = 0;
+        
+        // Apply physics
+        verticalVelocityRef.current += gravity * timeDelta; // gravity should be scaled properly
+        horizontalVelocityRef.current *= Math.pow(1 - airResistance, timeDelta);
+
+        
+
+        // Update position based on timeDelta
+        let newTop =
+          ballPositionRef.current.top + verticalVelocityRef.current * timeDelta;
+        let newLeft =
+          ballPositionRef.current.left +
+          horizontalVelocityRef.current * timeDelta;
+
+        // Check for bounce
+        if (newTop >= bottomLimit) {
+          newTop = bottomLimit;
+          verticalVelocityRef.current = -verticalVelocityRef.current * bounce;
+          if (Math.abs(verticalVelocityRef.current) < bounce) {
+            verticalVelocityRef.current = 0;
+          }
+          horizontalVelocityRef.current *= 1 - airResistance - 0.1;
         }
-        horizontalVelocityRef.current *= 1 - airResistance - 0.1;
+
+        // Check horizontal velocity and stop the ball if below threshold
+        if (Math.abs(horizontalVelocityRef.current) < 1) {
+          horizontalVelocityRef.current = 0;
+          setIsSpinning(false);
+        }
+        // Scroll
+        setScrollLeft(() => {
+          const newScrollLeft = newLeft - window.innerWidth / 5; // Ball position while scrolling
+          return Math.max(
+            0,
+            Math.min(newScrollLeft, gameAreaWidth - window.innerWidth)
+          );
+        });
+
+        if (Math.abs(horizontalVelocityRef.current) > 0) {
+          const newDistance = parseFloat(
+            (ballPositionRef.current.left / 100).toFixed(2)
+          );
+          setDistance(newDistance);
+          setHighScore((prevHighScore) => Math.max(prevHighScore, newDistance));
+        }
+
+        // Update position state
+        setBallPosition({ top: newTop, left: newLeft });
+        // Update refs
+        ballPositionRef.current = { top: newTop, left: newLeft };
+        // Request next frame
+        lastTime = time;
+      } else {
+        // If lastTime wasn't set, set it to the current time, but don't move the ball yet
+        lastTime = time;
       }
 
-      // Check horizontal velocity and stop the ball if below threshold
-      if (Math.abs(horizontalVelocityRef.current) < 1) {
-        horizontalVelocityRef.current = 0;
-        setIsSpinning(false);
-      }
-      // Scroll
-      setScrollLeft(() => {
-        const newScrollLeft = newLeft - window.innerWidth / 5; // Ball position while scrolling
-        return Math.max(
-          0,
-          Math.min(newScrollLeft, gameAreaWidth - window.innerWidth)
-        );
-      });
-
-      if (Math.abs(horizontalVelocityRef.current) > 0) {
-        const newDistance = parseFloat(
-          (ballPositionRef.current.left / 100).toFixed(2)
-        );
-        setDistance(newDistance);
-        setHighScore((prevHighScore) => Math.max(prevHighScore, newDistance));
-      }
-
-      // Update position state
-      setBallPosition({ top: newTop, left: newLeft });
-      // Update refs
-      ballPositionRef.current = { top: newTop, left: newLeft };
-      // Request next frame
       animationFrameId = requestAnimationFrame(updatePosition);
     };
     animationFrameId = requestAnimationFrame(updatePosition);
     return () => {
       cancelAnimationFrame(animationFrameId);
+      lastTime = undefined;
     };
   }, [bottomLimit]);
 
@@ -258,10 +276,10 @@ const App = () => {
 
       //const hitStrengthValue = calculateHitStrength(
       //  reactionTime,
-       // minReactionTime,
-       // maxReactionTime,
-       // minHitStrength,
-       // maxHitStrength
+      // minReactionTime,
+      // maxReactionTime,
+      // minHitStrength,
+      // maxHitStrength
       //);
 
       const hitStrengthValue = defineHitStrength();
