@@ -62,7 +62,7 @@ const App = () => {
   const minReactionTime = 20; // fastest expected reaction time
   const maxReactionTime = 100; // slowest expected reaction time
   // Define your minimum and maximum hit strengths
-  const minHitStrength = 25;
+  const minHitStrength = 55;
   const maxHitStrength = 75;
 
   // HIGHSCORE
