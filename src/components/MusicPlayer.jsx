@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 
 const MusicPlayer = () => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
@@ -19,10 +19,10 @@ const MusicPlayer = () => {
       setCurrentTrackIndex((prevIndex) => (prevIndex + 1) % 4);
     };
 
-    audio.addEventListener('ended', playNextTrack);
+    audio.addEventListener("ended", playNextTrack);
 
     return () => {
-      audio.removeEventListener('ended', playNextTrack);
+      audio.removeEventListener("ended", playNextTrack);
     };
   }, []);
 
@@ -38,14 +38,36 @@ const MusicPlayer = () => {
     }
   }, [currentTrackIndex, isPlaying]);
 
+  const playNextTrack = () => {
+    setCurrentTrackIndex((prevIndex) => (prevIndex + 1) % 4); // Assuming you have 4 tracks
+  };
+
   const toggleMusic = () => {
     setIsPlaying(!isPlaying);
   };
-
+  const handleVolumeChange = (event) => {
+    const volume = event.target.value;
+    audioRef.current.volume = volume;
+  };
   return (
-    <button onClick={toggleMusic}>
-      {isPlaying ? 'Pause Music' : 'Play Music'}
-    </button>
+    <>
+      <button onClick={toggleMusic}>
+        {isPlaying ? "Pause Music" : "Play Music"}
+      </button>
+      {isPlaying && (
+        <>
+          <button onClick={playNextTrack}>Next Track</button>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={audioRef.current.volume}
+            onChange={handleVolumeChange}
+          />
+        </>
+      )}
+    </>
   );
 };
 
