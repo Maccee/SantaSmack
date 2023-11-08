@@ -8,7 +8,7 @@ const MusicPlayer = () => {
   // Initialize the audioRef.current value only once, when the component mounts
   if (audioRef.current === null) {
     audioRef.current = new Audio(`1.mp3`);
-    audioRef.current.volume = 0.3; // Set volume to 75%
+    audioRef.current.volume = 0.1; // Set volume to 75%
   }
 
   // Effect for playing the next track

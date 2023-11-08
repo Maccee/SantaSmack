@@ -154,7 +154,7 @@ const App = () => {
     if (isHit && horizontalVelocityRef.current === 0) {
       // Check if the distance is greater than the last high score data entry
       if (
-        highScoreData.length < 10 ||
+        highScoreData.length < 20 ||
         parseFloat(distance) >
           parseFloat(highScoreData[highScoreData.length - 1].distance)
       ) {
