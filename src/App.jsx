@@ -109,7 +109,7 @@ const App = () => {
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
-  }, [gameAreaHeight]);
+  }, []);
 
   // HITBOX
   useEffect(() => {
