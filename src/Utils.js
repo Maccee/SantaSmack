@@ -20,7 +20,7 @@ export const calculateHitStrength = (
 };
 
 export const defineHitStrength = () => {
-  const hitStrength = (Math.random() * (75 - 25) + 25).toFixed(2);
+  const hitStrength = (Math.random() * (75 - 55) + 55).toFixed(2);
   const parsedHitStrength = parseFloat(hitStrength);
   const test = 75;
   // Check if hitStrength is below 50

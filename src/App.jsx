@@ -62,7 +62,7 @@ const App = () => {
   const minReactionTime = 20; // fastest expected reaction time
   const maxReactionTime = 100; // slowest expected reaction time
   // Define your minimum and maximum hit strengths
-  const minHitStrength = 25;
+  const minHitStrength = 55;
   const maxHitStrength = 75;
 
   // HIGHSCORE
@@ -135,6 +135,8 @@ const App = () => {
   // CHECK FOR YOUR DISTANCE OF THE SESSION!
   useEffect(() => {
     const handleNewHighScore = async () => {
+      const sound = new Audio('highscore.mp3');
+sound.play();
       const name = prompt("Congrats on the high score! Enter your name:");
       if (name) {
         const data = {
