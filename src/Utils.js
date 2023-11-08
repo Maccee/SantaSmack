@@ -19,6 +19,11 @@ export const calculateHitStrength = (
   return hitStrength;
 };
 
+export const defineHitStrength = () => {
+  const hitStrength = (Math.random() * (75 - 25) + 25).toFixed(2);
+  return parseFloat(hitStrength);
+};
+
 export const resetGame = (
   setHitAngle,
   setIsHit,
