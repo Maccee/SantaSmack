@@ -22,7 +22,7 @@ export const calculateHitStrength = (
 export const defineHitStrength = () => {
   const hitStrength = (Math.random() * (75 - 25) + 25).toFixed(2);
   const parsedHitStrength = parseFloat(hitStrength);
-  
+  const test = 75;
   // Check if hitStrength is below 50
   if (parsedHitStrength > 70) {
     // Create a new audio object and play the sound
@@ -31,6 +31,7 @@ export const defineHitStrength = () => {
   }
 
   return parsedHitStrength;
+  //return test;
   
 };
 
