@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./App.css";
 import { postDataToAzureFunction, getDataFromAzureFunction } from "./ApiUtils";
-import { calculateHitStrength, resetGame } from "./Utils";
+import { calculateHitStrength, defineHitStrength, resetGame } from "./Utils";
 
 // Component Imports
 import Santa from "./components/Santa";
@@ -61,11 +61,11 @@ const App = () => {
   const minReactionTime = 20; // fastest expected reaction time
   const maxReactionTime = 100; // slowest expected reaction time
   // Define your minimum and maximum hit strengths
-  const minHitStrength = 15;
-  const maxHitStrength = 45;
+  const minHitStrength = 25;
+  const maxHitStrength = 75;
 
   // HIGHSCORE
-  
+
   const [highScoreData, setHighScoreData] = useState({});
   const [showHighScoreData, setShowHighScoreData] = useState(false);
 
@@ -84,10 +84,12 @@ const App = () => {
     };
     // Attach keydown event listener
     window.addEventListener("keydown", handleKeyDown);
+
     // Set game area scroll position and get high score data
     if (gameAreaRef.current) {
       const element = gameAreaRef.current;
       element.scrollTop = element.scrollHeight - element.clientHeight;
+      gameAreaRef.current.focus();
     }
 
     getDataFromAzureFunction().then((sortedResult) => {
@@ -147,7 +149,7 @@ const App = () => {
         setHighScoreData(updatedScores);
       }
     };
-    
+
     if (isHit && horizontalVelocityRef.current === 0) {
       // Check if the distance is greater than the last high score data entry
       if (
@@ -198,11 +200,13 @@ const App = () => {
       });
 
       if (Math.abs(horizontalVelocityRef.current) > 0) {
-        const newDistance = parseFloat((ballPositionRef.current.left / 100).toFixed(2));
+        const newDistance = parseFloat(
+          (ballPositionRef.current.left / 100).toFixed(2)
+        );
         setDistance(newDistance);
-        setHighScore(prevHighScore => Math.max(prevHighScore, newDistance));
+        setHighScore((prevHighScore) => Math.max(prevHighScore, newDistance));
       }
-      
+
       // Update position state
       setBallPosition({ top: newTop, left: newLeft });
       // Update refs
@@ -251,13 +255,15 @@ const App = () => {
       setIsHit(true);
       setIsSpinning(true);
 
-      const hitStrengthValue = calculateHitStrength(
-        reactionTime,
-        minReactionTime,
-        maxReactionTime,
-        minHitStrength,
-        maxHitStrength
-      );
+      //const hitStrengthValue = calculateHitStrength(
+      //  reactionTime,
+       // minReactionTime,
+       // maxReactionTime,
+       // minHitStrength,
+       // maxHitStrength
+      //);
+
+      const hitStrengthValue = defineHitStrength();
       setHitStrength(hitStrengthValue);
 
       const angle =
@@ -286,6 +292,19 @@ const App = () => {
   // Toggle HUD
   const toggleHUD = () => {
     setShowHUD((prevShowHUD) => !prevShowHUD);
+  };
+
+  const handleSpaceDown = (event) => {
+    if (event.code === "Space" && !event.repeat) {
+      event.preventDefault();
+      setMouseDownTime(performance.now());
+    }
+  };
+  const handleSpaceUp = (event) => {
+    if (event.code === "Space") {
+      event.preventDefault();
+      handleMouseUp();
+    }
   };
 
   // APP RENDER
@@ -324,6 +343,8 @@ const App = () => {
         tabIndex={0}
         onMouseUp={handleMouseUp}
         onMouseDown={handleMouseDown}
+        onKeyDown={handleSpaceDown}
+        onKeyUp={handleSpaceUp}
       >
         {/* Background layers with parallax scrolling effect */}
         <Background scrollLeft={scrollLeft} />
