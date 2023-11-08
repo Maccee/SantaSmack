@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const MusicPlayer = () => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
 
   // Initialize the audioRef.current value only once, when the component mounts
@@ -29,7 +29,7 @@ const MusicPlayer = () => {
   // Effect for changing the track source and playing or pausing
   useEffect(() => {
     const audio = audioRef.current;
-    audio.src = `${currentTrackIndex + 3}.mp3`; // Adjust the path accordingly
+    audio.src = `${currentTrackIndex + 1}.mp3`; // Adjust the path accordingly
     if (isPlaying) {
       audio.load(); // Load the new source
       audio.play();
