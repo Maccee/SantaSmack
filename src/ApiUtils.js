@@ -25,8 +25,8 @@ const getDataFromAzureFunction = async () => {
       throw new Error("The fetched data is not an array.");
     }
 
-    // Sort the data and then slice the top 10
-    const sortedData = data.sort((a, b) => b.distance - a.distance).slice(0, 10);
+    // Sort the data and then slice the top 20
+    const sortedData = data.sort((a, b) => b.distance - a.distance).slice(0, 20);
 
     return sortedData;
   } catch (error) {
