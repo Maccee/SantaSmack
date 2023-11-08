@@ -394,6 +394,7 @@ sound.play();
             isSpinning={isSpinning}
             distance={distance}
             isHit={isHit}
+            verticalVelocityRef={verticalVelocityRef}
           />
 
           {/* The Bat component, controlled by the player to hit the ball */}
