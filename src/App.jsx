@@ -173,12 +173,9 @@ const App = () => {
       if (lastTime !== undefined) {
         const timeDelta = (time - lastTime) / 7; // Convert to seconds
 
-        
         // Apply physics
         verticalVelocityRef.current += gravity * timeDelta; // gravity should be scaled properly
         horizontalVelocityRef.current *= Math.pow(1 - airResistance, timeDelta);
-
-        
 
         // Update position based on timeDelta
         let newTop =
@@ -334,11 +331,15 @@ const App = () => {
         showHighScoreData={showHighScoreData}
       />
       <div className="highScoreContainer">
-        <MusicPlayer />
-        <button onClick={() => setShowHighScoreData((prev) => !prev)}>
-          Toggle Highscore
-        </button>
-        <p>Your Session High: {highScore.toFixed(2)}m</p>
+        <div className="hsc-buttons">
+          <MusicPlayer />
+          <button onClick={() => setShowHighScoreData((prev) => !prev)}>
+            Show Highscores
+          </button>
+        </div>
+        <p className="session-high">
+          Your Session High: {highScore.toFixed(2)}m
+        </p>
       </div>
       {/* HUD (Heads-Up Display) for displaying game stats and controls */}
       <HUD
