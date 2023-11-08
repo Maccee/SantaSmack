@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import MusicOn from "../assets/music_on.svg";
+import MusicOff from "../assets/music_off.svg";
 
 const MusicPlayer = () => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
@@ -52,7 +54,11 @@ const MusicPlayer = () => {
   return (
     <>
       <button onClick={toggleMusic}>
-        {isPlaying ? "Pause Music" : "Play Music"}
+        {isPlaying ? (
+          <img src={MusicOff} className="music-svg" />
+        ) : (
+          <img src={MusicOn} className="music-svg" />
+        )}
       </button>
       {isPlaying && (
         <>
@@ -70,5 +76,4 @@ const MusicPlayer = () => {
     </>
   );
 };
-
 export default MusicPlayer;
