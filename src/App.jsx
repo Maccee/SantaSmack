@@ -135,6 +135,8 @@ const App = () => {
   // CHECK FOR YOUR DISTANCE OF THE SESSION!
   useEffect(() => {
     const handleNewHighScore = async () => {
+      const sound = new Audio('highscore.mp3');
+sound.play();
       const name = prompt("Congrats on the high score! Enter your name:");
       if (name) {
         const data = {
