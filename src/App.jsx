@@ -326,16 +326,22 @@ const App = () => {
   // APP RENDER
   return (
     <>
-      <HighScoreData
-        highScoreData={highScoreData}
-        showHighScoreData={showHighScoreData}
-      />
       <div className="highScoreContainer">
-        <div className="hsc-buttons">
+        <HighScoreData
+          highScoreData={highScoreData}
+          showHighScoreData={showHighScoreData}
+        />
+        <button
+          className="hsc-button"
+          onClick={() => setShowHighScoreData((prev) => !prev)}
+        >
+          Highscores
+        </button>
+      </div>
+
+      <div className="mp-session">
+        <div className="mp-buttons">
           <MusicPlayer />
-          <button onClick={() => setShowHighScoreData((prev) => !prev)}>
-            Show Highscores
-          </button>
         </div>
         <p className="session-high">
           Your Session High: {highScore.toFixed(2)}m

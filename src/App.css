@@ -155,7 +155,7 @@ body {
   font-weight: 700;
   font-family: "Mountains of Christmas", serif;
 }
-.highScoreContainer {
+.mp-session {
   position: fixed;
   bottom: 0.4rem;
   right: 0.4rem;
@@ -167,19 +167,22 @@ body {
   font-weight: 700;
   z-index: 1000;
   color: yellow;
-  height: 450px;
+  height: 400px;
   justify-content: space-between;
-  min-width: 350px;
+  min-width: 50px;
+  align-items: flex-end;
 }
-.hsc-buttons {
+.mp-buttons {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 20px;
+  align-items: flex-end;
 }
 .session-high {
-  text-align: center;
+  text-align: left;
 }
-.highScoreContainer button {
+.mp-session button {
   display: inline-block;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -208,15 +211,53 @@ body {
   -o-transition: 500ms linear;
   transition: 500ms linear;
 }
+.volume-slider {
+  -webkit-appearance: none;
+  width: 90px;
+  height: 20px;
+  border: 1px solid #4c0300;
 
-.music-svg {
-  fill: white; /* Change the color of the SVG */
-  width: 50px; /* Change the width of the SVG */
-  height: 50px; /* Change the height of the SVG */
+  border-radius: 5px;
+  background: #5e0d0c;
+  box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.25),
+    /* highlight */ inset 0 0 6px #a23227,
+    /* inner glow */ inset 0 80px 80px -40px #ac3223,
+    /* gradient */ 1px 1px 3px rgba(0, 0, 0, 0.75); /* shadow */
+
+  background-size: 150px 10px;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  outline: none;
 }
-.highScoreContainer button::before,
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: white;
+  position: relative;
+  z-index: 3;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
+}
+
+.volume-slider::-webkit-slider-thumb:after {
+  content: " ";
+  width: 160px;
+  height: 10px;
+  position: absolute;
+  z-index: 1;
+  right: 20px;
+  top: 5px;
+  background: white;
+  background: linear-gradient(to right, #f088fc 1%, #ac6cff 70%);
+}
+
+.mp-session button::before,
 .highscorewindow h1::before,
-.highscorewindow-table::before {
+.highscorewindow-table::before,
+.hsc-button::before {
   content: "";
   display: block;
   position: absolute;
@@ -231,7 +272,8 @@ body {
     url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAXCAYAAACFxybfAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAodJREFUeNrsVb1rWlEUv2pN/GqspKRSKFYXWzEloIWif0Fn6dJChQ7OQil0qd3EzcEpg0OgdHDr4CQODk7VRlLMEIVqApX4We0zflR9/Z1Ui4T34ksaaAYP/Hzc673n/M6550PG8zz73yKjn0wm83fDYDAwo9HINBrNnwOQg4MDs0ql2lQqlfdAWont7ng8Pjw+Ps44nc4G1pI9EXWaSOzt7TGO42aH5Pv7+08ajUZ0MBiUeXEZd7vdL5VK5fX29rZ+5tQiEmdxKrlcjsEYczgcynK5/BKKv/IXFNz/XiqVXkHdjUuRIA9SqdRD8or/R8Ez9fr9fqHVakUR4c2z0REjIQuHw2ZcrPBXLCA0RHTezEdHjIQqkUhEr9I4HOILhQLf6/VoOUFEvDMiQiToDx1Cdz+bzZ6bUFarlel0OkkVUK/XWbvdPoVer5fh3ntsfwJ+CJ2XA4p0Op1bpBgJyxDehQQ6nQ5DZXHBYDBZq9V+EhFUndnr9drEqoc2bwJbwGPgtohuVSwWe2Gz2TZMJpNgRKi6qtUqg2EWj8dTgUDgo0KhWPN4PC70EvXOzs67fD6/S6kiRIKeZA1YJ2MiJNbdbvfTUCjkV6vVK2hcDF8GI2w0GrGTkxM2HA5PDxaLxSOfz/cWEfk81X0XIMMFgJJ/srBjCgk8IdcfuVyuZ36//7nFYtkQyAMumUzuRiKRD0jMFLa+AZOpYwqgB/ziBVqmVBKUO7eAB/R0WG/Z7XaTVqtdbTabHJL6EK2djBaBPHA0NSqpbUsiMUeEBgpF4Q5AbZrmSJ/yEWgBTaBNHl9kdkgmMUeG7qwAq9PqovceTA3zlxlgsuswyuXsGsiSxJLEkoSY/BZgAEjRodi+uBruAAAAAElFTkSuQmCC)
       no-repeat 100% 0;
 }
-.highScoreContainer button:hover {
+.mp-session button:hover,
+.hsc-button:hover {
   background: #a61715;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75), 0 0 40px #fff;
   box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.25),
@@ -239,10 +281,11 @@ body {
     /* inner glow */ inset 0 80px 80px -40px #dd4330,
     /* gradient */ 1px 1px 3px rgba(0, 0, 0, 0.75); /* shadow */
 }
-.highScoreContainer button:focus {
+.mp-session button:focus,
+.hsc-button:focus {
   outline: none; /*FF*/
 }
-.highScoreContainer button:active {
+.mp-session button:active .hsc-button:active {
   box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.25),
     /* highlight */ inset 0 0 6px #da3b2c,
     /* inner glow */ inset 0 80px 80px -40px #dd4330,
@@ -254,8 +297,9 @@ body {
   transition: 50ms linear;
 }
 
-.highscorewindow h1 {
-  top: 8%;
+.hsc-button {
+  z-index: 2000;
+  top: 50px;
   left: 50%;
   width: 100%;
   max-width: 200px;
@@ -286,22 +330,21 @@ body {
   transition: 500ms linear;
 }
 .highscorewindow-table {
-  top: 40%;
+  top: 300px;
   left: 50%;
   transform: translate(-50%, -50%);
   /* Additional styles for aesthetics */
   width: 100%; /* Adjust width as needed */
-  max-width: 600px;
+  max-width: 650px;
   text-align: left;
   z-index: 1000; /* Ensure it's above other elements */
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   flex-direction: row;
   max-height: 70%;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  min-width: 100px;
   padding: 22px 33px;
   font-family: "Lobster", cursive;
   font-size: 1.2rem;
@@ -321,54 +364,58 @@ body {
   position: absolute;
   overflow: visible; /* IE9 & 10 */
 }
+
+.highscorewindow-table div:first-child {
+  border-right: 1px solid white;
+  padding: 0 20px 0 0;
+}
+.highscorewindow-table div:last-child {
+  padding: 0 0px 0 00px;
+}
+
+.highscorewindow-table div p {
+  display: flex;
+  justify-content: space-between;
+}
+.highscorewindow-table .dist {
+  color: antiquewhite;
+  text-align: right;
+  padding-left: 40px;
+}
+.highscorewindow-table .top1 {
+  color: gold;
+}
+.highscorewindow-table .top2 {
+  color: silver;
+}
+.highscorewindow-table .top3 {
+  color: #cd7f32;
+}
+
 .highscorewindow.hidden {
   display: none;
 }
-
 @media only screen and (max-width: 600px) {
-  .highScoreContainer {
-    min-width: 100%;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
+  .highscorewindow-table {
+    flex-direction: column;
   }
-  .highScoreContainer button {
-    min-width: 100%;
+  .highscorewindow-table div {
+    padding: 0;
+  }
+  .highscorewindow-table div:first-child {
+    border-right: none;
+    padding: 0;
+  }
+  .highscorewindow-table div:last-child {
+    padding: 0;
   }
   .highscorewindow-table {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    /* Additional styles for aesthetics */
-    width: 100%; /* Adjust width as needed */
-    max-width: 600px;
-    text-align: left;
-    z-index: 1000; /* Ensure it's above other elements */
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-    max-height: 70%;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    min-width: 100px;
-    padding: 22px 33px;
-    font-family: "Lobster", cursive;
-    font-size: 1.2rem;
-    line-height: 2rem;
-    text-decoration: none;
-    color: #fff;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
-    background: #5e0d0c;
-    outline: none;
-    border-radius: 15px;
-    border: 1px solid #4c0300;
-    box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.25),
-      /* highlight */ inset 0 0 6px #a23227,
-      /* inner glow */ inset 0 80px 80px -40px #ac3223,
-      /* gradient */ 1px 1px 3px rgba(0, 0, 0, 0.75); /* shadow */
-
-    position: absolute;
-    overflow: visible; /* IE9 & 10 */
+    font-size: 1rem;
+    line-height: 1.5rem;
+    max-width: 350px;
+    top: 35%;
+  }
+  .mp-session {
+    bottom: 0.4rem;
   }
 }

@@ -8,19 +8,22 @@ const HighScoreData = ({ highScoreData, showHighScoreData }) => {
 
   return (
     <div className="highscorewindow">
-      <h1>HIGHSCORES</h1>
       <div className="highscorewindow-table">
         <div>
           {firstColumnData.map((item, index) => (
             <p key={index}>
-              {index + 1}. {item.name} {item.distance}
+              {index + 1}. {item.name}{" "}
+              <span className={index < 3 ? `top${index + 1}` : "dist"}>
+                {item.distance}
+              </span>
             </p>
           ))}
         </div>
         <div>
           {secondColumnData.map((item, index) => (
             <p key={index + 10}>
-              {index + 11}. {item.name} {item.distance}
+              {index + 11}. {item.name}{" "}
+              <span className="dist">{item.distance}</span>
             </p>
           ))}
         </div>
@@ -28,5 +31,4 @@ const HighScoreData = ({ highScoreData, showHighScoreData }) => {
     </div>
   );
 };
-
 export default HighScoreData;

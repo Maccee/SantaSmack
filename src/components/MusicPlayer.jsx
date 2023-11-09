@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import MusicOn from "../assets/music_on.svg";
 import MusicOff from "../assets/music_off.svg";
+import MusicNext from "../assets/music_next.svg";
 
 const MusicPlayer = () => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
@@ -62,8 +63,11 @@ const MusicPlayer = () => {
       </button>
       {isPlaying && (
         <>
-          <button onClick={playNextTrack}>Next Track</button>
+          <button onClick={playNextTrack}>
+            <img src={MusicNext} className="music-svg" />
+          </button>{" "}
           <input
+            className="volume-slider"
             type="range"
             min="0"
             max="1"
