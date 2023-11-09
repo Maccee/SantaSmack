@@ -189,10 +189,14 @@ const App = () => {
       if (lastTime !== undefined) {
         const timeDelta = (time - lastTime) / 7;
 
-        verticalVelocityRef.current += gravity * timeDelta;
+
+        // Apply physics
+        verticalVelocityRef.current += gravity * timeDelta; // gravity should be scaled properly
         horizontalVelocityRef.current *= Math.pow(1 - airResistance, timeDelta);
 
+
         // UPDATE
+
         let newTop =
           ballPositionRef.current.top + verticalVelocityRef.current * timeDelta;
         let newLeft =
@@ -340,16 +344,26 @@ const App = () => {
   // APP RENDER
   return (
     <>
-      <HighScoreData
-        highScoreData={highScoreData}
-        showHighScoreData={showHighScoreData}
-      />
       <div className="highScoreContainer">
-        <MusicPlayer />
-        <button onClick={() => setShowHighScoreData((prev) => !prev)}>
-          Toggle Highscore
+        <HighScoreData
+          highScoreData={highScoreData}
+          showHighScoreData={showHighScoreData}
+        />
+        <button
+          className="hsc-button"
+          onClick={() => setShowHighScoreData((prev) => !prev)}
+        >
+          Highscores
         </button>
-        <p>Your Session High: {highScore.toFixed(2)}m</p>
+      </div>
+
+      <div className="mp-session">
+        <div className="mp-buttons">
+          <MusicPlayer />
+        </div>
+        <p className="session-high">
+          Your Session High: {highScore.toFixed(2)}m
+        </p>
       </div>
 
       <HUD
