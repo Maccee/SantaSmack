@@ -21,7 +21,7 @@ body {
 .santa {
   width: fit-content;
   transform: translateY(-100%);
-  position: relative;
+  position: absolute;
 
 
 }

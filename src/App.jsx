@@ -115,16 +115,7 @@ const App = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // VH
-  useEffect(() => {
-    const handleResize = () => {
-      setGameAreaHeight(window.innerHeight);
-      setBottomLimit(gameAreaHeight - 50);
-    };
-    window.addEventListener("resize", handleResize);
-    handleResize();
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  
 
   useEffect(() => {
     const handleVisibilityChange = () => {
