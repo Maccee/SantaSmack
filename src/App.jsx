@@ -23,7 +23,7 @@ const App = () => {
   // BALL MOVEMENT
   // Ball position, start position set 250px from bottom and 100px from left
   const [ballPosition, setBallPosition] = useState({
-    top: bottomLimit -  250,
+    top: bottomLimit - 250,
     left: 100,
   });
   const [verticalVelocity, setVerticalVelocity] = useState(-7); // Ball vertical speed, set to -7 for upward movement before swing
@@ -47,7 +47,7 @@ const App = () => {
   const [hitboxEntryTime, setHitboxEntryTime] = useState(null); // Time when ball enters hitbox in ms since refresh
   const [hitboxExitTime, setHitboxExitTime] = useState(null); // Time when ball exits hitbox in ms since refresh
   const hitboxTopBoundary = bottomLimit - 160; // Hitbox top
-  const hitboxBottomBoundary = bottomLimit +40; // Hitbox bottom
+  const hitboxBottomBoundary = bottomLimit + 40; // Hitbox bottom
   const hitboxTransitTime = 152; // The time in ms the ball travels through hitbox
 
   // Physics
@@ -128,24 +128,24 @@ const App = () => {
 
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
+      if (document.visibilityState === "hidden") {
         horizontalVelocityRef.current = 0;
       }
     };
-  
+
     const handleResize = () => {
       horizontalVelocityRef.current = 0;
     };
-  
-    window.addEventListener('resize', handleResize);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-  
+
+    window.addEventListener("resize", handleResize);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     // Call the resize handler in case the window is already resized
     handleResize();
-  
+
     return () => {
-      window.removeEventListener('resize', handleResize);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener("resize", handleResize);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 
@@ -214,11 +214,9 @@ const App = () => {
       if (lastTime !== undefined) {
         const timeDelta = (time - lastTime) / 7;
 
-
         // Apply physics
         verticalVelocityRef.current += gravity * timeDelta; // gravity should be scaled properly
         horizontalVelocityRef.current *= Math.pow(1 - airResistance, timeDelta);
-
 
         // UPDATE
 
@@ -381,15 +379,10 @@ const App = () => {
           Highscores
         </button>
       </div>
-
-      <div className="mp-session">
-        <div className="mp-buttons">
-          <MusicPlayer />
-        </div>
-        <p className="session-high">
-          Your Session High: {highScore.toFixed(2)}m
-        </p>
+      <div className="mp-buttons">
+        <MusicPlayer />
       </div>
+      <p className="session-high">Your Session High: {highScore.toFixed(2)}m</p>
 
       <HUD
         showHUD={showHUD}
@@ -441,8 +434,6 @@ const App = () => {
             isHit={isHit}
             verticalVelocityRef={verticalVelocityRef}
           />
-
-          
 
           <div className="ground"></div>
         </div>
