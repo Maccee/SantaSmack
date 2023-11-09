@@ -23,10 +23,10 @@ const App = () => {
   // BALL MOVEMENT
   // Ball position, start position set 250px from bottom and 100px from left
   const [ballPosition, setBallPosition] = useState({
-    top: bottomLimit - gameAreaHeight,
+    top: bottomLimit -  250,
     left: 100,
   });
-  const [verticalVelocity, setVerticalVelocity] = useState(0); // Ball vertical speed, set to -7 for upward movement before swing
+  const [verticalVelocity, setVerticalVelocity] = useState(-7); // Ball vertical speed, set to -7 for upward movement before swing
   const [horizontalVelocity, setHorizontalVelocity] = useState(0); // Ball horizontal speed
   const [hitAngle, setHitAngle] = useState(0); // Hit angle calculated between -90 and 90 deg.
   const [isHit, setIsHit] = useState(false); // Check if swinged
@@ -37,7 +37,7 @@ const App = () => {
   const ballPositionRef = useRef(ballPosition);
 
   // Debug console
-  const [showHUD, setShowHUD] = useState(true);
+  const [showHUD, setShowHUD] = useState(false);
   const [lastHitPosition, setLastHitPosition] = useState({ top: 0, left: 0 });
   const [highScore, setHighScore] = useState(0);
   const [distance, setDistance] = useState(0);
@@ -46,9 +46,9 @@ const App = () => {
   const [showHitbox, setShowHitbox] = useState(false); // Toggle hitbox visibility
   const [hitboxEntryTime, setHitboxEntryTime] = useState(null); // Time when ball enters hitbox in ms since refresh
   const [hitboxExitTime, setHitboxExitTime] = useState(null); // Time when ball exits hitbox in ms since refresh
-  const hitboxTopBoundary = bottomLimit - 200; // Hitbox top
-  const hitboxBottomBoundary = bottomLimit; // Hitbox bottom
-  const hitboxTransitTime = 550; // The time in ms the ball travels through hitbox
+  const hitboxTopBoundary = bottomLimit - 160; // Hitbox top
+  const hitboxBottomBoundary = bottomLimit +40; // Hitbox bottom
+  const hitboxTransitTime = 152; // The time in ms the ball travels through hitbox
 
   // Physics
   const [gravity, setGravity] = useState(0.1); // Downward force that pulls ball down while flying
@@ -124,6 +124,29 @@ const App = () => {
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        horizontalVelocityRef.current = 0;
+      }
+    };
+  
+    const handleResize = () => {
+      horizontalVelocityRef.current = 0;
+    };
+  
+    window.addEventListener('resize', handleResize);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+  
+    // Call the resize handler in case the window is already resized
+    handleResize();
+  
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   // HITBOX
