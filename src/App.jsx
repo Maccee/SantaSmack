@@ -416,7 +416,7 @@ const App = () => {
           className="scroll-container"
           style={{ transform: `translateX(-${scrollLeft}px)` }}
         >
-          <Markers gameAreaWidth={gameAreaWidth} />
+          <Markers gameAreaWidth={gameAreaWidth} gameAreaHeight={gameAreaHeight}/>
 
           <Santa
             showHitbox={showHitbox}
@@ -424,6 +424,7 @@ const App = () => {
             hitboxBottomBoundary={hitboxBottomBoundary}
             bottomLimit={bottomLimit}
             isHit={isHit}
+            gameAreaHeight={gameAreaHeight}
           />
 
           <Ball

@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import KylttiImg from "../assets/kyltti.png"; // Picture of a sign where distance is displayed in game area.
 
-const Markers = ({ gameAreaWidth }) => {
+const Markers = ({ gameAreaWidth, gameAreaHeight }) => {
   // Only recalculate markers if gameAreaWidth changes
   const markers = useMemo(() => {
     const interval = 1000; // Distance between markers
@@ -18,10 +18,12 @@ const Markers = ({ gameAreaWidth }) => {
           className="marker"
           style={{
             left: `${distance}px`,
+            top: `${gameAreaHeight-200}px`,
           }}
         >
           <img src={KylttiImg} alt={`Marker at ${distance / 100} meters`}></img>
-          <div>{distance / 100}m</div>
+          <div style={{ top: `49px` }}>{distance / 100}m</div>
+
         </div>
       ))}
     </>

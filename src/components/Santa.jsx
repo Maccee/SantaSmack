@@ -6,7 +6,8 @@ const Santa = ({
     hitboxTopBoundary,
     hitboxBottomBoundary,
     bottomLimit,
-    isHit
+    isHit,
+    gameAreaHeight
 }) => {
     const santaStyle = {
         top: `${bottomLimit +10}px`,
@@ -29,7 +30,7 @@ const Santa = ({
                 <img src={SantaImg} alt="Santa" />
             </div>
             <div style={hitboxStyle}></div>
-            <Bat isHit={isHit} />
+            <Bat isHit={isHit} gameAreaHeight={gameAreaHeight} />
         </div>
     );
 };
