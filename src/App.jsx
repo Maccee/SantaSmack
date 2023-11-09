@@ -43,7 +43,7 @@ const App = () => {
   const [distance, setDistance] = useState(0);
 
   // Hitbox
-  const [showHitbox, setShowHitbox] = useState(false); // Toggle visibility
+  const [showHitbox, setShowHitbox] = useState(false); // Toggle hitbox visibility
   const [hitboxEntryTime, setHitboxEntryTime] = useState(null); // Time when ball enters hitbox in ms since refresh
   const [hitboxExitTime, setHitboxExitTime] = useState(null); // Time when ball exits hitbox in ms since refresh
   const hitboxTopBoundary = bottomLimit - 200; // Hitbox top
@@ -62,31 +62,48 @@ const App = () => {
   const minReactionTime = 20; // fastest expected reaction time
   const maxReactionTime = 100; // slowest expected reaction time
   // Define your minimum and maximum hit strengths
-  const minHitStrength = 25;
+  const minHitStrength = 55;
   const maxHitStrength = 75;
 
   // HIGHSCORE
-
   const [highScoreData, setHighScoreData] = useState({});
   const [showHighScoreData, setShowHighScoreData] = useState(false);
 
   // SCROLLING
-  const gameAreaRef = useRef(null); // Game area reference for scrolling
-  const [scrollLeft, setScrollLeft] = useState(0); // Scroll position
+  const gameAreaRef = useRef(null);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  //Koodit
+  const [juhaMode, setJuhaMode] = useState(false);
+  let keySequence = [];
+  let keySequenceString = "";
+  const secretCode = "iddqd";
 
   // SET GAMEAREA // TOGGLE HUD // INITALIZATION
   useEffect(() => {
-    // Handle key down for HUD toggle
     const handleKeyDown = (event) => {
-      //console.log(event.key, event.keyCode);
+      keySequence.push(event.key);
+      keySequenceString = keySequence.slice(-secretCode.length).join("").toLowerCase();
+      
+      if (
+        keySequenceString ===
+        secretCode
+      ) {
+        
+        setJuhaMode((prevMode) => {
+          console.log("JuhaMode", !prevMode); // Log the new state
+          return !prevMode; // This toggles the mode
+        });
+        keySequence = [];
+      }
+      
       if (event.keyCode === 220 || event.keyCode === 192) {
         toggleHUD();
       }
     };
-    // Attach keydown event listener
+
     window.addEventListener("keydown", handleKeyDown);
 
-    // Set game area scroll position and get high score data
     if (gameAreaRef.current) {
       const element = gameAreaRef.current;
       element.scrollTop = element.scrollHeight - element.clientHeight;
@@ -96,11 +113,10 @@ const App = () => {
     getDataFromAzureFunction().then((sortedResult) => {
       setHighScoreData(sortedResult);
     });
-    // Cleanup function to remove event listener
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Event listener if screen height changes during playing
+  // VH
   useEffect(() => {
     const handleResize = () => {
       setGameAreaHeight(window.innerHeight);
@@ -135,24 +151,25 @@ const App = () => {
   // CHECK FOR YOUR DISTANCE OF THE SESSION!
   useEffect(() => {
     const handleNewHighScore = async () => {
+      const sound = new Audio("highscore.mp3");
+      sound.play();
       const name = prompt("Congrats on the high score! Enter your name:");
       if (name) {
         const data = {
           name: name,
-          hitAngle: hitAngle, // Assuming hitAngle is available in this scope
-          hitStrength: hitStrength, // Same assumption as above
-          gameAreaHeight: gameAreaHeight, // Same assumption as above
+          hitAngle: hitAngle,
+          hitStrength: hitStrength,
+          gameAreaHeight: gameAreaHeight,
           distance: distance,
         };
         await postDataToAzureFunction(data);
-        // Optionally, you can refresh the highScoreData after posting
+
         const updatedScores = await getDataFromAzureFunction();
         setHighScoreData(updatedScores);
       }
     };
 
     if (isHit && horizontalVelocityRef.current === 0) {
-      // Check if the distance is greater than the last high score data entry
       if (
         highScoreData.length < 20 ||
         parseFloat(distance) >
@@ -164,27 +181,29 @@ const App = () => {
   }, [distance, horizontalVelocityRef.current]);
 
   let lastTime;
-  // MAIN BALL MOVEMENT AND FLIGHT PHYSICS
+
   useEffect(() => {
     let animationFrameId;
 
-    // Make sure to accept the 'time' parameter here
     const updatePosition = (time) => {
       if (lastTime !== undefined) {
-        const timeDelta = (time - lastTime) / 7; // Convert to seconds
+        const timeDelta = (time - lastTime) / 7;
+
 
         // Apply physics
         verticalVelocityRef.current += gravity * timeDelta; // gravity should be scaled properly
         horizontalVelocityRef.current *= Math.pow(1 - airResistance, timeDelta);
 
-        // Update position based on timeDelta
+
+        // UPDATE
+
         let newTop =
           ballPositionRef.current.top + verticalVelocityRef.current * timeDelta;
         let newLeft =
           ballPositionRef.current.left +
           horizontalVelocityRef.current * timeDelta;
 
-        // Check for bounce
+        // POMPPU
         if (newTop >= bottomLimit) {
           newTop = bottomLimit;
           verticalVelocityRef.current = -verticalVelocityRef.current * bounce;
@@ -194,14 +213,14 @@ const App = () => {
           horizontalVelocityRef.current *= 1 - airResistance - 0.1;
         }
 
-        // Check horizontal velocity and stop the ball if below threshold
+        // STOP MOVEMENT
         if (Math.abs(horizontalVelocityRef.current) < 1) {
           horizontalVelocityRef.current = 0;
           setIsSpinning(false);
         }
-        // Scroll
+        // SCROLL
         setScrollLeft(() => {
-          const newScrollLeft = newLeft - window.innerWidth / 5; // Ball position while scrolling
+          const newScrollLeft = newLeft - window.innerWidth / 5; // PIENEMPI ENEMMÄN VASEMMALLE
           return Math.max(
             0,
             Math.min(newScrollLeft, gameAreaWidth - window.innerWidth)
@@ -223,7 +242,6 @@ const App = () => {
         // Request next frame
         lastTime = time;
       } else {
-        // If lastTime wasn't set, set it to the current time, but don't move the ball yet
         lastTime = time;
       }
 
@@ -236,7 +254,7 @@ const App = () => {
     };
   }, [bottomLimit]);
 
-  // Get performance time in ms when user press mouseDOWN
+  // SET PERFORMANCE TIME
   const handleMouseDown = () => {
     setMouseDownTime(performance.now());
     //console.log("mousedown", mouseDownTime);
@@ -279,7 +297,7 @@ const App = () => {
       // maxHitStrength
       //);
 
-      const hitStrengthValue = defineHitStrength();
+      const hitStrengthValue = defineHitStrength(juhaMode);
       setHitStrength(hitStrengthValue);
 
       const angle =
@@ -300,12 +318,12 @@ const App = () => {
     }
   };
 
-  // Hitbox toggle function
+  // TOGGLE HITBOX
   const toggleShowHitbox = () => {
     setShowHitbox((prevShowHitbox) => !prevShowHitbox);
   };
 
-  // Toggle HUD
+  // TOGGLE HUD
   const toggleHUD = () => {
     setShowHUD((prevShowHUD) => !prevShowHUD);
   };
@@ -347,7 +365,7 @@ const App = () => {
           Your Session High: {highScore.toFixed(2)}m
         </p>
       </div>
-      {/* HUD (Heads-Up Display) for displaying game stats and controls */}
+
       <HUD
         showHUD={showHUD}
         lastHitPosition={lastHitPosition}
@@ -373,18 +391,14 @@ const App = () => {
         onKeyDown={handleSpaceDown}
         onKeyUp={handleSpaceUp}
       >
-        {/* Background layers with parallax scrolling effect */}
         <Background scrollLeft={scrollLeft} />
 
-        {/* Scrollable container for the game elements to allow for a larger virtual play area */}
         <div
           className="scroll-container"
           style={{ transform: `translateX(-${scrollLeft}px)` }}
         >
-          {/* Game markers indicating distance and render sign positions */}
           <Markers gameAreaWidth={gameAreaWidth} />
 
-          {/* The Santa component, just Santa. :) Debug hitbox is in this component */}
           <Santa
             showHitbox={showHitbox}
             hitboxTopBoundary={hitboxTopBoundary}
@@ -392,19 +406,17 @@ const App = () => {
             bottomLimit={bottomLimit}
           />
 
-          {/* The Ball component, representing the object being hit in the game */}
           <Ball
             top={ballPosition.top}
             left={ballPosition.left}
             isSpinning={isSpinning}
             distance={distance}
             isHit={isHit}
+            verticalVelocityRef={verticalVelocityRef}
           />
 
-          {/* The Bat component, controlled by the player to hit the ball */}
           <Bat isHit={isHit} />
 
-          {/* Visual representation of the ground */}
           <div className="ground"></div>
         </div>
       </div>
