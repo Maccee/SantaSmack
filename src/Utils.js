@@ -22,19 +22,36 @@ export const calculateHitStrength = (
 export const defineHitStrength = (juhamode) => {
   const hitStrength = (Math.random() * (75 - 70) + 70).toFixed(2);
   const parsedHitStrength = parseFloat(hitStrength);
-  const test = 89;
-  // Check if hitStrength is below 50
+
+  // Play audio if hitStrength is above the threshold
   if (parsedHitStrength > 60.5) {
-    let audio = new Audio("bighit.mp3");
-    if (juhamode) {
-      audio = new Audio("eivarmastimeeohimaalista.mp3");
-    }
-    audio.play();
+    playAudio(juhamode);
   }
 
   return parsedHitStrength;
-  //return test;
 };
+
+const playAudio = (juhamode) => {
+  // Default audio file
+  let audioFile = "boom.mp3";
+
+  // Array of audio files for juhamode
+  const juhamodeFiles = [
+    "./iddqd/kympinkahenkympin.mp3",
+    "./iddqd/eivarmastimeeohimaalista.mp3",
+    
+  ];
+
+  if (juhamode) {
+    // If juhamode is true, select a random file from the juhamodeFiles array
+    const randomIndex = Math.floor(Math.random() * juhamodeFiles.length);
+    audioFile = juhamodeFiles[randomIndex];
+  }
+
+  // Play the audio file
+  const audio = new Audio(audioFile);
+  audio.play();
+}
 
 export const resetGame = (
   setHitAngle,

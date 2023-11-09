@@ -22,7 +22,6 @@ const App = () => {
 
   const [bottomLimit, setBottomLimit] = useState(gameAreaHeight - 50);
 
-
   // BALL MOVEMENT
   // Ball position, start position set 250px from bottom and 100px from left
   const [ballPosition, setBallPosition] = useState({
@@ -118,13 +117,9 @@ const App = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-
-
   useEffect(() => {
     const handleVisibilityChange = () => {
-
-
-      if (document.visibilityState === 'hidden') {
+      if (document.visibilityState === "hidden") {
         horizontalVelocityRef.current = 0;
       }
     };
@@ -133,19 +128,15 @@ const App = () => {
       horizontalVelocityRef.current = 0;
     };
 
-
-    window.addEventListener('resize', handleResize);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
+    window.addEventListener("resize", handleResize);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     // Call the resize handler in case the window is already resized
     handleResize();
 
     return () => {
-
-      window.removeEventListener('resize', handleResize);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-
+      window.removeEventListener("resize", handleResize);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 
@@ -196,10 +187,15 @@ const App = () => {
       if (
         highScoreData.length < 20 ||
         parseFloat(distance) >
-        parseFloat(highScoreData[highScoreData.length - 1].distance)
+          parseFloat(highScoreData[highScoreData.length - 1].distance)
       ) {
-        const newHighScoresound = new Audio("highscore.mp3");
-        newHighScoresound.play();
+        let newHighScoresound = new Audio("highscore.mp3");
+        if (juhaMode) {
+          let audio = new Audio("/iddqd/kuitenkinjoihankohtuu.mp3");
+          audio.play();
+        } else {
+          newHighScoresound.play();
+        }
         handleNewHighScore();
       }
     }
@@ -402,7 +398,6 @@ const App = () => {
         gameAreaHeight={gameAreaHeight}
       />
       <div
-
         className="game-area"
         tabIndex={0}
         onMouseUp={handleMouseUp}
@@ -416,7 +411,10 @@ const App = () => {
           className="scroll-container"
           style={{ transform: `translateX(-${scrollLeft}px)` }}
         >
-          <Markers gameAreaWidth={gameAreaWidth} gameAreaHeight={gameAreaHeight}/>
+          <Markers
+            gameAreaWidth={gameAreaWidth}
+            gameAreaHeight={gameAreaHeight}
+          />
 
           <Santa
             showHitbox={showHitbox}
@@ -436,11 +434,7 @@ const App = () => {
             verticalVelocityRef={verticalVelocityRef}
           />
 
-
           <Ground gameAreaHeight={gameAreaHeight} />
-
-
-
         </div>
       </div>
     </>
