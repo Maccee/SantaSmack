@@ -103,7 +103,7 @@ body {
   background-size: contain;
   background-repeat: no-repeat;
   position: absolute;
-  bottom: 100px;
+  
   left: 25px;
   z-index: 1;
 
@@ -169,7 +169,7 @@ body {
   border-radius: 10px;
   padding: 0 2.5rem 0 2.3rem;
   position: absolute;
-  bottom: 77px;
+  
   left: 10px;
   font-size: 3.9rem;
   color: rgb(0, 0, 0);

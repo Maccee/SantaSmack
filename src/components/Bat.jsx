@@ -1,7 +1,8 @@
-const Bat = ({ isHit }) => {
-  // When isHit is true the bat animates to swing. When false, reset.
+const Bat = ({ isHit, gameAreaHeight }) => {
+  const batStyle = {
+    top: `${gameAreaHeight - 200}px`
+  };
   const batClass = isHit ? "bat hit" : "bat";
-  return <div className={batClass} />;
+  return <div className={batClass} style={batStyle} />;
 };
-
 export default Bat;
