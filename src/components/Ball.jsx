@@ -11,7 +11,7 @@ const Ball = ({
   const minTopPosition = 50;
   const isOffScreen = top < minTopPosition;
   const distanceTop = isOffScreen ? minTopPosition : top - 110;
-console.log(distanceTop)
+
   const ballStyle = {
     top: `${top - 25}px`,
     left: `${left}px`,
@@ -19,7 +19,7 @@ console.log(distanceTop)
   };
 
   const distanceStyle = {
-    top: `${distanceTop }px`,
+    top: `${distanceTop}px`,
     left: `${left + 10}px`,
   };
 
@@ -32,7 +32,7 @@ console.log(distanceTop)
   return (
     <>
       <div className="ball" style={ballStyle}><div className="ballMarker"></div></div>
-      
+
       {isHit && (
         <div className="distance" style={distanceStyle}>
           {isOffScreen && <img src={Arrow} alt="Arrow" style={arrowStyle} />}

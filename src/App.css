@@ -22,7 +22,7 @@ body {
   width: fit-content;
   transform: translateY(-100%);
   position: relative;
-  border: 1px solid blue;
+  
   
 }
 .santa img {
@@ -42,7 +42,7 @@ body {
 
 .ball {
   
-  border: 1px solid blue;
+  
   width: 100px;
   height: 100px;
   border-radius: 100px;
@@ -57,7 +57,7 @@ body {
   left: -50%;
   width: 200px;
   position: absolute;
-  border: 1px solid red;
+  
 }
 
 .distance {
@@ -104,7 +104,7 @@ body {
   bottom: 100px;
   left: 25px;
   z-index: 1;
-  border: 1px solid blue;
+  
 }
 
 .hit {
