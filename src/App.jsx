@@ -13,6 +13,7 @@ import HUD from "./components/HUD";
 import Background from "./components/Background";
 import MusicPlayer from "./components/MusicPlayer";
 import Ground from "./components/Ground";
+import Porot from "./components/Porot";
 
 // APP COMPONENT
 const App = () => {
@@ -415,6 +416,7 @@ const App = () => {
             gameAreaWidth={gameAreaWidth}
             gameAreaHeight={gameAreaHeight}
           />
+          <Porot gameAreaWidth={gameAreaWidth} gameAreaHeight={gameAreaHeight} />
 
           <Santa
             showHitbox={showHitbox}
