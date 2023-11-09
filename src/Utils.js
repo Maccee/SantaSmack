@@ -22,7 +22,7 @@ export const calculateHitStrength = (
 export const defineHitStrength = (juhamode) => {
   const hitStrength = (Math.random() * (75 - 70) + 70).toFixed(2);
   const parsedHitStrength = parseFloat(hitStrength);
-  const test = 75;
+  const test = 89;
   // Check if hitStrength is below 50
   if (parsedHitStrength > 60.5) {
     let audio = new Audio("bighit.mp3");

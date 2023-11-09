@@ -1,13 +1,15 @@
 import SantaImg from "../assets/pukki.png";
+import Bat from "./Bat";
 
 const Santa = ({
     showHitbox,
     hitboxTopBoundary,
     hitboxBottomBoundary,
     bottomLimit,
+    isHit
 }) => {
     const santaStyle = {
-        top: `${bottomLimit + 23}px`,
+        top: `${bottomLimit +10}px`,
         left: "0px",
     };
 
@@ -27,6 +29,7 @@ const Santa = ({
                 <img src={SantaImg} alt="Santa" />
             </div>
             <div style={hitboxStyle}></div>
+            <Bat isHit={isHit} />
         </div>
     );
 };
