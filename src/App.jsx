@@ -18,15 +18,15 @@ const App = () => {
   // Define game area width, height and ground level
   const gameAreaWidth = 116000; // in px
   const [gameAreaHeight, setGameAreaHeight] = useState(window.innerHeight); // Client browser window height
-  const [bottomLimit, setBottomLimit] = useState(gameAreaHeight - 70); // 70px from bottom
+  const [bottomLimit, setBottomLimit] = useState(gameAreaHeight);
 
   // BALL MOVEMENT
   // Ball position, start position set 250px from bottom and 100px from left
   const [ballPosition, setBallPosition] = useState({
-    top: bottomLimit - 250,
+    top: bottomLimit - gameAreaHeight,
     left: 100,
   });
-  const [verticalVelocity, setVerticalVelocity] = useState(-7); // Ball vertical speed, set to -7 for upward movement before swing
+  const [verticalVelocity, setVerticalVelocity] = useState(0); // Ball vertical speed, set to -7 for upward movement before swing
   const [horizontalVelocity, setHorizontalVelocity] = useState(0); // Ball horizontal speed
   const [hitAngle, setHitAngle] = useState(0); // Hit angle calculated between -90 and 90 deg.
   const [isHit, setIsHit] = useState(false); // Check if swinged
@@ -37,7 +37,7 @@ const App = () => {
   const ballPositionRef = useRef(ballPosition);
 
   // Debug console
-  const [showHUD, setShowHUD] = useState(false);
+  const [showHUD, setShowHUD] = useState(true);
   const [lastHitPosition, setLastHitPosition] = useState({ top: 0, left: 0 });
   const [highScore, setHighScore] = useState(0);
   const [distance, setDistance] = useState(0);
@@ -47,8 +47,8 @@ const App = () => {
   const [hitboxEntryTime, setHitboxEntryTime] = useState(null); // Time when ball enters hitbox in ms since refresh
   const [hitboxExitTime, setHitboxExitTime] = useState(null); // Time when ball exits hitbox in ms since refresh
   const hitboxTopBoundary = bottomLimit - 200; // Hitbox top
-  const hitboxBottomBoundary = bottomLimit - 20; // Hitbox bottom
-  const hitboxTransitTime = 250; // The time in ms the ball travels through hitbox
+  const hitboxBottomBoundary = bottomLimit; // Hitbox bottom
+  const hitboxTransitTime = 550; // The time in ms the ball travels through hitbox
 
   // Physics
   const [gravity, setGravity] = useState(0.1); // Downward force that pulls ball down while flying
@@ -83,20 +83,19 @@ const App = () => {
   useEffect(() => {
     const handleKeyDown = (event) => {
       keySequence.push(event.key);
-      keySequenceString = keySequence.slice(-secretCode.length).join("").toLowerCase();
-      
-      if (
-        keySequenceString ===
-        secretCode
-      ) {
-        
+      keySequenceString = keySequence
+        .slice(-secretCode.length)
+        .join("")
+        .toLowerCase();
+
+      if (keySequenceString === secretCode) {
         setJuhaMode((prevMode) => {
           console.log("JuhaMode", !prevMode); // Log the new state
           return !prevMode; // This toggles the mode
         });
         keySequence = [];
       }
-      
+
       if (event.keyCode === 220 || event.keyCode === 192) {
         toggleHUD();
       }
@@ -107,7 +106,7 @@ const App = () => {
     if (gameAreaRef.current) {
       const element = gameAreaRef.current;
       element.scrollTop = element.scrollHeight - element.clientHeight;
-      gameAreaRef.current.focus();
+      //gameAreaRef.current.focus();
     }
 
     getDataFromAzureFunction().then((sortedResult) => {
@@ -120,7 +119,7 @@ const App = () => {
   useEffect(() => {
     const handleResize = () => {
       setGameAreaHeight(window.innerHeight);
-      setBottomLimit(gameAreaHeight - 70);
+      setBottomLimit(gameAreaHeight - 50);
     };
     window.addEventListener("resize", handleResize);
     handleResize();
@@ -151,10 +150,9 @@ const App = () => {
   // CHECK FOR YOUR DISTANCE OF THE SESSION!
   useEffect(() => {
     const handleNewHighScore = async () => {
-      const sound = new Audio("highscore.mp3");
-      sound.play();
       const name = prompt("Congrats on the high score! Enter your name:");
-      if (name) {
+
+      if (name && name.length <= 15) {
         const data = {
           name: name,
           hitAngle: hitAngle,
@@ -166,6 +164,8 @@ const App = () => {
 
         const updatedScores = await getDataFromAzureFunction();
         setHighScoreData(updatedScores);
+      } else if (name && name.length > 15) {
+        handleNewHighScore();
       }
     };
 
@@ -175,6 +175,8 @@ const App = () => {
         parseFloat(distance) >
           parseFloat(highScoreData[highScoreData.length - 1].distance)
       ) {
+        const newHighScoresound = new Audio("highscore.mp3");
+        newHighScoresound.play();
         handleNewHighScore();
       }
     }
@@ -301,7 +303,7 @@ const App = () => {
       setHitStrength(hitStrengthValue);
 
       const angle =
-        90 - ((mouseUpTime - hitboxEntryTime) / hitboxTransitTime) * 180;
+        90 - ((mouseUpTime - hitboxEntryTime) / hitboxTransitTime) * 120;
       const radians = (angle * Math.PI) / 180;
       const verticalVelocityComponent = hitStrengthValue * Math.sin(radians);
       const horizontalVelocityComponent = hitStrengthValue * Math.cos(radians);
@@ -381,6 +383,7 @@ const App = () => {
         highScore={highScore}
         hitStrength={hitStrength}
         toggleShowHitbox={toggleShowHitbox}
+        gameAreaHeight={gameAreaHeight}
       />
       <div
         ref={gameAreaRef}
@@ -404,6 +407,7 @@ const App = () => {
             hitboxTopBoundary={hitboxTopBoundary}
             hitboxBottomBoundary={hitboxBottomBoundary}
             bottomLimit={bottomLimit}
+            isHit={isHit}
           />
 
           <Ball
@@ -415,7 +419,7 @@ const App = () => {
             verticalVelocityRef={verticalVelocityRef}
           />
 
-          <Bat isHit={isHit} />
+          
 
           <div className="ground"></div>
         </div>

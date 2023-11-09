@@ -1,14 +1,16 @@
 body {
   font-family: "Mountains of Christmas", serif;
-  background-color: blue;
+  background-color: #3E210B;
 }
 
 .game-area {
+  height: 95vh;
   box-sizing: border-box;
   position: relative;
   overflow-x: hidden;
   overflow-y: hidden;
   scrollbar-width: none;
+
 }
 
 .game-area h2 {
@@ -17,15 +19,16 @@ body {
 }
 
 .santa {
-  width: 200px;
-  transform: translateX(-50%);
+  width: fit-content;
   transform: translateY(-100%);
-  position: absolute;
+  position: relative;
+  border: 1px solid blue;
+  
 }
-
 .santa img {
   width: 150px;
 }
+
 
 @keyframes spin {
   0% {
@@ -38,19 +41,28 @@ body {
 }
 
 .ball {
+  
+  border: 1px solid blue;
   width: 100px;
   height: 100px;
   border-radius: 100px;
-  position: relative;
+  position: absolute;
   background-image: url("./assets/elf.svg");
   background-size: contain;
-  transform: translateY(-50%);
   animation: spin 1s linear infinite;
   z-index: 2;
+}
+.ballMarker {
+  top: 50%;
+  left: -50%;
+  width: 200px;
+  position: absolute;
+  border: 1px solid red;
 }
 
 .distance {
   position: absolute;
+  
   z-index: 3;
   font-size: 2rem;
   color: rgb(0, 0, 0);
@@ -89,9 +101,10 @@ body {
   background-size: contain;
   background-repeat: no-repeat;
   position: absolute;
-  bottom: 95px;
-  left: 50px;
+  bottom: 100px;
+  left: 25px;
   z-index: 1;
+  border: 1px solid blue;
 }
 
 .hit {
@@ -116,6 +129,7 @@ body {
   position: absolute;
   width: 116000px;
   bottom: 0;
+  
   background-image: url("./assets/bg.png");
   background-size: contain;
   z-index: -10;
@@ -125,10 +139,12 @@ body {
   background-image: url("./assets/bg3.png");
   background-size: contain;
   background-repeat: repeat-x;
-  height: 400px;
+  height: 40vh;
   width: 116000px;
-  bottom: 50px;
+  bottom: -5vh;
   position: absolute;
+  
+  
 }
 
 .background2 {
@@ -143,7 +159,7 @@ body {
 
 .marker {
   position: absolute;
-  bottom: 20px;
+  bottom: 0;
 }
 
 .marker img {
@@ -162,8 +178,13 @@ body {
   font-weight: 700;
   font-family: "Mountains of Christmas", serif;
 }
+<<<<<<< HEAD
 .mp-session {
   position: fixed;
+=======
+.highScoreContainer {
+  position: absolute;
+>>>>>>> 17fe5b3 (uus vh laskuri)
   bottom: 0.4rem;
   right: 0.4rem;
   display: flex;
