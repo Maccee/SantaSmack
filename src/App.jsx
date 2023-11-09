@@ -68,6 +68,13 @@ const App = () => {
   const minHitStrength = 55;
   const maxHitStrength = 75;
 
+  // COLLISION
+  const [poros, setPoros] = useState([]);
+  const ballDiameter = 50;
+  const poroWidth = 150;
+  const poroHeight = 250;
+  const hitPorosRef = useRef(new Set()); // Ref to keep track of hit poros
+
   // HIGHSCORE
   const [highScoreData, setHighScoreData] = useState({});
   const [showHighScoreData, setShowHighScoreData] = useState(false);
@@ -203,10 +210,8 @@ const App = () => {
   }, [distance, horizontalVelocityRef.current]);
 
   let lastTime;
-
   useEffect(() => {
     let animationFrameId;
-
     const updatePosition = (time) => {
       if (lastTime !== undefined) {
         const timeDelta = (time - lastTime) / 7;
@@ -216,13 +221,50 @@ const App = () => {
         horizontalVelocityRef.current *= Math.pow(1 - airResistance, timeDelta);
 
         // UPDATE
-
         let newTop =
           ballPositionRef.current.top + verticalVelocityRef.current * timeDelta;
         let newLeft =
           ballPositionRef.current.left +
           horizontalVelocityRef.current * timeDelta;
+        // Collision Detection
+        const ballRect = {
+          left: newLeft,
+          right: newLeft + ballDiameter,
+          top: newTop,
+          bottom: newTop + ballDiameter,
+        };
 
+        poros.forEach((poro, index) => {
+          const poroRect = {
+            left: poro.x,
+            right: poro.x + poroWidth,
+            top: poro.y,
+            bottom: poro.y + poroHeight,
+          };
+
+          const isInCollision =
+            ballRect.right > poroRect.left &&
+            ballRect.left < poroRect.right &&
+            ballRect.bottom > poroRect.top &&
+            ballRect.top < poroRect.bottom;
+
+          if (isInCollision && !hitPorosRef.current.has(index)) {
+            // There is a new collision
+            // Increase horizontal velocity for speed boost
+            horizontalVelocityRef.current += 5;
+            if (verticalVelocityRef.current > 14) {
+              verticalVelocityRef.current -= 20;
+            } else {
+              verticalVelocityRef.current -= 14;
+            }
+            const audio = new Audio("bells.mp3");
+            audio.play();
+            hitPorosRef.current.add(index); // Mark this poro as hit
+          } else if (!isInCollision && hitPorosRef.current.has(index)) {
+            // The ball has left the collision area of a hit poro
+            hitPorosRef.current.delete(index); // Clear hit marker
+          }
+        });
         // POMPPU
         if (newTop >= bottomLimit) {
           newTop = bottomLimit;
@@ -238,6 +280,7 @@ const App = () => {
           horizontalVelocityRef.current = 0;
           setIsSpinning(false);
         }
+
         // SCROLL
         setScrollLeft(() => {
           const newScrollLeft = newLeft - window.innerWidth / 5; // PIENEMPI ENEMMÄN VASEMMALLE
@@ -246,7 +289,6 @@ const App = () => {
             Math.min(newScrollLeft, gameAreaWidth - window.innerWidth)
           );
         });
-
         if (Math.abs(horizontalVelocityRef.current) > 0) {
           const newDistance = parseFloat(
             (ballPositionRef.current.left / 100).toFixed(2)
@@ -264,7 +306,6 @@ const App = () => {
       } else {
         lastTime = time;
       }
-
       animationFrameId = requestAnimationFrame(updatePosition);
     };
     animationFrameId = requestAnimationFrame(updatePosition);
@@ -272,7 +313,7 @@ const App = () => {
       cancelAnimationFrame(animationFrameId);
       lastTime = undefined;
     };
-  }, [bottomLimit]);
+  }, [bottomLimit, poros]);
 
   // SET PERFORMANCE TIME
   const handleMouseDown = () => {
@@ -416,7 +457,11 @@ const App = () => {
             gameAreaWidth={gameAreaWidth}
             gameAreaHeight={gameAreaHeight}
           />
-          <Porot gameAreaWidth={gameAreaWidth} gameAreaHeight={gameAreaHeight} />
+          <Porot
+            setPoros={setPoros}
+            gameAreaWidth={gameAreaWidth}
+            gameAreaHeight={gameAreaHeight}
+          />
 
           <Santa
             showHitbox={showHitbox}
