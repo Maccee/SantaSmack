@@ -5,13 +5,14 @@ import { calculateHitStrength, defineHitStrength, resetGame } from "./Utils";
 
 // Component Imports
 import Santa from "./components/Santa";
-import Bat from "./components/Bat";
+
 import Markers from "./components/Markers";
 import Ball from "./components/Ball";
 import HighScoreData from "./components/HighScoreData";
 import HUD from "./components/HUD";
 import Background from "./components/Background";
 import MusicPlayer from "./components/MusicPlayer";
+import Ground from "./components/Ground";
 
 // APP COMPONENT
 const App = () => {
@@ -115,7 +116,7 @@ const App = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  
+
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -400,7 +401,7 @@ const App = () => {
         gameAreaHeight={gameAreaHeight}
       />
       <div
-        
+
         className="game-area"
         tabIndex={0}
         onMouseUp={handleMouseUp}
@@ -433,9 +434,9 @@ const App = () => {
             verticalVelocityRef={verticalVelocityRef}
           />
 
+          <Ground gameAreaHeight={gameAreaHeight} />
 
 
-          <div className="ground"></div>
         </div>
       </div>
     </>

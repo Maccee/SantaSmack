@@ -4,7 +4,7 @@ body {
 }
 
 .game-area {
-  
+
   box-sizing: border-box;
   position: relative;
   overflow-x: hidden;
@@ -126,14 +126,12 @@ body {
 }
 
 .ground {
-  background-color: rgba(255, 255, 255, 0);
   height: 50px;
   position: absolute;
   width: 116000px;
-  bottom: 0;
-
   background-image: url("./assets/bg.png");
   background-size: contain;
+  transform: translateY(-100%);
   z-index: -10;
 }
 
@@ -145,9 +143,7 @@ body {
   width: 116000px;
   bottom: -5vh;
   position: absolute;
-
-
-}
+ }
 
 .background2 {
   background-image: url("./assets/bg2.png");
