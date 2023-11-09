@@ -18,12 +18,12 @@ const App = () => {
   // Define game area width, height and ground level
   const gameAreaWidth = 116000; // in px
   const [gameAreaHeight, setGameAreaHeight] = useState(window.innerHeight); // Client browser window height
-  const [bottomLimit, setBottomLimit] = useState(gameAreaHeight);
+  const [bottomLimit, setBottomLimit] = useState(gameAreaHeight - 50);
 
   // BALL MOVEMENT
   // Ball position, start position set 250px from bottom and 100px from left
   const [ballPosition, setBallPosition] = useState({
-    top: bottomLimit -  250,
+    top: bottomLimit - 250,
     left: 100,
   });
   const [verticalVelocity, setVerticalVelocity] = useState(-7); // Ball vertical speed, set to -7 for upward movement before swing
@@ -47,7 +47,7 @@ const App = () => {
   const [hitboxEntryTime, setHitboxEntryTime] = useState(null); // Time when ball enters hitbox in ms since refresh
   const [hitboxExitTime, setHitboxExitTime] = useState(null); // Time when ball exits hitbox in ms since refresh
   const hitboxTopBoundary = bottomLimit - 160; // Hitbox top
-  const hitboxBottomBoundary = bottomLimit +40; // Hitbox bottom
+  const hitboxBottomBoundary = bottomLimit + 40; // Hitbox bottom
   const hitboxTransitTime = 152; // The time in ms the ball travels through hitbox
 
   // Physics
@@ -132,17 +132,17 @@ const App = () => {
         horizontalVelocityRef.current = 0;
       }
     };
-  
+
     const handleResize = () => {
       horizontalVelocityRef.current = 0;
     };
-  
+
     window.addEventListener('resize', handleResize);
     document.addEventListener('visibilitychange', handleVisibilityChange);
-  
+
     // Call the resize handler in case the window is already resized
     handleResize();
-  
+
     return () => {
       window.removeEventListener('resize', handleResize);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
@@ -196,7 +196,7 @@ const App = () => {
       if (
         highScoreData.length < 20 ||
         parseFloat(distance) >
-          parseFloat(highScoreData[highScoreData.length - 1].distance)
+        parseFloat(highScoreData[highScoreData.length - 1].distance)
       ) {
         const newHighScoresound = new Audio("highscore.mp3");
         newHighScoresound.play();
@@ -409,7 +409,7 @@ const App = () => {
         gameAreaHeight={gameAreaHeight}
       />
       <div
-        ref={gameAreaRef}
+        
         className="game-area"
         tabIndex={0}
         onMouseUp={handleMouseUp}
@@ -442,7 +442,7 @@ const App = () => {
             verticalVelocityRef={verticalVelocityRef}
           />
 
-          
+
 
           <div className="ground"></div>
         </div>
