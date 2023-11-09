@@ -7,6 +7,7 @@ const MusicPlayer = () => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
+  const [showSlider, setShowSlider] = useState(false);
 
   // Initialize the audioRef.current value only once, when the component mounts
   if (audioRef.current === null) {
@@ -47,6 +48,11 @@ const MusicPlayer = () => {
 
   const toggleMusic = () => {
     setIsPlaying(!isPlaying);
+    if (isPlaying) {
+      setShowSlider(false);
+    } else {
+      setShowSlider(true);
+    }
   };
   const handleVolumeChange = (event) => {
     const volume = event.target.value;
@@ -54,29 +60,31 @@ const MusicPlayer = () => {
   };
   return (
     <>
-      <button onClick={toggleMusic}>
-        {isPlaying ? (
-          <img src={MusicOff} className="music-svg" />
-        ) : (
-          <img src={MusicOn} className="music-svg" />
-        )}
-      </button>
-      {isPlaying && (
-        <>
+      <div className="button-container">
+        <button onClick={toggleMusic}>
+          {isPlaying ? (
+            <img src={MusicOff} className="music-svg" />
+          ) : (
+            <img src={MusicOn} className="music-svg" />
+          )}
+        </button>
+        {isPlaying && (
           <button onClick={playNextTrack}>
             <img src={MusicNext} className="music-svg" />
-          </button>{" "}
-          <input
-            className="volume-slider"
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={audioRef.current.volume}
-            onChange={handleVolumeChange}
-          />
-        </>
-      )}
+          </button>
+        )}
+      </div>
+      <div className={`slider-container ${showSlider ? "" : "hidden"}`}>
+        <input
+          className="volume-slider"
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value={audioRef.current.volume}
+          onChange={handleVolumeChange}
+        />
+      </div>{" "}
     </>
   );
 };
