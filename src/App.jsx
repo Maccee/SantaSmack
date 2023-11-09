@@ -19,7 +19,9 @@ const App = () => {
   // Define game area width, height and ground level
   const gameAreaWidth = 116000; // in px
   const [gameAreaHeight, setGameAreaHeight] = useState(window.innerHeight); // Client browser window height
+
   const [bottomLimit, setBottomLimit] = useState(gameAreaHeight - 50);
+
 
   // BALL MOVEMENT
   // Ball position, start position set 250px from bottom and 100px from left
@@ -120,6 +122,8 @@ const App = () => {
 
   useEffect(() => {
     const handleVisibilityChange = () => {
+
+
       if (document.visibilityState === 'hidden') {
         horizontalVelocityRef.current = 0;
       }
@@ -129,15 +133,19 @@ const App = () => {
       horizontalVelocityRef.current = 0;
     };
 
+
     window.addEventListener('resize', handleResize);
     document.addEventListener('visibilitychange', handleVisibilityChange);
+
 
     // Call the resize handler in case the window is already resized
     handleResize();
 
     return () => {
+
       window.removeEventListener('resize', handleResize);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+
     };
   }, []);
 
@@ -206,11 +214,9 @@ const App = () => {
       if (lastTime !== undefined) {
         const timeDelta = (time - lastTime) / 7;
 
-
         // Apply physics
         verticalVelocityRef.current += gravity * timeDelta; // gravity should be scaled properly
         horizontalVelocityRef.current *= Math.pow(1 - airResistance, timeDelta);
-
 
         // UPDATE
 
@@ -373,15 +379,10 @@ const App = () => {
           Highscores
         </button>
       </div>
-
-      <div className="mp-session">
-        <div className="mp-buttons">
-          <MusicPlayer />
-        </div>
-        <p className="session-high">
-          Your Session High: {highScore.toFixed(2)}m
-        </p>
+      <div className="mp-buttons">
+        <MusicPlayer />
       </div>
+      <p className="session-high">Your Session High: {highScore.toFixed(2)}m</p>
 
       <HUD
         showHUD={showHUD}
@@ -434,7 +435,9 @@ const App = () => {
             verticalVelocityRef={verticalVelocityRef}
           />
 
+
           <Ground gameAreaHeight={gameAreaHeight} />
+
 
 
         </div>

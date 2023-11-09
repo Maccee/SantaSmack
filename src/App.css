@@ -1,9 +1,11 @@
 body {
   font-family: "Mountains of Christmas", serif;
-  background-color: #3E210B;
+
+  background-color: #3e210b;
 }
 
 .game-area {
+
 
   box-sizing: border-box;
   position: relative;
@@ -23,9 +25,7 @@ body {
   transform: translateY(-100%);
   position: absolute;
 
-
 }
-
 .santa img {
   width: 150px;
 }
@@ -53,6 +53,12 @@ body {
   animation: spin 1s linear infinite;
   z-index: 2;
 }
+.ballMarker {
+  top: 50%;
+  left: -50%;
+  width: 200px;
+  position: absolute;
+}
 
 .ballMarker {
   top: 50%;
@@ -78,7 +84,6 @@ body {
   justify-content: space-between;
   gap: 1rem;
   margin-block-start: 0.5rem;
-
 }
 
 @keyframes hit {
@@ -177,56 +182,48 @@ body {
   font-family: "Mountains of Christmas", serif;
 }
 
-
-
-.mp-session {
-
-
-
+.mp-buttons {
   position: fixed;
-
-  bottom: 0.4rem;
+  bottom: 100px;
   right: 0.4rem;
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  z-index: 1000;
+  height: 250px;
+  justify-content: space-between;
+  min-width: 50px;
+  width: 80px;
+}
+.session-high {
+  position: fixed;
+  bottom: 0px;
+  right: 0.4rem;
+  text-align: left;
+  z-index: 1000;
   font-family: "Mountains of Christmas", serif;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   z-index: 1000;
   color: yellow;
-  height: 400px;
-  justify-content: space-between;
-  min-width: 50px;
-  align-items: flex-end;
+  height: 32px;
+  width: 250px;
 }
 
-.mp-buttons {
-
+.button-container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  width: 20px;
-  align-items: flex-end;
+  gap: 0.5rem;
+  width: 50px;
+  right: 0.5rem;
 }
-
-.session-high {
-  text-align: left;
-}
-
-.mp-session button {
+.button-container button {
   display: inline-block;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  min-width: 100px;
-  padding: 22px 33px;
-  font-family: "Lobster", sans-serif;
-  font-size: 26px;
-  line-height: 26px;
-  text-decoration: none;
+  min-width: 75px;
+  padding: 20px 20px;
   color: #fff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
   background: #5e0d0c;
   outline: none;
   border-radius: 15px;
@@ -249,23 +246,23 @@ body {
   transition: 500ms linear;
 }
 
+.slider-container.hidden {
+  display: none;
+}
+
 .volume-slider {
   -webkit-appearance: none;
-  width: 90px;
+  width: 75px;
   height: 20px;
   border: 1px solid #4c0300;
 
   border-radius: 5px;
   background: #5e0d0c;
   box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.25),
-    /* highlight */
-    inset 0 0 6px #a23227,
-    /* inner glow */
-    inset 0 80px 80px -40px #ac3223,
-    /* gradient */
-    1px 1px 3px rgba(0, 0, 0, 0.75);
-  /* shadow */
 
+    /* highlight */ inset 0 0 6px #a23227,
+    /* inner glow */ inset 0 80px 80px -40px #ac3223,
+    /* gradient */ 1px 1px 3px rgba(0, 0, 0, 0.75); /* shadow */
   background-size: 150px 10px;
   background-position: center;
   background-repeat: no-repeat;
@@ -296,7 +293,7 @@ body {
   background: linear-gradient(to right, #f088fc 1%, #ac6cff 70%);
 }
 
-.mp-session button::before,
+.button-container button::before,
 .highscorewindow h1::before,
 .highscorewindow-table::before,
 .hsc-button::before {
@@ -312,7 +309,7 @@ body {
     url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAXCAYAAACFxybfAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAodJREFUeNrsVb1rWlEUv2pN/GqspKRSKFYXWzEloIWif0Fn6dJChQ7OQil0qd3EzcEpg0OgdHDr4CQODk7VRlLMEIVqApX4We0zflR9/Z1Ui4T34ksaaAYP/Hzc673n/M6550PG8zz73yKjn0wm83fDYDAwo9HINBrNnwOQg4MDs0ql2lQqlfdAWont7ng8Pjw+Ps44nc4G1pI9EXWaSOzt7TGO42aH5Pv7+08ajUZ0MBiUeXEZd7vdL5VK5fX29rZ+5tQiEmdxKrlcjsEYczgcynK5/BKKv/IXFNz/XiqVXkHdjUuRIA9SqdRD8or/R8Ez9fr9fqHVakUR4c2z0REjIQuHw2ZcrPBXLCA0RHTezEdHjIQqkUhEr9I4HOILhQLf6/VoOUFEvDMiQiToDx1Cdz+bzZ6bUFarlel0OkkVUK/XWbvdPoVer5fh3ntsfwJ+CJ2XA4p0Op1bpBgJyxDehQQ6nQ5DZXHBYDBZq9V+EhFUndnr9drEqoc2bwJbwGPgtohuVSwWe2Gz2TZMJpNgRKi6qtUqg2EWj8dTgUDgo0KhWPN4PC70EvXOzs67fD6/S6kiRIKeZA1YJ2MiJNbdbvfTUCjkV6vVK2hcDF8GI2w0GrGTkxM2HA5PDxaLxSOfz/cWEfk81X0XIMMFgJJ/srBjCgk8IdcfuVyuZ36//7nFYtkQyAMumUzuRiKRD0jMFLa+AZOpYwqgB/ziBVqmVBKUO7eAB/R0WG/Z7XaTVqtdbTabHJL6EK2djBaBPHA0NSqpbUsiMUeEBgpF4Q5AbZrmSJ/yEWgBTaBNHl9kdkgmMUeG7qwAq9PqovceTA3zlxlgsuswyuXsGsiSxJLEkoSY/BZgAEjRodi+uBruAAAAAElFTkSuQmCC) no-repeat 100% 0;
 }
 
-.mp-session button:hover,
+.button-container button:hover,
 .hsc-button:hover {
   background: #a61715;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75), 0 0 40px #fff;
@@ -326,13 +323,13 @@ body {
   /* shadow */
 }
 
-.mp-session button:focus,
+.button-container button:focus,
 .hsc-button:focus {
   outline: none;
   /*FF*/
 }
 
-.mp-session button:active .hsc-button:active {
+.button-container button:active .hsc-button:active {
   box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.25),
     /* highlight */
     inset 0 0 6px #da3b2c,
@@ -466,10 +463,6 @@ body {
 }
 
 @media only screen and (max-width: 600px) {
-  .highscorewindow-table {
-    flex-direction: column;
-  }
-
   .highscorewindow-table div {
     padding: 0;
   }
@@ -484,13 +477,33 @@ body {
   }
 
   .highscorewindow-table {
-    font-size: 1rem;
-    line-height: 1.5rem;
-    max-width: 350px;
-    top: 35%;
+    flex-direction: column;
+    font-size: 0.8rem;
+    line-height: 1rem;
+    max-width: 250px;
+    min-height: 350px;
+    top: 275px;
+    left: 50%;
+    padding: 0 10px;
+    justify-content: center;
   }
 
-  .mp-session {
-    bottom: 0.4rem;
+  .mp-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 160px;
+    height: 60px;
+  }
+
+  .button-container {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 0.5rem;
+    width: 160px;
+    justify-content: flex-start;
+  }
+
+  .mp-buttons .volume-slider {
+    width: 100%;
   }
 }
