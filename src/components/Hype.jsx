@@ -16,7 +16,7 @@ const Hype = () => {
 
   return (
     <>
-      <div className="hype">WAU!</div>
+      <div className="hype">WOW!</div>
     </>
   );
 };
