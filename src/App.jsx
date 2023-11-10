@@ -14,6 +14,7 @@ import Background from "./components/Background";
 import MusicPlayer from "./components/MusicPlayer";
 import Ground from "./components/Ground";
 import Porot from "./components/Porot";
+import Hype from "./components/Hype";
 
 // APP COMPONENT
 const App = () => {
@@ -279,7 +280,7 @@ const App = () => {
             ballRect.top < poroRect.bottom;
 
           if (isInCollision && !hitPorosRef.current.has(index)) {
-            horizontalVelocityRef.current += 10;
+            horizontalVelocityRef.current += 5;
             if (verticalVelocityRef.current > 14) {
               verticalVelocityRef.current -= 20;
             } else {
@@ -305,7 +306,7 @@ const App = () => {
 
         // MUSAT
         if (
-          Math.abs(horizontalVelocityRef.current) > 5 &&
+          Math.abs(horizontalVelocityRef.current) > 25 &&
           Math.abs(ballPositionRef.current.left) > 100000 &&
           canPlayAudio
         ) {
@@ -496,6 +497,9 @@ const App = () => {
         toggleShowHitbox={toggleShowHitbox}
         gameAreaHeight={gameAreaHeight}
       />
+      {ballPositionRef.current.left > 100000 && (
+        <Hype />
+      )}
       <div
         className="game-area"
         tabIndex={0}

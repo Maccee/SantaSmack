@@ -152,6 +152,37 @@ body {
   font-family: "Mountains of Christmas", serif;
 }
 
+@keyframes fontGrowAndShrink {
+  0% {
+    font-size: 1rem;
+    opacity: 1;
+  }
+  50% { /* Half of the total animation time to grow */
+    font-size: 15rem;
+    opacity: 1;
+  }
+  75% { /* Maintain for 25% of the total time */
+    font-size: 15rem;
+    opacity: 1;
+  }
+  100% {
+    font-size: 0rem;
+    opacity: 0;
+  }
+}
+
+.hype {
+  font-family: "Mountains of Christmas", serif;
+  color: yellow;
+  font-weight: 700;
+  opacity: 0;
+  position: absolute;
+  top: 300px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: fontGrowAndShrink 1s ease-in-out;
+}
+
 .mp-buttons {
   position: fixed;
   bottom: 100px;
