@@ -59,6 +59,7 @@ const App = () => {
   const [gravity, setGravity] = useState(0.1); // Downward force that pulls ball down while flying
   const airResistance = 0.001; // Resistance to slow the ball in the air
   const bounce = 0.5; // 50% bounce strength
+  const [gameSpeed, setGameSpeed] = useState(1);
 
   // For hitStrength calculations
   const [hitStrength, setHitStrength] = useState(0);
@@ -230,15 +231,15 @@ const App = () => {
         const timeDelta = (time - lastTime) / 7;
 
         // Apply physics
-        verticalVelocityRef.current += gravity * timeDelta; // gravity should be scaled properly
-        horizontalVelocityRef.current *= Math.pow(1 - airResistance, timeDelta);
+        verticalVelocityRef.current += gravity * timeDelta * gameSpeed; // gravity should be scaled properly
+        horizontalVelocityRef.current *= Math.pow(1 - airResistance, timeDelta * gameSpeed);
 
         // UPDATE
         let newTop =
-          ballPositionRef.current.top + verticalVelocityRef.current * timeDelta;
+          ballPositionRef.current.top + verticalVelocityRef.current * timeDelta * gameSpeed;
         let newLeft =
           ballPositionRef.current.left +
-          horizontalVelocityRef.current * timeDelta;
+          horizontalVelocityRef.current * timeDelta * gameSpeed;
         // Collision Detection
         const ballRect = {
           left: newLeft,
@@ -263,12 +264,15 @@ const App = () => {
 
           if (isInCollision && !hitPorosRef.current.has(index)) {
             horizontalVelocityRef.current += 5;
-            if (verticalVelocityRef.current > 14) {
+            if (verticalVelocityRef.current > 15) {
               verticalVelocityRef.current -= 20;
             } else {
-              verticalVelocityRef.current -= 14;
+              verticalVelocityRef.current -= 10;
             }
-            const audio = new Audio("bells.mp3");
+            let audio = new Audio("bells.mp3");
+            if (juhaMode) {
+              audio = new Audio("hyvahienohomma.mp3");
+            } 
             audio.play();
             hitPorosRef.current.add(index); // Mark this poro as hit
           } else if (!isInCollision && hitPorosRef.current.has(index)) {
@@ -283,11 +287,8 @@ const App = () => {
           if (Math.abs(verticalVelocityRef.current) < bounce) {
             verticalVelocityRef.current = 0;
           }
-          horizontalVelocityRef.current *= 1 - airResistance - 0.1;
+          horizontalVelocityRef.current *= 1 - airResistance - 0.05;
         }
-
-
-
 
         // STOP MOVEMENT
         if (Math.abs(horizontalVelocityRef.current) < 1) {
@@ -327,7 +328,7 @@ const App = () => {
       cancelAnimationFrame(animationFrameId);
       lastTime = undefined;
     };
-  }, [bottomLimit, poros, isHit]);
+  }, [bottomLimit, poros, isHit, gameSpeed]);
 
   // SET PERFORMANCE TIME
   const handleMouseDown = () => {
@@ -429,7 +430,7 @@ const App = () => {
         </button>
       </div>
       <div className="mp-buttons">
-        <MusicPlayer mute={mute} setMute={setMute} />
+        <MusicPlayer mute={mute} setMute={setMute} gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
       </div>
       <div className="session-high">
         <p>Your Session High: </p>

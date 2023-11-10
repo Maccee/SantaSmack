@@ -27,5 +27,6 @@ if (!mute) {
 } else {
     distanceMusa.volume = 0;
     distanceMusa.currentTime = 0;
+    distanceMusa.pause();
 }
 } 
