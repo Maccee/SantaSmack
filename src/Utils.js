@@ -24,9 +24,9 @@ export const defineHitStrength = (juhamode) => {
   const parsedHitStrength = parseFloat(hitStrength);
 
   // Play audio if hitStrength is above the threshold
-  if (parsedHitStrength > 60.5) {
+  
     playAudio(juhamode);
-  }
+  
 
   return parsedHitStrength;
 };
