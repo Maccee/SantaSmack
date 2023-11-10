@@ -2,12 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import MusicOn from "../assets/music_on.svg";
 import MusicOff from "../assets/music_off.svg";
 import MusicNext from "../assets/music_next.svg";
+import { distanceMusicPlay } from "../SoundUtils";
 
-const MusicPlayer = () => {
+const MusicPlayer = ({mute, setMute}) => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
   const [showSlider, setShowSlider] = useState(false);
+  
 
   // Initialize the audioRef.current value only once, when the component mounts
   if (audioRef.current === null) {
@@ -58,6 +60,13 @@ const MusicPlayer = () => {
     const volume = event.target.value;
     audioRef.current.volume = volume;
   };
+
+  const handleMuteClick = () => {
+    setMute(prevMute => !prevMute); // Toggles the mute state
+    distanceMusicPlay(0, !mute); // Pass the opposite of the current mute state
+    console.log("mute clicked", !mute); // Logging the new state
+}
+
   return (
     <>
       <div className="button-container">
@@ -73,6 +82,11 @@ const MusicPlayer = () => {
             <img src={MusicNext} className="music-svg" />
           </button>
         )}
+        {!mute ? (
+        <button className="music-svg" onClick={() => handleMuteClick()}>mute</button>
+        ) : (
+          <button className="music-svg" onClick={() => handleMuteClick()}>unmute</button>
+        )}
       </div>
       <div className={`slider-container ${showSlider ? "" : "hidden"}`}>
         <input
@@ -85,6 +99,7 @@ const MusicPlayer = () => {
           onChange={handleVolumeChange}
         />
       </div>{" "}
+      
     </>
   );
 };

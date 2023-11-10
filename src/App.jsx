@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./App.css";
 import { postDataToAzureFunction, getDataFromAzureFunction } from "./ApiUtils";
 import { calculateHitStrength, defineHitStrength, resetGame } from "./Utils";
+import { distanceMusicPlay } from "./SoundUtils";
 
 // Component Imports
 import Santa from "./components/Santa";
@@ -62,18 +63,13 @@ const App = () => {
   // For hitStrength calculations
   const [hitStrength, setHitStrength] = useState(0);
   const [mouseDownTime, setMouseDownTime] = useState(0); // The performance.now time when mouse is pressed down
-  // Define your minimum and maximum reaction times
-  const minReactionTime = 20; // fastest expected reaction time
-  const maxReactionTime = 100; // slowest expected reaction time
-  // Define your minimum and maximum hit strengths
-  const minHitStrength = 55;
-  const maxHitStrength = 75;
 
   // MUSAT
   const [distanceMusa, setDistanceMusa] = useState("distancemusic.mp3");
   const throttleDuration = 1000; // Time in milliseconds
-  let audioDistance= null;
+  let audioDistance = null;
   const audioDistanceRef = useRef(null);
+  const [mute, setMute] = useState(false);
 
   // COLLISION
   const [poros, setPoros] = useState([]);
@@ -100,7 +96,7 @@ const App = () => {
   useEffect(() => {
     if (!audioDistance) {
       audioDistance = new Audio(distanceMusa);
-      
+
     }
     const handleKeyDown = (event) => {
       keySequence.push(event.key);
@@ -206,7 +202,7 @@ const App = () => {
       if (
         highScoreData.length < 20 ||
         parseFloat(distance) >
-          parseFloat(highScoreData[highScoreData.length - 1].distance)
+        parseFloat(highScoreData[highScoreData.length - 1].distance)
       ) {
         let newHighScoresound = new Audio("highscore.mp3");
         if (juhaMode) {
@@ -220,41 +216,11 @@ const App = () => {
     }
   }, [distance, horizontalVelocityRef.current]);
 
+  // LETS PLAY MUSIC WHILE WE ARE IN SPEEEEEED !!
   useEffect(() => {
-    // Initialize the audio object once on component mount
-    audioDistanceRef.current = new Audio('distancemusic.mp3');
+    distanceMusicPlay(horizontalVelocityRef, mute);
+  }, [horizontalVelocityRef.current]);
 
-    return () => {
-      // Optional: Cleanup if needed when component unmounts
-      if (audioDistanceRef.current) {
-        audioDistanceRef.current.pause();
-      }
-    };
-  }, []);
-  useEffect(() => {
-    if (isHit) {
-      const velocity = horizontalVelocityRef.current;
-      let volume = 0;
-
-      if (velocity > 25) {
-        volume = 0.6;
-      } else if (velocity >= 10) {
-        volume = ((velocity - 10) / 15) * 0.6;
-      }
-
-      const audioDistance = audioDistanceRef.current;
-      if (audioDistance) {
-        audioDistance.volume = volume;
-        if (volume > 0) {
-          audioDistance.play();
-        } else {
-          audioDistance.pause();
-        }
-      }
-    }
-  }, [isHit, horizontalVelocityRef]);
-
- 
 
   let lastTime;
   useEffect(() => {
@@ -320,10 +286,8 @@ const App = () => {
           horizontalVelocityRef.current *= 1 - airResistance - 0.1;
         }
 
-        // MUSAT
-        if (isHit) {
-          
-        } 
+
+
 
         // STOP MOVEMENT
         if (Math.abs(horizontalVelocityRef.current) < 1) {
@@ -388,8 +352,9 @@ const App = () => {
         horizontalVelocityRef,
         bottomLimit
       );
-     
+
     }
+
     const mouseUpTime = performance.now();
     const reactionTime = mouseUpTime - mouseDownTime;
 
@@ -401,13 +366,6 @@ const App = () => {
       setIsHit(true);
       setIsSpinning(true);
 
-      //const hitStrengthValue = calculateHitStrength(
-      //  reactionTime,
-      // minReactionTime,
-      // maxReactionTime,
-      // minHitStrength,
-      // maxHitStrength
-      //);
 
       const hitStrengthValue = defineHitStrength(juhaMode);
       setHitStrength(hitStrengthValue);
@@ -427,6 +385,8 @@ const App = () => {
       // FOR HUD ONLY
       setLastHitPosition({ top: ballPosition.top });
       setHitAngle(angle);
+
+
     }
   };
 
@@ -469,7 +429,7 @@ const App = () => {
         </button>
       </div>
       <div className="mp-buttons">
-        <MusicPlayer />
+        <MusicPlayer mute={mute} setMute={setMute} />
       </div>
       <div className="session-high">
         <p>Your Session High: </p>

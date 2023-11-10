@@ -24,9 +24,9 @@ export const defineHitStrength = (juhamode) => {
   const parsedHitStrength = parseFloat(hitStrength);
 
   // Play audio if hitStrength is above the threshold
-  
-    playAudio(juhamode);
-  
+
+  playAudio(juhamode);
+
 
   return parsedHitStrength;
 };
@@ -39,7 +39,7 @@ const playAudio = (juhamode) => {
   const juhamodeFiles = [
     "./iddqd/kympinkahenkympin.mp3",
     "./iddqd/eivarmastimeeohimaalista.mp3",
-    
+
   ];
 
   if (juhamode) {
