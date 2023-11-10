@@ -279,7 +279,7 @@ const App = () => {
             ballRect.top < poroRect.bottom;
 
           if (isInCollision && !hitPorosRef.current.has(index)) {
-            horizontalVelocityRef.current += 5;
+            horizontalVelocityRef.current += 10;
             if (verticalVelocityRef.current > 14) {
               verticalVelocityRef.current -= 20;
             } else {
@@ -305,7 +305,7 @@ const App = () => {
 
         // MUSAT
         if (
-          Math.abs(horizontalVelocityRef.current) > 15 &&
+          Math.abs(horizontalVelocityRef.current) > 5 &&
           Math.abs(ballPositionRef.current.left) > 100000 &&
           canPlayAudio
         ) {
@@ -474,7 +474,10 @@ const App = () => {
       <div className="mp-buttons">
         <MusicPlayer />
       </div>
-      <p className="session-high">Your Session High: {highScore.toFixed(2)}m</p>
+      <div className="session-high">
+        <p>Your Session High: </p>
+        <p>{highScore.toFixed(2)}m</p>
+      </div>
 
       <HUD
         showHUD={showHUD}

@@ -168,7 +168,7 @@ body {
   position: fixed;
   bottom: 0px;
   right: 0.4rem;
-  text-align: left;
+  text-align: right;
   z-index: 1000;
   font-family: "Mountains of Christmas", serif;
   font-size: 1.5rem;
@@ -176,7 +176,13 @@ body {
   z-index: 1000;
   color: yellow;
   height: 32px;
-  width: 250px;
+  width: 260px;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+}
+.session-high:first-child{
+  text-align: left;
 }
 
 .button-container {
