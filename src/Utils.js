@@ -20,7 +20,7 @@ export const calculateHitStrength = (
 };
 
 export const defineHitStrength = (juhamode) => {
-  const hitStrength = (Math.random() * (75 - 70) + 70).toFixed(2);
+  const hitStrength = (Math.random() * (55 - 50) + 50).toFixed(2);
   const parsedHitStrength = parseFloat(hitStrength);
 
   // Play audio if hitStrength is above the threshold
