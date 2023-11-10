@@ -36,10 +36,11 @@ body {
   height: 100px;
   border-radius: 100px;
   position: absolute;
-  background-image: url("./assets/elf.svg");
+  background-image: url("./assets/tonttu.png");
   background-size: contain;
   animation: spin 1s linear infinite;
   z-index: 2;
+  background-repeat: no-repeat;
 }
 .ballMarker {
   top: 50%;
@@ -395,7 +396,7 @@ body {
   z-index: 1000;
   /* Ensure it's above other elements */
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
   flex-direction: row;
   max-height: 70%;
   -webkit-box-sizing: border-box;
@@ -424,7 +425,6 @@ body {
 }
 
 .highscorewindow-table div:first-child {
-  border-right: 1px solid white;
   padding: 0 20px 0 0;
 }
 
@@ -440,7 +440,7 @@ body {
 .highscorewindow-table .dist {
   color: antiquewhite;
   text-align: right;
-  padding-left: 40px;
+  padding-left: 20px;
 }
 
 .highscorewindow-table .top1 {

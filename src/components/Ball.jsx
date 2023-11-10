@@ -31,7 +31,9 @@ const Ball = ({
 
   return (
     <>
-      <div className="ball" style={ballStyle}><div className="ballMarker"></div></div>
+      <div className="ball" style={ballStyle}>
+        <div className="ballMarker"></div>
+      </div>
 
       {isHit && (
         <div className="distance" style={distanceStyle}>
