@@ -18,7 +18,7 @@ import Porot from "./components/Porot";
 // APP COMPONENT
 const App = () => {
   // Define game area width, height and ground level
-  const gameAreaWidth = 116000; // in px
+  const gameAreaWidth = 400000; // in px
   const [gameAreaHeight, setGameAreaHeight] = useState(window.innerHeight); // Client browser window height
 
   const [bottomLimit, setBottomLimit] = useState(gameAreaHeight - 50);
@@ -249,8 +249,7 @@ const App = () => {
             ballRect.top < poroRect.bottom;
 
           if (isInCollision && !hitPorosRef.current.has(index)) {
-            // There is a new collision
-            // Increase horizontal velocity for speed boost
+            
             horizontalVelocityRef.current += 5;
             if (verticalVelocityRef.current > 14) {
               verticalVelocityRef.current -= 20;
