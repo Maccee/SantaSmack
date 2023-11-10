@@ -18,7 +18,7 @@ import Porot from "./components/Porot";
 // APP COMPONENT
 const App = () => {
   // Define game area width, height and ground level
-  const gameAreaWidth = 400000; // in px
+  const gameAreaWidth = 300000; // in px
   const [gameAreaHeight, setGameAreaHeight] = useState(window.innerHeight); // Client browser window height
 
   const [bottomLimit, setBottomLimit] = useState(gameAreaHeight - 50);
@@ -67,6 +67,11 @@ const App = () => {
   // Define your minimum and maximum hit strengths
   const minHitStrength = 55;
   const maxHitStrength = 75;
+
+  // MUSAT
+  const [distanceMusa, setDistanceMusa] = useState("distancemusic.mp3");
+  let canPlayAudio = true;
+  const throttleDuration = 1000; // Time in milliseconds
 
   // COLLISION
   const [poros, setPoros] = useState([]);
@@ -208,6 +213,31 @@ const App = () => {
       }
     }
   }, [distance, horizontalVelocityRef.current]);
+  let audio = null;
+  const musat = () => {
+    if (!audio) {
+      audio = new Audio(distanceMusa);
+    }
+    if (!canPlayAudio) {
+      audio.volume = 1;
+      audio.play();
+    } else {
+      fadeOut(audio);
+    }
+  };
+
+  function fadeOut(audio) {
+    let fadeInterval = setInterval(() => {
+      if (audio.volume > 0.1) {
+        audio.volume -= 0.1;
+      } else {
+        clearInterval(fadeInterval);
+        audio.volume = 0;
+        audio.pause();
+        audio.currentTime = 0;
+      }
+    }, 100);
+  }
 
   let lastTime;
   useEffect(() => {
@@ -249,7 +279,6 @@ const App = () => {
             ballRect.top < poroRect.bottom;
 
           if (isInCollision && !hitPorosRef.current.has(index)) {
-            
             horizontalVelocityRef.current += 5;
             if (verticalVelocityRef.current > 14) {
               verticalVelocityRef.current -= 20;
@@ -272,6 +301,32 @@ const App = () => {
             verticalVelocityRef.current = 0;
           }
           horizontalVelocityRef.current *= 1 - airResistance - 0.1;
+        }
+
+        // MUSAT
+        if (
+          Math.abs(horizontalVelocityRef.current) > 15 &&
+          Math.abs(ballPositionRef.current.left) > 100000 &&
+          canPlayAudio
+        ) {
+          canPlayAudio = false;
+          musat();
+          console.log(
+            "PLAY",
+            Math.abs(horizontalVelocityRef.current),
+            Math.abs(ballPositionRef.current.left),
+            canPlayAudio
+          );
+        }
+        if (Math.abs(horizontalVelocityRef.current) < 10 && !canPlayAudio) {
+          canPlayAudio = true;
+          musat();
+          console.log(
+            "STOP",
+            Math.abs(horizontalVelocityRef.current),
+            Math.abs(ballPositionRef.current.left),
+            canPlayAudio
+          );
         }
 
         // STOP MOVEMENT
