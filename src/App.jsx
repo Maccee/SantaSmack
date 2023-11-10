@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./App.css";
 import { postDataToAzureFunction, getDataFromAzureFunction } from "./ApiUtils";
 import { calculateHitStrength, defineHitStrength, resetGame } from "./Utils";
+import { distanceMusicPlay } from "./SoundUtils";
 
 // Component Imports
 import Santa from "./components/Santa";
@@ -62,17 +63,13 @@ const App = () => {
   // For hitStrength calculations
   const [hitStrength, setHitStrength] = useState(0);
   const [mouseDownTime, setMouseDownTime] = useState(0); // The performance.now time when mouse is pressed down
-  // Define your minimum and maximum reaction times
-  const minReactionTime = 20; // fastest expected reaction time
-  const maxReactionTime = 100; // slowest expected reaction time
-  // Define your minimum and maximum hit strengths
-  const minHitStrength = 55;
-  const maxHitStrength = 75;
 
   // MUSAT
   const [distanceMusa, setDistanceMusa] = useState("distancemusic.mp3");
-  let canPlayAudio = true;
   const throttleDuration = 1000; // Time in milliseconds
+  let audioDistance = null;
+  const audioDistanceRef = useRef(null);
+  const [mute, setMute] = useState(false);
 
   // COLLISION
   const [poros, setPoros] = useState([]);
@@ -97,6 +94,10 @@ const App = () => {
 
   // SET GAMEAREA // TOGGLE HUD // INITALIZATION
   useEffect(() => {
+    if (!audioDistance) {
+      audioDistance = new Audio(distanceMusa);
+
+    }
     const handleKeyDown = (event) => {
       keySequence.push(event.key);
       keySequenceString = keySequence
@@ -201,7 +202,7 @@ const App = () => {
       if (
         highScoreData.length < 20 ||
         parseFloat(distance) >
-          parseFloat(highScoreData[highScoreData.length - 1].distance)
+        parseFloat(highScoreData[highScoreData.length - 1].distance)
       ) {
         let newHighScoresound = new Audio("highscore.mp3");
         if (juhaMode) {
@@ -214,31 +215,12 @@ const App = () => {
       }
     }
   }, [distance, horizontalVelocityRef.current]);
-  let audio = null;
-  const musat = () => {
-    if (!audio) {
-      audio = new Audio(distanceMusa);
-    }
-    if (!canPlayAudio) {
-      audio.volume = 1;
-      audio.play();
-    } else {
-      fadeOut(audio);
-    }
-  };
 
-  function fadeOut(audio) {
-    let fadeInterval = setInterval(() => {
-      if (audio.volume > 0.1) {
-        audio.volume -= 0.1;
-      } else {
-        clearInterval(fadeInterval);
-        audio.volume = 0;
-        audio.pause();
-        audio.currentTime = 0;
-      }
-    }, 100);
-  }
+  // LETS PLAY MUSIC WHILE WE ARE IN SPEEEEEED !!
+  useEffect(() => {
+    distanceMusicPlay(horizontalVelocityRef, mute);
+  }, [horizontalVelocityRef.current]);
+
 
   let lastTime;
   useEffect(() => {
@@ -304,31 +286,8 @@ const App = () => {
           horizontalVelocityRef.current *= 1 - airResistance - 0.1;
         }
 
-        // MUSAT
-        if (
-          Math.abs(horizontalVelocityRef.current) > 25 &&
-          Math.abs(ballPositionRef.current.left) > 100000 &&
-          canPlayAudio
-        ) {
-          canPlayAudio = false;
-          musat();
-          console.log(
-            "PLAY",
-            Math.abs(horizontalVelocityRef.current),
-            Math.abs(ballPositionRef.current.left),
-            canPlayAudio
-          );
-        }
-        if (Math.abs(horizontalVelocityRef.current) < 10 && !canPlayAudio) {
-          canPlayAudio = true;
-          musat();
-          console.log(
-            "STOP",
-            Math.abs(horizontalVelocityRef.current),
-            Math.abs(ballPositionRef.current.left),
-            canPlayAudio
-          );
-        }
+
+
 
         // STOP MOVEMENT
         if (Math.abs(horizontalVelocityRef.current) < 1) {
@@ -368,7 +327,7 @@ const App = () => {
       cancelAnimationFrame(animationFrameId);
       lastTime = undefined;
     };
-  }, [bottomLimit, poros]);
+  }, [bottomLimit, poros, isHit]);
 
   // SET PERFORMANCE TIME
   const handleMouseDown = () => {
@@ -393,7 +352,9 @@ const App = () => {
         horizontalVelocityRef,
         bottomLimit
       );
+
     }
+
     const mouseUpTime = performance.now();
     const reactionTime = mouseUpTime - mouseDownTime;
 
@@ -405,13 +366,6 @@ const App = () => {
       setIsHit(true);
       setIsSpinning(true);
 
-      //const hitStrengthValue = calculateHitStrength(
-      //  reactionTime,
-      // minReactionTime,
-      // maxReactionTime,
-      // minHitStrength,
-      // maxHitStrength
-      //);
 
       const hitStrengthValue = defineHitStrength(juhaMode);
       setHitStrength(hitStrengthValue);
@@ -431,6 +385,8 @@ const App = () => {
       // FOR HUD ONLY
       setLastHitPosition({ top: ballPosition.top });
       setHitAngle(angle);
+
+
     }
   };
 
@@ -473,7 +429,7 @@ const App = () => {
         </button>
       </div>
       <div className="mp-buttons">
-        <MusicPlayer />
+        <MusicPlayer mute={mute} setMute={setMute} />
       </div>
       <div className="session-high">
         <p>Your Session High: </p>
@@ -497,9 +453,7 @@ const App = () => {
         toggleShowHitbox={toggleShowHitbox}
         gameAreaHeight={gameAreaHeight}
       />
-      {ballPositionRef.current.left > 100000 && (
-        <Hype />
-      )}
+      {ballPositionRef.current.left > 100000 && <Hype />}
       <div
         className="game-area"
         tabIndex={0}
