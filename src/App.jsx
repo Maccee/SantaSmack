@@ -14,7 +14,7 @@ import Background from "./components/Background";
 import MusicPlayer from "./components/MusicPlayer";
 import Ground from "./components/Ground";
 import Porot from "./components/Porot";
-import Hype from "./Hype";
+import Hype from "./components/Hype";
 
 // APP COMPONENT
 const App = () => {
@@ -497,9 +497,9 @@ const App = () => {
         toggleShowHitbox={toggleShowHitbox}
         gameAreaHeight={gameAreaHeight}
       />
-
-      <Hype ballPositionRef={ballPositionRef}/>
-
+      {ballPositionRef.current.left > 100000 && (
+        <Hype />
+      )}
       <div
         className="game-area"
         tabIndex={0}
