@@ -71,8 +71,9 @@ const App = () => {
 
   // MUSAT
   const [distanceMusa, setDistanceMusa] = useState("distancemusic.mp3");
-  let canPlayAudio = true;
   const throttleDuration = 1000; // Time in milliseconds
+  let audioDistance= null;
+  const audioDistanceRef = useRef(null);
 
   // COLLISION
   const [poros, setPoros] = useState([]);
@@ -97,6 +98,10 @@ const App = () => {
 
   // SET GAMEAREA // TOGGLE HUD // INITALIZATION
   useEffect(() => {
+    if (!audioDistance) {
+      audioDistance = new Audio(distanceMusa);
+      
+    }
     const handleKeyDown = (event) => {
       keySequence.push(event.key);
       keySequenceString = keySequence
@@ -214,31 +219,42 @@ const App = () => {
       }
     }
   }, [distance, horizontalVelocityRef.current]);
-  let audio = null;
-  const musat = () => {
-    if (!audio) {
-      audio = new Audio(distanceMusa);
-    }
-    if (!canPlayAudio) {
-      audio.volume = 1;
-      audio.play();
-    } else {
-      fadeOut(audio);
-    }
-  };
 
-  function fadeOut(audio) {
-    let fadeInterval = setInterval(() => {
-      if (audio.volume > 0.1) {
-        audio.volume -= 0.1;
-      } else {
-        clearInterval(fadeInterval);
-        audio.volume = 0;
-        audio.pause();
-        audio.currentTime = 0;
+  useEffect(() => {
+    // Initialize the audio object once on component mount
+    audioDistanceRef.current = new Audio('distancemusic.mp3');
+
+    return () => {
+      // Optional: Cleanup if needed when component unmounts
+      if (audioDistanceRef.current) {
+        audioDistanceRef.current.pause();
       }
-    }, 100);
-  }
+    };
+  }, []);
+  useEffect(() => {
+    if (isHit) {
+      const velocity = horizontalVelocityRef.current;
+      let volume = 0;
+
+      if (velocity > 25) {
+        volume = 0.6;
+      } else if (velocity >= 10) {
+        volume = ((velocity - 10) / 15) * 0.6;
+      }
+
+      const audioDistance = audioDistanceRef.current;
+      if (audioDistance) {
+        audioDistance.volume = volume;
+        if (volume > 0) {
+          audioDistance.play();
+        } else {
+          audioDistance.pause();
+        }
+      }
+    }
+  }, [isHit, horizontalVelocityRef]);
+
+ 
 
   let lastTime;
   useEffect(() => {
@@ -305,30 +321,9 @@ const App = () => {
         }
 
         // MUSAT
-        if (
-          Math.abs(horizontalVelocityRef.current) > 25 &&
-          Math.abs(ballPositionRef.current.left) > 100000 &&
-          canPlayAudio
-        ) {
-          canPlayAudio = false;
-          musat();
-          console.log(
-            "PLAY",
-            Math.abs(horizontalVelocityRef.current),
-            Math.abs(ballPositionRef.current.left),
-            canPlayAudio
-          );
-        }
-        if (Math.abs(horizontalVelocityRef.current) < 10 && !canPlayAudio) {
-          canPlayAudio = true;
-          musat();
-          console.log(
-            "STOP",
-            Math.abs(horizontalVelocityRef.current),
-            Math.abs(ballPositionRef.current.left),
-            canPlayAudio
-          );
-        }
+        if (isHit) {
+          
+        } 
 
         // STOP MOVEMENT
         if (Math.abs(horizontalVelocityRef.current) < 1) {
@@ -368,7 +363,7 @@ const App = () => {
       cancelAnimationFrame(animationFrameId);
       lastTime = undefined;
     };
-  }, [bottomLimit, poros]);
+  }, [bottomLimit, poros, isHit]);
 
   // SET PERFORMANCE TIME
   const handleMouseDown = () => {
@@ -393,6 +388,7 @@ const App = () => {
         horizontalVelocityRef,
         bottomLimit
       );
+     
     }
     const mouseUpTime = performance.now();
     const reactionTime = mouseUpTime - mouseDownTime;
@@ -497,9 +493,7 @@ const App = () => {
         toggleShowHitbox={toggleShowHitbox}
         gameAreaHeight={gameAreaHeight}
       />
-      {ballPositionRef.current.left > 100000 && (
-        <Hype />
-      )}
+      {ballPositionRef.current.left > 100000 && <Hype />}
       <div
         className="game-area"
         tabIndex={0}
