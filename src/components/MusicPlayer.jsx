@@ -4,7 +4,7 @@ import MusicOff from "../assets/music_off.svg";
 import MusicNext from "../assets/music_next.svg";
 import { distanceMusicPlay } from "../SoundUtils";
 
-const MusicPlayer = ({mute, setMute}) => {
+const MusicPlayer = ({mute, setMute, gameSpeed, setGameSpeed}) => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
@@ -60,6 +60,10 @@ const MusicPlayer = ({mute, setMute}) => {
     const volume = event.target.value;
     audioRef.current.volume = volume;
   };
+  const handleSpeedChange = (event) => {
+    setGameSpeed(event.target.value);
+    console.log(gameSpeed)
+  };
 
   const handleMuteClick = () => {
     setMute(prevMute => !prevMute); // Toggles the mute state
@@ -87,6 +91,15 @@ const MusicPlayer = ({mute, setMute}) => {
         ) : (
           <button className="music-svg" onClick={() => handleMuteClick()}>unmute</button>
         )}
+        <input
+          className="volume-slider"
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value={gameSpeed}
+          onChange={handleSpeedChange}
+        />
       </div>
       <div className={`slider-container ${showSlider ? "" : "hidden"}`}>
         <input
