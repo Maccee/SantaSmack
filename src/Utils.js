@@ -33,7 +33,7 @@ export const defineHitStrength = (juhamode) => {
 
 const playAudio = (juhamode) => {
   // Default audio file
-  let audioFile = "boom.mp3";
+  let audioFile = "punch.mp3";
 
   // Array of audio files for juhamode
   const juhamodeFiles = [
