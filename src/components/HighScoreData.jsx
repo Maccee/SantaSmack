@@ -13,7 +13,7 @@ const HighScoreData = ({ highScoreData, showHighScoreData }) => {
           {firstColumnData.map((item, index) => (
             <p key={index}>
               {index + 1}. {item.name}{" "}
-              <span className={index < 3 ? `top${index + 1}` : "dist"}>
+              <span className={`${index < 3 ? `top${index + 1}` : ""} dist`}>
                 {item.distance}
               </span>
             </p>
