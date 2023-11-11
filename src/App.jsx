@@ -20,7 +20,7 @@ import Hype from "./components/Hype";
 // APP COMPONENT
 const App = () => {
   // Define game area width, height and ground level
-  const gameAreaWidth = 100000; // in px
+  const [gameAreaWidth, setGameAreaWidth] = useState(100000); // in px
   const [gameAreaHeight, setGameAreaHeight] = useState(window.innerHeight); // Client browser window height
 
   const [bottomLimit, setBottomLimit] = useState(gameAreaHeight - 50);
@@ -97,7 +97,6 @@ const App = () => {
   useEffect(() => {
     if (!audioDistance) {
       audioDistance = new Audio(distanceMusa);
-
     }
     const handleKeyDown = (event) => {
       keySequence.push(event.key);
@@ -105,7 +104,6 @@ const App = () => {
         .slice(-secretCode.length)
         .join("")
         .toLowerCase();
-
       if (keySequenceString === secretCode) {
         setJuhaMode((prevMode) => {
           console.log("JuhaMode", !prevMode); // Log the new state
@@ -113,20 +111,16 @@ const App = () => {
         });
         keySequence = [];
       }
-
       if (event.keyCode === 220 || event.keyCode === 192) {
         toggleHUD();
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
-
     if (gameAreaRef.current) {
       const element = gameAreaRef.current;
       element.scrollTop = element.scrollHeight - element.clientHeight;
       //gameAreaRef.current.focus();
     }
-
     getDataFromAzureFunction().then((sortedResult) => {
       setHighScoreData(sortedResult);
     });
@@ -139,17 +133,14 @@ const App = () => {
         horizontalVelocityRef.current = 0;
       }
     };
-
     const handleResize = () => {
       horizontalVelocityRef.current = 0;
     };
-
     window.addEventListener("resize", handleResize);
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     // Call the resize handler in case the window is already resized
     handleResize();
-
     return () => {
       window.removeEventListener("resize", handleResize);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
@@ -191,14 +182,12 @@ const App = () => {
           distance: distance,
         };
         await postDataToAzureFunction(data);
-
         const updatedScores = await getDataFromAzureFunction();
         setHighScoreData(updatedScores);
       } else if (name && name.length > 15) {
         handleNewHighScore();
       }
     };
-
     if (isHit && horizontalVelocityRef.current === 0) {
       if (
         highScoreData.length < 20 ||
@@ -222,7 +211,17 @@ const App = () => {
     distanceMusicPlay(horizontalVelocityRef, mute);
   }, [horizontalVelocityRef.current]);
 
+  useEffect(() => {
+    // Calculate new width based on ball's position
+    const newWidth = ballPositionRef.current.left + 20000;
 
+    // Update the game area's width if it's less than the new width
+    if (gameAreaWidth < newWidth) {
+      setGameAreaWidth(newWidth);
+    }
+  }, [ballPositionRef.current.left]);
+
+  // MAIN PHYSICS UPDATE
   let lastTime;
   useEffect(() => {
     let animationFrameId;
@@ -477,6 +476,7 @@ const App = () => {
             setPoros={setPoros}
             gameAreaWidth={gameAreaWidth}
             gameAreaHeight={gameAreaHeight}
+            ballPositionRef={ballPositionRef}
           />
 
           <Santa

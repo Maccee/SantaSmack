@@ -8,8 +8,9 @@ const Markers = ({ gameAreaWidth, gameAreaHeight }) => {
     const count = Math.floor(gameAreaWidth / interval);
     // Generate the markers array
     return Array.from({ length: count }, (_, index) => (index + 1) * interval);
+    
   }, [gameAreaWidth]); // Dependencies array
-
+  
   return (
     <>
       {markers.map((distance, index) => (
