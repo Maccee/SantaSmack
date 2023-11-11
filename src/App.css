@@ -139,7 +139,6 @@ body {
 .ground {
   height: 50px;
   position: absolute;
-  width: 300000px;
   background-image: url("./assets/bg.png");
   background-size: contain;
   transform: translateY(-100%);
@@ -151,7 +150,7 @@ body {
   background-size: contain;
   background-repeat: repeat-x;
   height: 55vh;
-  width: 300000px;
+  
   bottom: -5vh;
   position: absolute;
 }
