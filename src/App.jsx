@@ -20,7 +20,7 @@ import Hype from "./components/Hype";
 // APP COMPONENT
 const App = () => {
   // Define game area width, height and ground level
-  const [gameAreaWidth, setGameAreaWidth] = useState(100000); // in px
+  const [gameAreaWidth, setGameAreaWidth] = useState(10000); // in px
   const [gameAreaHeight, setGameAreaHeight] = useState(window.innerHeight); // Client browser window height
 
   const [bottomLimit, setBottomLimit] = useState(gameAreaHeight - 50);
@@ -462,7 +462,7 @@ const App = () => {
         onKeyDown={handleSpaceDown}
         onKeyUp={handleSpaceUp}
       >
-        <Background scrollLeft={scrollLeft} />
+        <Background scrollLeft={scrollLeft} gameAreaWidth={gameAreaWidth}/>
 
         <div
           className="scroll-container"
@@ -497,7 +497,7 @@ const App = () => {
             verticalVelocityRef={verticalVelocityRef}
           />
 
-          <Ground gameAreaHeight={gameAreaHeight} />
+          <Ground gameAreaHeight={gameAreaHeight} gameAreaWidth={gameAreaWidth} />
         </div>
       </div>
     </>
