@@ -20,7 +20,7 @@ import Hype from "./components/Hype";
 // APP COMPONENT
 const App = () => {
   // Define game area width, height and ground level
-  const gameAreaWidth = 300000; // in px
+  const gameAreaWidth = 100000; // in px
   const [gameAreaHeight, setGameAreaHeight] = useState(window.innerHeight); // Client browser window height
 
   const [bottomLimit, setBottomLimit] = useState(gameAreaHeight - 50);

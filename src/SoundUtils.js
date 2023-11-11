@@ -20,22 +20,20 @@ export const distanceMusicPlay = (horizontalVelocityRef, mute) => {
 const playForFiveSeconds = (horizontalVelocityRef) => {
   distanceMusa.volume = 1;
   distanceMusa.play();
-  
 
   setTimeout(() => {
     if (!isFadingOut) {
       checkVelocityAndDecide(horizontalVelocityRef);
     }
-  }, 1000);
+  }, 3000);
 };
 
 const checkVelocityAndDecide = (horizontalVelocityRef) => {
-    
-  if (horizontalVelocityRef.current > 17) {
-    console.log("PLaying", horizontalVelocityRef.current)
+  if (horizontalVelocityRef.current > 27) {
+    //console.log("PLaying", horizontalVelocityRef.current)
     playForFiveSeconds(horizontalVelocityRef);
   } else {
-    console.log("Fadeout", horizontalVelocityRef.current)
+    //console.log("Fadeout", horizontalVelocityRef.current)
     fadeOutMusic(horizontalVelocityRef);
   }
 };
@@ -49,21 +47,20 @@ const fadeOutMusic = (horizontalVelocityRef) => {
   fadeOutInterval = setInterval(() => {
     if (distanceMusa.volume > 0.1) {
       distanceMusa.volume -= 0.1;
-      
     } else {
       clearInterval(fadeOutInterval);
       distanceMusa.pause();
       distanceMusa.currentTime = 0;
       isFadingOut = false;
     }
-  }, 1000);
-  
+  }, 100);
+
   setTimeout(() => {
-    if (Math.abs(horizontalVelocityRef.current) > 1) {
-        console.log("uudestaan", horizontalVelocityRef.current)
-    playForFiveSeconds(horizontalVelocityRef)
+    if (Math.abs(horizontalVelocityRef.current) > 27) {
+      //console.log("uudestaan", horizontalVelocityRef.current)
+      playForFiveSeconds(horizontalVelocityRef);
     }
-  }, 1000);
+  }, 100);
 };
 
 const stopMusic = () => {
