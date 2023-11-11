@@ -1,32 +1,75 @@
 const distanceMusa = new Audio("distancemusic.mp3");
+let isFadingOut = false;
+let fadeOutInterval = null;
 
 export const distanceMusicPlay = (horizontalVelocityRef, mute) => {
-if (!mute) {
-    // Pause the music if the velocity is less than 1
-    if (horizontalVelocityRef.current < 1) {
-        distanceMusa.pause();
-        distanceMusa.currentTime = 0;
+  if (mute) {
+    stopMusic();
+    return;
+  }
 
-    } else {
-       
-        // Only play the music if the velocity is greater than 1
+  if (isFadingOut) {
+    return;
+  }
 
+  if (horizontalVelocityRef.current > 27 && !distanceMusa.playing) {
+    playForFiveSeconds(horizontalVelocityRef);
+  }
+};
 
-        // Set the volume based on horizontalVelocityRef.current
-        if (horizontalVelocityRef.current < 15) {
-            distanceMusa.volume = 0;
-        } else if (horizontalVelocityRef.current > 27) {
-            distanceMusa.volume = 1;
-        } else {
-            // Linearly interpolate the volume between 10 and 25
-            distanceMusa.volume = (horizontalVelocityRef.current - 15) / 27;
-        }
+const playForFiveSeconds = (horizontalVelocityRef) => {
+  distanceMusa.volume = 1;
+  distanceMusa.play();
+  
 
-        distanceMusa.play();
+  setTimeout(() => {
+    if (!isFadingOut) {
+      checkVelocityAndDecide(horizontalVelocityRef);
     }
-} else {
-    distanceMusa.volume = 0;
-    distanceMusa.currentTime = 0;
-    distanceMusa.pause();
-}
-} 
+  }, 1000);
+};
+
+const checkVelocityAndDecide = (horizontalVelocityRef) => {
+    
+  if (horizontalVelocityRef.current > 17) {
+    console.log("PLaying", horizontalVelocityRef.current)
+    playForFiveSeconds(horizontalVelocityRef);
+  } else {
+    console.log("Fadeout", horizontalVelocityRef.current)
+    fadeOutMusic(horizontalVelocityRef);
+  }
+};
+
+const fadeOutMusic = (horizontalVelocityRef) => {
+  if (isFadingOut) {
+    return;
+  }
+  isFadingOut = true;
+  clearInterval(fadeOutInterval);
+  fadeOutInterval = setInterval(() => {
+    if (distanceMusa.volume > 0.1) {
+      distanceMusa.volume -= 0.1;
+      
+    } else {
+      clearInterval(fadeOutInterval);
+      distanceMusa.pause();
+      distanceMusa.currentTime = 0;
+      isFadingOut = false;
+    }
+  }, 1000);
+  
+  setTimeout(() => {
+    if (Math.abs(horizontalVelocityRef.current) > 1) {
+        console.log("uudestaan", horizontalVelocityRef.current)
+    playForFiveSeconds(horizontalVelocityRef)
+    }
+  }, 1000);
+};
+
+const stopMusic = () => {
+  clearInterval(fadeOutInterval);
+  isFadingOut = false;
+  distanceMusa.volume = 0;
+  distanceMusa.currentTime = 0;
+  distanceMusa.pause();
+};
