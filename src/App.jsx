@@ -78,6 +78,9 @@ const App = () => {
   const poroWidth = 150;
   const poroHeight = 250;
   const hitPorosRef = useRef(new Set()); // Ref to keep track of hit poros
+  const [poroHits, setPoroHits] = useState(0);
+  const [consecutivePoroHits, setConsecutivePoroHits] = useState(0);
+  const [poroHitCounter, setPoroHitCounter] = useState(0);
 
   // HIGHSCORE
   const [highScoreData, setHighScoreData] = useState({});
@@ -192,7 +195,7 @@ const App = () => {
       if (
         highScoreData.length < 20 ||
         parseFloat(distance) >
-        parseFloat(highScoreData[highScoreData.length - 1].distance)
+          parseFloat(highScoreData[highScoreData.length - 1].distance)
       ) {
         let newHighScoresound = new Audio("highscore.mp3");
         if (juhaMode) {
@@ -223,6 +226,7 @@ const App = () => {
 
   // MAIN PHYSICS UPDATE
   let lastTime;
+
   useEffect(() => {
     let animationFrameId;
     const updatePosition = (time) => {
@@ -231,11 +235,15 @@ const App = () => {
 
         // Apply physics
         verticalVelocityRef.current += gravity * timeDelta * gameSpeed; // gravity should be scaled properly
-        horizontalVelocityRef.current *= Math.pow(1 - airResistance, timeDelta * gameSpeed);
+        horizontalVelocityRef.current *= Math.pow(
+          1 - airResistance,
+          timeDelta * gameSpeed
+        );
 
         // UPDATE
         let newTop =
-          ballPositionRef.current.top + verticalVelocityRef.current * timeDelta * gameSpeed;
+          ballPositionRef.current.top +
+          verticalVelocityRef.current * timeDelta * gameSpeed;
         let newLeft =
           ballPositionRef.current.left +
           horizontalVelocityRef.current * timeDelta * gameSpeed;
@@ -262,6 +270,12 @@ const App = () => {
             ballRect.top < poroRect.bottom;
 
           if (isInCollision && !hitPorosRef.current.has(index)) {
+            // PORO HIT COUNTERS
+            setPoroHits(poroHits + 1);
+            console.log("setPoroHits + 1", poroHits);
+            setPoroHitCounter(poroHitCounter + 1);
+            console.log("setPoroHitCounter +1", poroHitCounter);
+
             horizontalVelocityRef.current += 5;
             if (verticalVelocityRef.current > 15) {
               verticalVelocityRef.current -= 20;
@@ -271,7 +285,7 @@ const App = () => {
             let audio = new Audio("bells.mp3");
             if (juhaMode) {
               audio = new Audio("hyvahienohomma.mp3");
-            } 
+            }
             audio.play();
             hitPorosRef.current.add(index); // Mark this poro as hit
           } else if (!isInCollision && hitPorosRef.current.has(index)) {
@@ -281,6 +295,17 @@ const App = () => {
         });
         // POMPPU
         if (newTop >= bottomLimit) {
+          // HIT COUNTER RESETS
+          if (poroHitCounter > consecutivePoroHits) {
+            setConsecutivePoroHits(poroHitCounter);
+            console.log(poroHitCounter, ">", consecutivePoroHits, "setConsecutivePoroHits: ", poroHitCounter);
+          }
+          if (poroHitCounter > 0) {
+          setPoroHitCounter(0);
+          console.log("setPoroHitCounter(0)", poroHitCounter)
+          }
+          
+
           newTop = bottomLimit;
           verticalVelocityRef.current = -verticalVelocityRef.current * bounce;
           if (Math.abs(verticalVelocityRef.current) < bounce) {
@@ -327,7 +352,7 @@ const App = () => {
       cancelAnimationFrame(animationFrameId);
       lastTime = undefined;
     };
-  }, [bottomLimit, poros, isHit, gameSpeed]);
+  }, [bottomLimit, poros, isHit, gameSpeed, poroHitCounter]);
 
   // SET PERFORMANCE TIME
   const handleMouseDown = () => {
@@ -350,9 +375,11 @@ const App = () => {
         ballPositionRef,
         verticalVelocityRef,
         horizontalVelocityRef,
-        bottomLimit
+        bottomLimit,
+        setPoroHitCounter,
+        setPoroHits,
+        setConsecutivePoroHits
       );
-
     }
 
     const mouseUpTime = performance.now();
@@ -365,7 +392,6 @@ const App = () => {
     ) {
       setIsHit(true);
       setIsSpinning(true);
-
 
       const hitStrengthValue = defineHitStrength(juhaMode);
       setHitStrength(hitStrengthValue);
@@ -385,8 +411,6 @@ const App = () => {
       // FOR HUD ONLY
       setLastHitPosition({ top: ballPosition.top });
       setHitAngle(angle);
-
-
     }
   };
 
@@ -429,7 +453,12 @@ const App = () => {
         </button>
       </div>
       <div className="mp-buttons">
-        <MusicPlayer mute={mute} setMute={setMute} gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
+        <MusicPlayer
+          mute={mute}
+          setMute={setMute}
+          gameSpeed={gameSpeed}
+          setGameSpeed={setGameSpeed}
+        />
       </div>
       <div className="session-high">
         <p>Your Session High: </p>
@@ -452,6 +481,9 @@ const App = () => {
         hitStrength={hitStrength}
         toggleShowHitbox={toggleShowHitbox}
         gameAreaHeight={gameAreaHeight}
+        poroHits={poroHits}
+        consecutivePoroHits={consecutivePoroHits}
+        poroHitCounter={poroHitCounter}
       />
       {ballPositionRef.current.left > 100000 && <Hype />}
       <div
@@ -462,7 +494,7 @@ const App = () => {
         onKeyDown={handleSpaceDown}
         onKeyUp={handleSpaceUp}
       >
-        <Background scrollLeft={scrollLeft} gameAreaWidth={gameAreaWidth}/>
+        <Background scrollLeft={scrollLeft} gameAreaWidth={gameAreaWidth} />
 
         <div
           className="scroll-container"
@@ -497,7 +529,10 @@ const App = () => {
             verticalVelocityRef={verticalVelocityRef}
           />
 
-          <Ground gameAreaHeight={gameAreaHeight} gameAreaWidth={gameAreaWidth} />
+          <Ground
+            gameAreaHeight={gameAreaHeight}
+            gameAreaWidth={gameAreaWidth}
+          />
         </div>
       </div>
     </>
