@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { getClosestDistanceFromAzureFunction } from "../ApiUtils";
 
 let keySequence = [];
 let keySequenceString = "";
@@ -33,7 +34,9 @@ export const useGameInitialization = (
   toggleHUD,
   gameAreaRef,
   getDataFromAzureFunction,
-  setHighScoreData
+  setHighScoreData,
+  dailyChallengeDistance,
+  setDailyChallengeName
 ) => {
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -63,8 +66,18 @@ export const useGameInitialization = (
       setHighScoreData(sortedResult);
     });
 
+    getClosestDistanceFromAzureFunction(dailyChallengeDistance)
+      .then((dailyChallengeData) => {
+        if (dailyChallengeData) {
+          setDailyChallengeName(dailyChallengeData); // Set the entire object
+        } else {
+          console.log("No matching entry found");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 };
-
-

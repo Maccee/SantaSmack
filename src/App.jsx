@@ -19,9 +19,13 @@ import MusicPlayer from "./components/MusicPlayer";
 import Ground from "./components/Ground";
 import Porot from "./components/Porot";
 import Hype from "./components/Hype";
+import InputName from "./components/InputName";
 
 // APP COMPONENT
 const App = () => {
+  // HAS SET PLAYER NAME
+  const [playerName, setPlayerName] = useState(null);
+
   // Define game area width, height and ground level
   const [gameAreaWidth, setGameAreaWidth] = useState(10000); // in px
   const [gameAreaHeight, setGameAreaHeight] = useState(window.innerHeight); // Client browser window height
@@ -84,6 +88,9 @@ const App = () => {
   const [highScoreData, setHighScoreData] = useState({});
   const [showHighScoreData, setShowHighScoreData] = useState(false);
 
+  const dailyChallengeDistance = 50;
+  const [dailyChallengeName, setDailyChallengeName] = useState(null);
+
   // SCROLLING
   const gameAreaRef = useRef(null);
   const [scrollLeft, setScrollLeft] = useState(0);
@@ -102,7 +109,10 @@ const App = () => {
     toggleHUD,
     gameAreaRef,
     getDataFromAzureFunction,
-    setHighScoreData
+    setHighScoreData,
+    dailyChallengeDistance,
+    setDailyChallengeName,
+    dailyChallengeName
   );
   // Check screen resize to prevent possible cheating
   useWindowEventHandlers(horizontalVelocityRef);
@@ -131,29 +141,20 @@ const App = () => {
   // CHECK FOR YOUR DISTANCE OF THE SESSION!
   useEffect(() => {
     const handleNewHighScore = async () => {
-      const name = prompt("Congrats on the high score! Enter your name:");
-
-      if (name && name.length <= 15) {
-        const data = {
-          name: name,
-          hitAngle: hitAngle,
-          hitStrength: hitStrength,
-          gameAreaHeight: gameAreaHeight,
-          distance: distance,
-        };
-        await postDataToAzureFunction(data);
-        const updatedScores = await getDataFromAzureFunction();
-        setHighScoreData(updatedScores);
-      } else if (name && name.length > 15) {
-        handleNewHighScore();
-      }
+      const data = {
+        name: playerName,
+        hitAngle: hitAngle,
+        hitStrength: hitStrength,
+        gameAreaHeight: gameAreaHeight,
+        distance: distance,
+      };
+      await postDataToAzureFunction(data);
+      const updatedScores = await getDataFromAzureFunction();
+      setHighScoreData(updatedScores);
     };
+
     if (isHit && horizontalVelocityRef.current === 0) {
-      if (
-        highScoreData.length < 20 ||
-        parseFloat(distance) >
-          parseFloat(highScoreData[highScoreData.length - 1].distance)
-      ) {
+      if (parseFloat(distance) > parseFloat(highScoreData[19].distance)) {
         let newHighScoresound = new Audio("highscore.mp3");
         if (juhaMode) {
           let audio = new Audio("/iddqd/kuitenkinjoihankohtuu.mp3");
@@ -161,8 +162,8 @@ const App = () => {
         } else {
           newHighScoresound.play();
         }
-        handleNewHighScore();
       }
+      handleNewHighScore();
     }
   }, [distance, horizontalVelocityRef.current]);
 
@@ -305,9 +306,11 @@ const App = () => {
   // SET PERFORMANCE TIME
   const handleMouseDown = () => {
     setMouseDownTime(performance.now());
-    
   };
   const handleMouseUp = () => {
+    if (playerName === null) {
+      return;
+    }
     setIsHit(true);
     if (isHit) {
       resetGame(
@@ -331,7 +334,6 @@ const App = () => {
     }
 
     const mouseUpTime = performance.now();
-    const reactionTime = mouseUpTime - mouseDownTime;
 
     if (
       !isHit &&
@@ -379,6 +381,9 @@ const App = () => {
       handleMouseUp();
     }
   };
+  const blurStyle = {
+    filter: "blur(5px)", // You can adjust the blur intensity as needed
+  };
 
   // APP RENDER
   return (
@@ -387,6 +392,8 @@ const App = () => {
         <HighScoreData
           highScoreData={highScoreData}
           showHighScoreData={showHighScoreData}
+          dailyChallengeDistance={dailyChallengeDistance}
+          dailyChallengeName={dailyChallengeName}
         />
         <button
           className="hsc-button"
@@ -395,6 +402,7 @@ const App = () => {
           Highscores
         </button>
       </div>
+
       <div className="mp-buttons">
         <MusicPlayer
           mute={mute}
@@ -407,6 +415,8 @@ const App = () => {
         <p>Your Session High: </p>
         <p>{highScore.toFixed(2)}m</p>
       </div>
+
+      {playerName === null && <InputName setPlayerName={setPlayerName} />}
 
       <HUD
         showHUD={showHUD}
@@ -429,6 +439,7 @@ const App = () => {
         poroHitCounter={poroHitCounter}
       />
       {ballPositionRef.current.left > 100000 && <Hype />}
+
       <div
         className="game-area"
         tabIndex={0}
@@ -436,6 +447,7 @@ const App = () => {
         onMouseDown={handleMouseDown}
         onKeyDown={handleSpaceDown}
         onKeyUp={handleSpaceUp}
+        style={playerName === null ? blurStyle : {}}
       >
         <Background scrollLeft={scrollLeft} gameAreaWidth={gameAreaWidth} />
 
@@ -443,7 +455,6 @@ const App = () => {
           className="scroll-container"
           style={{ transform: `translateX(-${scrollLeft}px)` }}
         >
-          
           <Markers
             gameAreaWidth={gameAreaWidth}
             gameAreaHeight={gameAreaHeight}
@@ -462,6 +473,7 @@ const App = () => {
             bottomLimit={bottomLimit}
             isHit={isHit}
             gameAreaHeight={gameAreaHeight}
+            playerName={playerName}
           />
 
           <Ball
