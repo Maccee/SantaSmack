@@ -1,8 +1,8 @@
 const Arrow = ({ isVelocityPositive, style }) => {
   const fillColor = isVelocityPositive ? "red" : "#77B3D4";
   return (
-    <svg style={style} height="800px" width="800px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns: xlink="http://www.w3.org/1999/xlink"
-      viewBox="0 0 64 64" xml: space="preserve">
+    <svg style={style} height="800px" width="800px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
+      viewBox="0 0 64 64" xmlSpace="preserve">
       <style type="text/css">
       </style>
       <g id="Layer_1">
