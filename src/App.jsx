@@ -19,7 +19,9 @@ import MusicPlayer from "./components/MusicPlayer";
 import Ground from "./components/Ground";
 import Porot from "./components/Porot";
 import Hype from "./components/Hype";
-import InputName from "./components/InputName";
+
+import Settings from "./components/Settings";
+
 
 // APP COMPONENT
 const App = () => {
@@ -86,7 +88,6 @@ const App = () => {
 
   // HIGHSCORE
   const [highScoreData, setHighScoreData] = useState({});
-  const [showHighScoreData, setShowHighScoreData] = useState(false);
 
   const dailyChallengeDistance = 50;
   const [dailyChallengeName, setDailyChallengeName] = useState(null);
@@ -154,7 +155,9 @@ const App = () => {
     };
 
     if (isHit && horizontalVelocityRef.current === 0) {
+
       if (parseFloat(distance) > parseFloat(highScoreData[19].distance)) {
+
         let newHighScoresound = new Audio("highscore.mp3");
         if (juhaMode) {
           let audio = new Audio("/iddqd/kuitenkinjoihankohtuu.mp3");
@@ -234,10 +237,14 @@ const App = () => {
             }
             let poroHitAudio = new Audio("bells.mp3");
             if (juhaMode) {
-              poroHitAudio = new Audio("hyvahienohomma.mp3");
+
+              audio = new Audio("hyvahienohomma.mp3");
             }
-            poroHitAudio.play();
-            hitPorosRef.current.add(index);
+            if (!mute) {
+            audio.play();
+            }
+            hitPorosRef.current.add(index); // Mark this poro as hit
+
           } else if (!isInCollision && hitPorosRef.current.has(index)) {
             hitPorosRef.current.delete(index);
           }
@@ -388,32 +395,17 @@ const App = () => {
   // APP RENDER
   return (
     <>
-      <div className="highScoreContainer">
-        <HighScoreData
-          highScoreData={highScoreData}
-          showHighScoreData={showHighScoreData}
-          dailyChallengeDistance={dailyChallengeDistance}
-          dailyChallengeName={dailyChallengeName}
-        />
-        <button
-          className="hsc-button"
-          onClick={() => setShowHighScoreData((prev) => !prev)}
-        >
-          Highscores
-        </button>
-      </div>
 
-      <div className="mp-buttons">
-        <MusicPlayer
-          mute={mute}
-          setMute={setMute}
-          gameSpeed={gameSpeed}
-          setGameSpeed={setGameSpeed}
-        />
-      </div>
-      <div className="session-high">
-        <p>Your Session High: </p>
-        <p>{highScore.toFixed(2)}m</p>
+      <div className="navbar">
+        <div className="nav-left">LEFT: DAILY CHALLENGE COMPONENT PLACE HERE</div>
+        <div className="nav-center">CENTER:
+          <HighScoreData highScoreData={highScoreData} />
+        </div>
+        <div className="nav-right">RIGHT:
+          <Settings gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
+          <MusicPlayer mute={mute} setMute={setMute} />
+        </div>
+
       </div>
 
       {playerName === null && <InputName setPlayerName={setPlayerName} />}
