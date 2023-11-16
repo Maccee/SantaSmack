@@ -384,7 +384,7 @@ const App = () => {
   const blurStyle = {
     filter: "blur(5px)", // You can adjust the blur intensity as needed
   };
-  console.log((ballPositionRef.current.left / 100).toFixed(2), highScoreData[19].distance)
+  
 
   // APP RENDER
   return (
