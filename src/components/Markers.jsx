@@ -18,7 +18,7 @@ const Markers = ({ gameAreaWidth, gameAreaHeight }) => {
           className="marker"
           style={{
             left: `${distance}px`,
-            top: `${gameAreaHeight - 290}px`,
+            top: `${gameAreaHeight - 260}px`,
           }}
         >
           <img src={KylttiImg} alt={`Marker at ${distance / 100} meters`}></img>

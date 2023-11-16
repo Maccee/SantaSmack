@@ -183,7 +183,7 @@ body {
 .ground {
   height: 50px;
   position: absolute;
-  background-image: url("./assets/bg.png");
+  background-image: url("./assets/bg-new.png");
   background-size: contain;
   transform: translateY(-100%);
   z-index: -10;
