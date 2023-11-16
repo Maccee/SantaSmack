@@ -27,3 +27,4 @@ const Background = ({ scrollLeft, gameAreaWidth }) => {
 };
 
 export default Background;
+

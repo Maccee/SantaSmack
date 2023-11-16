@@ -2,12 +2,15 @@ import SantaImg from "../assets/pukki-lp.svg";
 import Bat from "./Bat";
 
 const Santa = ({
-  showHitbox,
-  hitboxTopBoundary,
-  hitboxBottomBoundary,
-  bottomLimit,
-  isHit,
-  gameAreaHeight,
+
+    showHitbox,
+    hitboxTopBoundary,
+    hitboxBottomBoundary,
+    bottomLimit,
+    isHit,
+    gameAreaHeight,
+    playerName
+
 }) => {
   const santaStyle = {
     top: `${bottomLimit + 10}px`,
@@ -24,15 +27,17 @@ const Santa = ({
     display: showHitbox ? "block" : "none",
   };
 
-  return (
-    <div>
-      <div className="santa" style={santaStyle}>
-        <img src={SantaImg} alt="Santa" />
-      </div>
-      <div style={hitboxStyle}></div>
-      <Bat isHit={isHit} gameAreaHeight={gameAreaHeight} />
-    </div>
-  );
+
+    return (
+        <div>
+            <div className="santa" style={santaStyle}>
+                <img src={SantaImg} alt="Santa" />
+            </div>
+            <div style={hitboxStyle}></div>
+            <Bat isHit={isHit} gameAreaHeight={gameAreaHeight} playerName={playerName} />
+        </div>
+    );
+
 };
 
 export default Santa;

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 const HighScoreData = ({ highScoreData }) => {
   const [showHighScoreData, setShowHighScoreData] = useState(false);
@@ -40,6 +41,7 @@ const HighScoreData = ({ highScoreData }) => {
               </p>
             ))}
           </div>
+
         </div>
       )}
     </div>

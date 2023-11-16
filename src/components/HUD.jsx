@@ -13,7 +13,10 @@ const HUD = ({
   highScore,
   hitStrength,
   toggleShowHitbox,
-  gameAreaHeight
+  gameAreaHeight,
+  poroHits,
+  consecutivePoroHits,
+  poroHitCounter
 }) => {
   if (!showHUD) {
     return null;
@@ -41,7 +44,10 @@ const HUD = ({
       <button onClick={toggleShowHitbox}>Display Hitbox</button>
       <p>Highscore: {highScore}m</p>
       <p>Hitstrength: {hitStrength}</p>
-      <p>{gameAreaHeight}</p>
+      <p>Gamearea height: {gameAreaHeight}</p>
+      <p>Porohits: {poroHits}</p>
+      <p>Consecutive porohits: {consecutivePoroHits}</p>
+      <p>Porohitcounter: {poroHitCounter}</p>
     </div>
   );
 };

@@ -3,10 +3,13 @@ import "./App.css";
 import { postDataToAzureFunction, getDataFromAzureFunction } from "./ApiUtils";
 import { calculateHitStrength, defineHitStrength, resetGame } from "./Utils";
 import { distanceMusicPlay } from "./SoundUtils";
+import {
+  useWindowEventHandlers,
+  useGameInitialization,
+} from "./Utilities/eventHandlers";
 
 // Component Imports
 import Santa from "./components/Santa";
-
 import Markers from "./components/Markers";
 import Ball from "./components/Ball";
 import HighScoreData from "./components/HighScoreData";
@@ -16,14 +19,18 @@ import MusicPlayer from "./components/MusicPlayer";
 import Ground from "./components/Ground";
 import Porot from "./components/Porot";
 import Hype from "./components/Hype";
+
 import Settings from "./components/Settings";
+
 
 // APP COMPONENT
 const App = () => {
+  // HAS SET PLAYER NAME
+  const [playerName, setPlayerName] = useState(null);
+
   // Define game area width, height and ground level
   const [gameAreaWidth, setGameAreaWidth] = useState(10000); // in px
   const [gameAreaHeight, setGameAreaHeight] = useState(window.innerHeight); // Client browser window height
-
   const [bottomLimit, setBottomLimit] = useState(gameAreaHeight - 50);
 
   // BALL MOVEMENT
@@ -57,7 +64,7 @@ const App = () => {
   const hitboxTransitTime = 152; // The time in ms the ball travels through hitbox
 
   // Physics
-  const [gravity, setGravity] = useState(0.1); // Downward force that pulls ball down while flying
+  const gravity = 0.1; // Downward force that pulls ball down while flying
   const airResistance = 0.001; // Resistance to slow the ball in the air
   const bounce = 0.5; // 50% bounce strength
   const [gameSpeed, setGameSpeed] = useState(1);
@@ -67,11 +74,7 @@ const App = () => {
   const [mouseDownTime, setMouseDownTime] = useState(0); // The performance.now time when mouse is pressed down
 
   // MUSAT
-  const [distanceMusa, setDistanceMusa] = useState("distancemusic.mp3");
-  const throttleDuration = 1000; // Time in milliseconds
-  let audioDistance = null;
-  const audioDistanceRef = useRef(null);
-  const [mute, setMute] = useState(false);
+  const [mute, setMute] = useState(true);
 
   // COLLISION
   const [poros, setPoros] = useState([]);
@@ -79,9 +82,15 @@ const App = () => {
   const poroWidth = 150;
   const poroHeight = 250;
   const hitPorosRef = useRef(new Set()); // Ref to keep track of hit poros
+  const [poroHits, setPoroHits] = useState(0);
+  const [consecutivePoroHits, setConsecutivePoroHits] = useState(0);
+  const [poroHitCounter, setPoroHitCounter] = useState(0);
 
   // HIGHSCORE
   const [highScoreData, setHighScoreData] = useState({});
+
+  const dailyChallengeDistance = 50;
+  const [dailyChallengeName, setDailyChallengeName] = useState(null);
 
   // SCROLLING
   const gameAreaRef = useRef(null);
@@ -89,63 +98,25 @@ const App = () => {
 
   //Koodit
   const [juhaMode, setJuhaMode] = useState(false);
-  let keySequence = [];
-  let keySequenceString = "";
-  const secretCode = "iddqd";
 
-  // SET GAMEAREA // TOGGLE HUD // INITALIZATION
-  useEffect(() => {
-    if (!audioDistance) {
-      audioDistance = new Audio(distanceMusa);
-    }
-    const handleKeyDown = (event) => {
-      keySequence.push(event.key);
-      keySequenceString = keySequence
-        .slice(-secretCode.length)
-        .join("")
-        .toLowerCase();
-      if (keySequenceString === secretCode) {
-        setJuhaMode((prevMode) => {
-          console.log("JuhaMode", !prevMode); // Log the new state
-          return !prevMode; // This toggles the mode
-        });
-        keySequence = [];
-      }
-      if (event.keyCode === 220 || event.keyCode === 192) {
-        toggleHUD();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    if (gameAreaRef.current) {
-      const element = gameAreaRef.current;
-      element.scrollTop = element.scrollHeight - element.clientHeight;
-      //gameAreaRef.current.focus();
-    }
-    getDataFromAzureFunction().then((sortedResult) => {
-      setHighScoreData(sortedResult);
-    });
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  // TOGGLE HUD
+  const toggleHUD = () => {
+    setShowHUD((prevShowHUD) => !prevShowHUD);
+  };
 
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "hidden") {
-        horizontalVelocityRef.current = 0;
-      }
-    };
-    const handleResize = () => {
-      horizontalVelocityRef.current = 0;
-    };
-    window.addEventListener("resize", handleResize);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    // Call the resize handler in case the window is already resized
-    handleResize();
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, []);
+  // Eventhandlers for keydown and get Highscore
+  useGameInitialization(
+    setJuhaMode,
+    toggleHUD,
+    gameAreaRef,
+    getDataFromAzureFunction,
+    setHighScoreData,
+    dailyChallengeDistance,
+    setDailyChallengeName,
+    dailyChallengeName
+  );
+  // Check screen resize to prevent possible cheating
+  useWindowEventHandlers(horizontalVelocityRef);
 
   // HITBOX
   useEffect(() => {
@@ -171,29 +142,22 @@ const App = () => {
   // CHECK FOR YOUR DISTANCE OF THE SESSION!
   useEffect(() => {
     const handleNewHighScore = async () => {
-      const name = prompt("Congrats on the high score! Enter your name:");
-
-      if (name && name.length <= 15) {
-        const data = {
-          name: name,
-          hitAngle: hitAngle,
-          hitStrength: hitStrength,
-          gameAreaHeight: gameAreaHeight,
-          distance: distance,
-        };
-        await postDataToAzureFunction(data);
-        const updatedScores = await getDataFromAzureFunction();
-        setHighScoreData(updatedScores);
-      } else if (name && name.length > 15) {
-        handleNewHighScore();
-      }
+      const data = {
+        name: playerName,
+        hitAngle: hitAngle,
+        hitStrength: hitStrength,
+        gameAreaHeight: gameAreaHeight,
+        distance: distance,
+      };
+      await postDataToAzureFunction(data);
+      const updatedScores = await getDataFromAzureFunction();
+      setHighScoreData(updatedScores);
     };
+
     if (isHit && horizontalVelocityRef.current === 0) {
-      if (
-        highScoreData.length < 20 ||
-        parseFloat(distance) >
-          parseFloat(highScoreData[highScoreData.length - 1].distance)
-      ) {
+
+      if (parseFloat(distance) > parseFloat(highScoreData[19].distance)) {
+
         let newHighScoresound = new Audio("highscore.mp3");
         if (juhaMode) {
           let audio = new Audio("/iddqd/kuitenkinjoihankohtuu.mp3");
@@ -201,8 +165,8 @@ const App = () => {
         } else {
           newHighScoresound.play();
         }
-        handleNewHighScore();
       }
+      handleNewHighScore();
     }
   }, [distance, horizontalVelocityRef.current]);
 
@@ -211,11 +175,9 @@ const App = () => {
     distanceMusicPlay(horizontalVelocityRef, mute);
   }, [horizontalVelocityRef.current]);
 
+  // Dynamically generate gamearea
   useEffect(() => {
-    // Calculate new width based on ball's position
     const newWidth = ballPositionRef.current.left + 20000;
-
-    // Update the game area's width if it's less than the new width
     if (gameAreaWidth < newWidth) {
       setGameAreaWidth(newWidth);
     }
@@ -223,6 +185,7 @@ const App = () => {
 
   // MAIN PHYSICS UPDATE
   let lastTime;
+
   useEffect(() => {
     let animationFrameId;
     const updatePosition = (time) => {
@@ -243,14 +206,8 @@ const App = () => {
         let newLeft =
           ballPositionRef.current.left +
           horizontalVelocityRef.current * timeDelta * gameSpeed;
-        // Collision Detection
-        const ballRect = {
-          left: newLeft,
-          right: newLeft + ballDiameter,
-          top: newTop,
-          bottom: newTop + ballDiameter,
-        };
 
+        // COLLISION DETECTION FOR POROS
         poros.forEach((poro, index) => {
           const poroRect = {
             left: poro.x,
@@ -258,35 +215,50 @@ const App = () => {
             top: poro.y,
             bottom: poro.y + poroHeight,
           };
-
+          const ballRect = {
+            left: newLeft,
+            right: newLeft + ballDiameter,
+            top: newTop,
+            bottom: newTop + ballDiameter,
+          };
           const isInCollision =
             ballRect.right > poroRect.left &&
             ballRect.left < poroRect.right &&
             ballRect.bottom > poroRect.top &&
             ballRect.top < poroRect.bottom;
-
           if (isInCollision && !hitPorosRef.current.has(index)) {
+            setPoroHits(poroHits + 1);
+            setPoroHitCounter(poroHitCounter + 1);
             horizontalVelocityRef.current += 5;
             if (verticalVelocityRef.current > 15) {
               verticalVelocityRef.current -= 20;
             } else {
               verticalVelocityRef.current -= 10;
             }
-            let audio = new Audio("bells.mp3");
+            let poroHitAudio = new Audio("bells.mp3");
             if (juhaMode) {
+
               audio = new Audio("hyvahienohomma.mp3");
             }
             if (!mute) {
             audio.play();
             }
             hitPorosRef.current.add(index); // Mark this poro as hit
+
           } else if (!isInCollision && hitPorosRef.current.has(index)) {
-            // The ball has left the collision area of a hit poro
-            hitPorosRef.current.delete(index); // Clear hit marker
+            hitPorosRef.current.delete(index);
           }
         });
+
         // POMPPU
         if (newTop >= bottomLimit) {
+          if (poroHitCounter > consecutivePoroHits) {
+            setConsecutivePoroHits(poroHitCounter);
+          }
+          if (poroHitCounter > 0) {
+            setPoroHitCounter(0);
+          }
+
           newTop = bottomLimit;
           verticalVelocityRef.current = -verticalVelocityRef.current * bounce;
           if (Math.abs(verticalVelocityRef.current) < bounce) {
@@ -309,6 +281,7 @@ const App = () => {
             Math.min(newScrollLeft, gameAreaWidth - window.innerWidth)
           );
         });
+
         if (Math.abs(horizontalVelocityRef.current) > 0) {
           const newDistance = parseFloat(
             (ballPositionRef.current.left / 100).toFixed(2)
@@ -317,30 +290,34 @@ const App = () => {
           setHighScore((prevHighScore) => Math.max(prevHighScore, newDistance));
         }
 
-        // Update position state
+        // UPDATE BALL POSITION AND REFS
         setBallPosition({ top: newTop, left: newLeft });
-        // Update refs
         ballPositionRef.current = { top: newTop, left: newLeft };
-        // Request next frame
+
+        // NEXT FRAME
         lastTime = time;
       } else {
         lastTime = time;
       }
       animationFrameId = requestAnimationFrame(updatePosition);
     };
+
+    // GAME LOOP
     animationFrameId = requestAnimationFrame(updatePosition);
     return () => {
       cancelAnimationFrame(animationFrameId);
       lastTime = undefined;
     };
-  }, [bottomLimit, poros, isHit, gameSpeed]);
+  }, [bottomLimit, poros, isHit, gameSpeed, poroHitCounter]);
 
   // SET PERFORMANCE TIME
   const handleMouseDown = () => {
     setMouseDownTime(performance.now());
-    //console.log("mousedown", mouseDownTime);
   };
   const handleMouseUp = () => {
+    if (playerName === null) {
+      return;
+    }
     setIsHit(true);
     if (isHit) {
       resetGame(
@@ -356,7 +333,10 @@ const App = () => {
         ballPositionRef,
         verticalVelocityRef,
         horizontalVelocityRef,
-        bottomLimit
+        bottomLimit,
+        setPoroHitCounter,
+        setPoroHits,
+        setConsecutivePoroHits
       );
     }
 
@@ -396,11 +376,6 @@ const App = () => {
     setShowHitbox((prevShowHitbox) => !prevShowHitbox);
   };
 
-  // TOGGLE HUD
-  const toggleHUD = () => {
-    setShowHUD((prevShowHUD) => !prevShowHUD);
-  };
-
   const handleSpaceDown = (event) => {
     if (event.code === "Space" && !event.repeat) {
       event.preventDefault();
@@ -413,10 +388,14 @@ const App = () => {
       handleMouseUp();
     }
   };
-
+  const blurStyle = {
+    filter: "blur(5px)", // You can adjust the blur intensity as needed
+  };
+  
   // APP RENDER
   return (
     <>
+
       <div className="navbar">
         <div className="nav-left">LEFT: DAILY CHALLENGE COMPONENT PLACE HERE</div>
         <div className="nav-center">CENTER:
@@ -426,7 +405,10 @@ const App = () => {
           <Settings gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
           <MusicPlayer mute={mute} setMute={setMute} />
         </div>
+
       </div>
+
+      {playerName === null && <InputName setPlayerName={setPlayerName} />}
 
       <HUD
         showHUD={showHUD}
@@ -444,8 +426,15 @@ const App = () => {
         hitStrength={hitStrength}
         toggleShowHitbox={toggleShowHitbox}
         gameAreaHeight={gameAreaHeight}
+        poroHits={poroHits}
+        consecutivePoroHits={consecutivePoroHits}
+        poroHitCounter={poroHitCounter}
       />
-      {ballPositionRef.current.left > 100000 && <Hype />}
+
+      {highScoreData[19] &&
+        highScoreData.length >= 20 &&
+        parseFloat(distance) > parseFloat(highScoreData[19].distance) && <Hype />}
+
       <div
         className="game-area"
         tabIndex={0}
@@ -453,6 +442,7 @@ const App = () => {
         onMouseDown={handleMouseDown}
         onKeyDown={handleSpaceDown}
         onKeyUp={handleSpaceUp}
+        style={playerName === null ? blurStyle : {}}
       >
         <Background scrollLeft={scrollLeft} gameAreaWidth={gameAreaWidth} />
 
@@ -478,6 +468,7 @@ const App = () => {
             bottomLimit={bottomLimit}
             isHit={isHit}
             gameAreaHeight={gameAreaHeight}
+            playerName={playerName}
           />
 
           <Ball
