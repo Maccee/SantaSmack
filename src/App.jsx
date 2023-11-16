@@ -19,7 +19,7 @@ import MusicPlayer from "./components/MusicPlayer";
 import Ground from "./components/Ground";
 import Porot from "./components/Porot";
 import Hype from "./components/Hype";
-
+import InputName from "./components/InputName";
 import Settings from "./components/Settings";
 
 
@@ -238,11 +238,12 @@ const App = () => {
             let poroHitAudio = new Audio("bells.mp3");
             if (juhaMode) {
 
-              audio = new Audio("hyvahienohomma.mp3");
+              poroHitAudio = new Audio("hyvahienohomma.mp3");
             }
             if (!mute) {
-            audio.play();
+            poroHitAudio.play();
             }
+
             hitPorosRef.current.add(index); // Mark this poro as hit
 
           } else if (!isInCollision && hitPorosRef.current.has(index)) {
@@ -400,6 +401,7 @@ const App = () => {
         <div className="nav-left">LEFT: DAILY CHALLENGE COMPONENT PLACE HERE</div>
         <div className="nav-center">CENTER:
           <HighScoreData highScoreData={highScoreData} />
+          {playerName === null && <InputName setPlayerName={setPlayerName} />}
         </div>
         <div className="nav-right">RIGHT:
           <Settings gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
@@ -408,7 +410,7 @@ const App = () => {
 
       </div>
 
-      {playerName === null && <InputName setPlayerName={setPlayerName} />}
+      
 
       <HUD
         showHUD={showHUD}
