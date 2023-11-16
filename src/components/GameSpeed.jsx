@@ -10,7 +10,7 @@ const GameSpeed = ({ gameSpeed, setGameSpeed }) => {
     <div className="game-speed">
       <input
         type="range"
-        min="0.5"
+        min="0.1"
         max="2"
         step="0.1"
         value={gameSpeed}
