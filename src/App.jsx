@@ -384,6 +384,7 @@ const App = () => {
   const blurStyle = {
     filter: "blur(5px)", // You can adjust the blur intensity as needed
   };
+  console.log((ballPositionRef.current.left / 100).toFixed(2), highScoreData[19].distance)
 
   // APP RENDER
   return (
@@ -438,7 +439,10 @@ const App = () => {
         consecutivePoroHits={consecutivePoroHits}
         poroHitCounter={poroHitCounter}
       />
-      {ballPositionRef.current.left > 100000 && <Hype />}
+
+      {highScoreData[19] &&
+        highScoreData.length >= 20 &&
+        parseFloat(distance) > parseFloat(highScoreData[19].distance) && <Hype />}
 
       <div
         className="game-area"
