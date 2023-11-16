@@ -33,13 +33,13 @@ body {
 }
 .inputButton {
   z-index: 2000;
-    width: 100%;
+  width: 100%;
   max-width: 100px;
   text-align: center;
   padding: 0.5rem;
-    font-family: "Lobster", cursive;
+  font-family: "Lobster", cursive;
   font-size: 1rem;
-    text-decoration: none;
+  text-decoration: none;
   color: #fff;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
   background: #5e0d0c;
@@ -47,12 +47,9 @@ body {
   border-radius: 15px;
   border: 1px solid #4c0300;
   box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.25),
-    /* highlight */
-    inset 0 0 6px #a23227,
-    /* inner glow */
-    inset 0 80px 80px -40px #ac3223,
-    /* gradient */
-    1px 1px 3px rgba(0, 0, 0, 0.75);
+    /* highlight */ inset 0 0 6px #a23227,
+    /* inner glow */ inset 0 80px 80px -40px #ac3223,
+    /* gradient */ 1px 1px 3px rgba(0, 0, 0, 0.75);
   /* shadow */
   overflow: visible;
   /* IE9 & 10 */
@@ -286,21 +283,67 @@ body {
 
 /* UI-Stuff */
 
+.navbar svg {
+  position: absolute;
+  top: -5%;
+  left: 50%;
+  transform: translate(-50%, -10%);
+  min-width: 600px;
+  min-height: 129px;
+  z-index: -1;
+}
+
 .navbar {
   position: absolute;
-  z-index: 10000;
-  border: 2px solid blue;
   top: 5%;
   left: 50%;
   transform: translate(-50%, 0%);
+  min-width: 600px;
+  min-height: 129px;
+  z-index: 100;
+}
+
+.navbar-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
 }
 
 .nav-left {
-  border: 2px solid blue;
+  display: flex;
+  flex-direction: row;
+  height: 80px;
+  box-sizing: border-box;
+  padding: 8px;
+}
+.session-high {
+  padding-left: 8px;
+  display: flex;
+  font-family: Luckiest Guy;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #ffe4af;
+  font-size: 16px;
+  letter-spacing: 0.96px;
+}
+.session-high .longest-score {
+  color: #fff;
+  text-align: center;
+  font-family: Luckiest Guy;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 1.44px;
 }
 
 .nav-center {
-  border: 2px solid blue;
+  height: 130px;
+  z-index: 100000;
 }
 .nav-center .scoresContainer {
 }
@@ -308,8 +351,19 @@ body {
 .nav-center .scoresContainer .scores-button {
 }
 
+.nav-center .scoresContainer .scores-button svg {
+  max-width: 68px;
+  max-height: 68px;
+  flex-shrink: 0;
+  z-index: 10000;
+}
+
 .nav-right {
-  border: 2px solid rgb(26, 255, 0);
+  display: flex;
+  flex-direction: row;
+  height: 80px;
+  box-sizing: border-box;
+  padding: 8px;
 }
 
 .nav-right .settings-button {

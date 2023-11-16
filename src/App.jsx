@@ -21,7 +21,7 @@ import Porot from "./components/Porot";
 import Hype from "./components/Hype";
 import InputName from "./components/InputName";
 import Settings from "./components/Settings";
-
+import TargetImg from "./assets/target.png";
 
 // APP COMPONENT
 const App = () => {
@@ -155,9 +155,7 @@ const App = () => {
     };
 
     if (isHit && horizontalVelocityRef.current === 0) {
-
       if (parseFloat(distance) > parseFloat(highScoreData[19].distance)) {
-
         let newHighScoresound = new Audio("highscore.mp3");
         if (juhaMode) {
           let audio = new Audio("/iddqd/kuitenkinjoihankohtuu.mp3");
@@ -237,15 +235,13 @@ const App = () => {
             }
             let poroHitAudio = new Audio("bells.mp3");
             if (juhaMode) {
-
               poroHitAudio = new Audio("hyvahienohomma.mp3");
             }
             if (!mute) {
-            poroHitAudio.play();
+              poroHitAudio.play();
             }
 
             hitPorosRef.current.add(index); // Mark this poro as hit
-
           } else if (!isInCollision && hitPorosRef.current.has(index)) {
             hitPorosRef.current.delete(index);
           }
@@ -392,25 +388,171 @@ const App = () => {
   const blurStyle = {
     filter: "blur(5px)", // You can adjust the blur intensity as needed
   };
-  
+
   // APP RENDER
   return (
     <>
-
       <div className="navbar">
-        <div className="nav-left">LEFT: DAILY CHALLENGE COMPONENT PLACE HERE</div>
-        <div className="nav-center">CENTER:
-          <HighScoreData highScoreData={highScoreData} />
-          {playerName === null && <InputName setPlayerName={setPlayerName} />}
+        <div className="navbar-content">
+          <div className="nav-left">
+            <img src={TargetImg} alt="Target" />
+            <div className="session-high">
+              <p>
+                SESSION
+                <br />
+                LONGEST
+              </p>{" "}
+              <p className="longest-score">{highScore.toFixed(2)} M</p>
+            </div>
+          </div>
+          <div className="nav-center">
+            <HighScoreData highScoreData={highScoreData} />
+            {playerName === null && <InputName setPlayerName={setPlayerName} />}
+          </div>
+          <div className="nav-right">
+            <Settings gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
+            <MusicPlayer mute={mute} setMute={setMute} />
+          </div>
         </div>
-        <div className="nav-right">RIGHT:
-          <Settings gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
-          <MusicPlayer mute={mute} setMute={setMute} />
-        </div>
-
+        <svg
+          width="650"
+          height="179"
+          viewBox="0 0 650 179"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g filter="url(#filter0_d_489_15)">
+            <path
+              d="M35 22.5C28.0964 22.5 22.5 28.0964 22.5 35V95C22.5 101.904 28.0964 107.5 35 107.5H276.94C279.862 107.5 282.5 110.367 282.5 114C282.5 137.472 301.528 156.5 325 156.5C348.472 156.5 367.5 137.472 367.5 114C367.5 110.367 370.138 107.5 373.06 107.5H615C621.904 107.5 627.5 101.904 627.5 95V35C627.5 28.0964 621.904 22.5 615 22.5H35Z"
+              stroke="#00A44B"
+              stroke-width="5"
+              shape-rendering="crispEdges"
+            />
+          </g>
+          <g filter="url(#filter1_f_489_15)">
+            <path
+              d="M35 20C26.7157 20 20 26.7157 20 35V95C20 103.284 26.7157 110 35 110H276.94C277.603 110 278.295 110.29 278.919 111.017C279.572 111.776 280 112.869 280 114C280 138.853 300.147 159 325 159C349.853 159 370 138.853 370 114C370 112.869 370.428 111.776 371.081 111.017C371.705 110.29 372.397 110 373.06 110H615C623.284 110 630 103.284 630 95V35C630 26.7157 623.284 20 615 20H35Z"
+              stroke="#00A44B"
+              stroke-width="10"
+            />
+          </g>
+          <g filter="url(#filter2_i_489_15)">
+            <path
+              d="M35 25C29.4772 25 25 29.4772 25 35V95C25 100.523 29.4771 105 35 105H276.94C281.585 105 285 109.355 285 114C285 136.091 302.909 154 325 154C347.091 154 365 136.091 365 114C365 109.355 368.415 105 373.06 105H615C620.523 105 625 100.523 625 95V35C625 29.4772 620.523 25 615 25H35Z"
+              fill="url(#paint0_radial_489_15)"
+            />
+          </g>
+          <defs>
+            <filter
+              id="filter0_d_489_15"
+              x="18"
+              y="18"
+              width="618"
+              height="147"
+              filterUnits="userSpaceOnUse"
+              color-interpolation-filters="sRGB"
+            >
+              <feFlood flood-opacity="0" result="BackgroundImageFix" />
+              <feColorMatrix
+                in="SourceAlpha"
+                type="matrix"
+                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                result="hardAlpha"
+              />
+              <feOffset dx="2" dy="2" />
+              <feGaussianBlur stdDeviation="2" />
+              <feComposite in2="hardAlpha" operator="out" />
+              <feColorMatrix
+                type="matrix"
+                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"
+              />
+              <feBlend
+                mode="normal"
+                in2="BackgroundImageFix"
+                result="effect1_dropShadow_489_15"
+              />
+              <feBlend
+                mode="normal"
+                in="SourceGraphic"
+                in2="effect1_dropShadow_489_15"
+                result="shape"
+              />
+            </filter>
+            <filter
+              id="filter1_f_489_15"
+              x="0"
+              y="0"
+              width="650"
+              height="179"
+              filterUnits="userSpaceOnUse"
+              color-interpolation-filters="sRGB"
+            >
+              <feFlood flood-opacity="0" result="BackgroundImageFix" />
+              <feBlend
+                mode="normal"
+                in="SourceGraphic"
+                in2="BackgroundImageFix"
+                result="shape"
+              />
+              <feGaussianBlur
+                stdDeviation="7.5"
+                result="effect1_foregroundBlur_489_15"
+              />
+            </filter>
+            <filter
+              id="filter2_i_489_15"
+              x="25"
+              y="25"
+              width="604"
+              height="133"
+              filterUnits="userSpaceOnUse"
+              color-interpolation-filters="sRGB"
+            >
+              <feFlood flood-opacity="0" result="BackgroundImageFix" />
+              <feBlend
+                mode="normal"
+                in="SourceGraphic"
+                in2="BackgroundImageFix"
+                result="shape"
+              />
+              <feColorMatrix
+                in="SourceAlpha"
+                type="matrix"
+                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                result="hardAlpha"
+              />
+              <feOffset dx="4" dy="4" />
+              <feGaussianBlur stdDeviation="15.15" />
+              <feComposite
+                in2="hardAlpha"
+                operator="arithmetic"
+                k2="-1"
+                k3="1"
+              />
+              <feColorMatrix
+                type="matrix"
+                values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.25 0"
+              />
+              <feBlend
+                mode="normal"
+                in2="shape"
+                result="effect1_innerShadow_489_15"
+              />
+            </filter>
+            <radialGradient
+              id="paint0_radial_489_15"
+              cx="0"
+              cy="0"
+              r="1"
+              gradientUnits="userSpaceOnUse"
+              gradientTransform="translate(325 50.6496) rotate(90) scale(43.4334 317.5)"
+            >
+              <stop offset="0.038414" stop-color="#BD2828" />
+              <stop offset="1" stop-color="#870404" />
+            </radialGradient>
+          </defs>
+        </svg>
       </div>
-
-      
 
       <HUD
         showHUD={showHUD}
@@ -435,7 +577,9 @@ const App = () => {
 
       {highScoreData[19] &&
         highScoreData.length >= 20 &&
-        parseFloat(distance) > parseFloat(highScoreData[19].distance) && <Hype />}
+        parseFloat(distance) > parseFloat(highScoreData[19].distance) && (
+          <Hype />
+        )}
 
       <div
         className="game-area"
