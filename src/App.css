@@ -243,12 +243,17 @@ body {
 /* UI-Stuff */
 
 .navbar {
+  position: absolute;
+  z-index: 10000;
+  border: 2px solid blue;
 }
 
 .nav-left {
+  border: 2px solid blue;
 }
 
 .nav-center {
+  border: 2px solid blue;
 }
 .nav-center .scoresContainer {
 }
@@ -257,6 +262,7 @@ body {
 }
 
 .nav-right {
+  border: 2px solid rgb(26, 255, 0);
 }
 
 .nav-right .settings-button {

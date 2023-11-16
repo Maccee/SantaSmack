@@ -72,7 +72,7 @@ const MusicPlayer = ({ mute, setMute }) => {
   return (
     <>
       <div className="button-container">
-        <button onClick={toggleMusic}>
+        <button onClick={toggleMusic}>Toggle Music
           {isPlaying ? (
             <img src={MusicOff} className="music-svg" />
           ) : (
@@ -80,7 +80,7 @@ const MusicPlayer = ({ mute, setMute }) => {
           )}
         </button>
         {isPlaying && (
-          <button onClick={playNextTrack}>
+          <button onClick={playNextTrack}>Play Next
             <img src={MusicNext} className="music-svg" />
           </button>
         )}

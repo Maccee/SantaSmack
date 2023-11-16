@@ -13,10 +13,10 @@ import HighScoreData from "./components/HighScoreData";
 import HUD from "./components/HUD";
 import Background from "./components/Background";
 import MusicPlayer from "./components/MusicPlayer";
-import GameSpeed from "./components/Settings";
 import Ground from "./components/Ground";
 import Porot from "./components/Porot";
 import Hype from "./components/Hype";
+import Settings from "./components/Settings";
 
 // APP COMPONENT
 const App = () => {
@@ -82,10 +82,6 @@ const App = () => {
 
   // HIGHSCORE
   const [highScoreData, setHighScoreData] = useState({});
-  const [showHighScoreData, setShowHighScoreData] = useState(false);
-
-  //SETTINGS
-  const [showSettings, setShowSettings] = useState(false);
 
   // SCROLLING
   const gameAreaRef = useRef(null);
@@ -363,7 +359,6 @@ const App = () => {
     }
 
     const mouseUpTime = performance.now();
-    const reactionTime = mouseUpTime - mouseDownTime;
 
     if (
       !isHit &&
@@ -421,31 +416,12 @@ const App = () => {
   return (
     <>
       <div className="navbar">
-        <div className="nav-left"></div>
+        <div className="nav-left">DAILY CHALLENGE</div>
         <div className="nav-center">
-          <div className="scoresContainer">
-            <HighScoreData
-              highScoreData={highScoreData}
-              showHighScoreData={showHighScoreData}
-            />
-            <button
-              className="scores-button"
-              onClick={() => setShowHighScoreData((prev) => !prev)}
-            >
-              Scores
-            </button>
-          </div>
+          <HighScoreData highScoreData={highScoreData} />
         </div>
         <div className="nav-right">
-          <div className="settingsContainer">
-            <GameSpeed gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
-            <button
-              className="settings-button"
-              onClick={() => setShowSettings((prev) => !prev)}
-            >
-              Settings
-            </button>
-          </div>
+          <Settings gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
           <MusicPlayer mute={mute} setMute={setMute} />
         </div>
       </div>

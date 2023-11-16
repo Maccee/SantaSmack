@@ -1,23 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
+import GameSpeed from "./GameSpeed";
 
-const GameSpeed = ({ gameSpeed, setGameSpeed }) => {
-  const handleSpeedChange = (event) => {
-    setGameSpeed(event.target.value);
-    console.log(gameSpeed);
-  };
+const Settings = ({ gameSpeed, setGameSpeed }) => {
+  const [showSettings, setShowSettings] = useState(false);
 
   return (
-    <div className="game-speed">
-      <input
-        type="range"
-        min="0.5"
-        max="2"
-        step="0.1"
-        value={gameSpeed}
-        onChange={handleSpeedChange}
-      />
-    </div>
+    <>
+      <div className="settingsContainer">
+        SETTINGS CONTAINER
+        <button
+          className="settings-button"
+          onClick={() => setShowSettings((prev) => !prev)}
+        >
+          Settings
+        </button>
+        {showSettings && (
+          <GameSpeed gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
+        )}
+      </div>
+    </>
   );
 };
 
-export default GameSpeed;
+export default Settings;
