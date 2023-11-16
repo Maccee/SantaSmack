@@ -276,7 +276,9 @@ const App = () => {
             if (juhaMode) {
               audio = new Audio("hyvahienohomma.mp3");
             }
+            if (!mute) {
             audio.play();
+            }
             hitPorosRef.current.add(index); // Mark this poro as hit
           } else if (!isInCollision && hitPorosRef.current.has(index)) {
             // The ball has left the collision area of a hit poro
