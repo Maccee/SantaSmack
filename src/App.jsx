@@ -13,6 +13,7 @@ import HighScoreData from "./components/HighScoreData";
 import HUD from "./components/HUD";
 import Background from "./components/Background";
 import MusicPlayer from "./components/MusicPlayer";
+import GameSpeed from "./components/Settings";
 import Ground from "./components/Ground";
 import Porot from "./components/Porot";
 import Hype from "./components/Hype";
@@ -82,6 +83,9 @@ const App = () => {
   // HIGHSCORE
   const [highScoreData, setHighScoreData] = useState({});
   const [showHighScoreData, setShowHighScoreData] = useState(false);
+
+  //SETTINGS
+  const [showSettings, setShowSettings] = useState(false);
 
   // SCROLLING
   const gameAreaRef = useRef(null);
@@ -192,7 +196,7 @@ const App = () => {
       if (
         highScoreData.length < 20 ||
         parseFloat(distance) >
-        parseFloat(highScoreData[highScoreData.length - 1].distance)
+          parseFloat(highScoreData[highScoreData.length - 1].distance)
       ) {
         let newHighScoresound = new Audio("highscore.mp3");
         if (juhaMode) {
@@ -231,11 +235,15 @@ const App = () => {
 
         // Apply physics
         verticalVelocityRef.current += gravity * timeDelta * gameSpeed; // gravity should be scaled properly
-        horizontalVelocityRef.current *= Math.pow(1 - airResistance, timeDelta * gameSpeed);
+        horizontalVelocityRef.current *= Math.pow(
+          1 - airResistance,
+          timeDelta * gameSpeed
+        );
 
         // UPDATE
         let newTop =
-          ballPositionRef.current.top + verticalVelocityRef.current * timeDelta * gameSpeed;
+          ballPositionRef.current.top +
+          verticalVelocityRef.current * timeDelta * gameSpeed;
         let newLeft =
           ballPositionRef.current.left +
           horizontalVelocityRef.current * timeDelta * gameSpeed;
@@ -271,7 +279,7 @@ const App = () => {
             let audio = new Audio("bells.mp3");
             if (juhaMode) {
               audio = new Audio("hyvahienohomma.mp3");
-            } 
+            }
             audio.play();
             hitPorosRef.current.add(index); // Mark this poro as hit
           } else if (!isInCollision && hitPorosRef.current.has(index)) {
@@ -352,7 +360,6 @@ const App = () => {
         horizontalVelocityRef,
         bottomLimit
       );
-
     }
 
     const mouseUpTime = performance.now();
@@ -365,7 +372,6 @@ const App = () => {
     ) {
       setIsHit(true);
       setIsSpinning(true);
-
 
       const hitStrengthValue = defineHitStrength(juhaMode);
       setHitStrength(hitStrengthValue);
@@ -385,8 +391,6 @@ const App = () => {
       // FOR HUD ONLY
       setLastHitPosition({ top: ballPosition.top });
       setHitAngle(angle);
-
-
     }
   };
 
@@ -416,24 +420,34 @@ const App = () => {
   // APP RENDER
   return (
     <>
-      <div className="highScoreContainer">
-        <HighScoreData
-          highScoreData={highScoreData}
-          showHighScoreData={showHighScoreData}
-        />
-        <button
-          className="hsc-button"
-          onClick={() => setShowHighScoreData((prev) => !prev)}
-        >
-          Highscores
-        </button>
-      </div>
-      <div className="mp-buttons">
-        <MusicPlayer mute={mute} setMute={setMute} gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
-      </div>
-      <div className="session-high">
-        <p>Your Session High: </p>
-        <p>{highScore.toFixed(2)}m</p>
+      <div className="navbar">
+        <div className="nav-left"></div>
+        <div className="nav-center">
+          <div className="scoresContainer">
+            <HighScoreData
+              highScoreData={highScoreData}
+              showHighScoreData={showHighScoreData}
+            />
+            <button
+              className="scores-button"
+              onClick={() => setShowHighScoreData((prev) => !prev)}
+            >
+              Scores
+            </button>
+          </div>
+        </div>
+        <div className="nav-right">
+          <div className="settingsContainer">
+            <GameSpeed gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
+            <button
+              className="settings-button"
+              onClick={() => setShowSettings((prev) => !prev)}
+            >
+              Settings
+            </button>
+          </div>
+          <MusicPlayer mute={mute} setMute={setMute} />
+        </div>
       </div>
 
       <HUD
@@ -462,7 +476,7 @@ const App = () => {
         onKeyDown={handleSpaceDown}
         onKeyUp={handleSpaceUp}
       >
-        <Background scrollLeft={scrollLeft} gameAreaWidth={gameAreaWidth}/>
+        <Background scrollLeft={scrollLeft} gameAreaWidth={gameAreaWidth} />
 
         <div
           className="scroll-container"
@@ -497,7 +511,10 @@ const App = () => {
             verticalVelocityRef={verticalVelocityRef}
           />
 
-          <Ground gameAreaHeight={gameAreaHeight} gameAreaWidth={gameAreaWidth} />
+          <Ground
+            gameAreaHeight={gameAreaHeight}
+            gameAreaWidth={gameAreaWidth}
+          />
         </div>
       </div>
     </>

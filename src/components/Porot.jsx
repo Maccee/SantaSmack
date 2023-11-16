@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import PoroImg from '../assets/poro.png'; // Assuming you have an image named poro.png
+import React, { useEffect, useState } from "react";
+import PoroImg from "../assets/poro-lp.png"; // Assuming you have an image named poro.png
 
 const Porot = ({ setPoros, gameAreaHeight, ballPositionRef }) => {
   const [lastPoroPosition, setLastPoroPosition] = useState(500); // Starting position for the first poro
@@ -9,17 +9,20 @@ const Porot = ({ setPoros, gameAreaHeight, ballPositionRef }) => {
     const addNewPoro = () => {
       const minDistance = 1500;
       const maxDistance = 4000;
-      const newPoroPosition = lastPoroPosition + minDistance + Math.random() * (maxDistance - minDistance);
+      const newPoroPosition =
+        lastPoroPosition +
+        minDistance +
+        Math.random() * (maxDistance - minDistance);
 
       const newPoro = {
         x: Math.floor(newPoroPosition),
         y: gameAreaHeight - 220,
       };
 
-      setLocalPoros(prevPoros => [...prevPoros, newPoro]);
-      setPoros(prevPoros => [...prevPoros, newPoro]); // Update parent state
+      setLocalPoros((prevPoros) => [...prevPoros, newPoro]);
+      setPoros((prevPoros) => [...prevPoros, newPoro]); // Update parent state
       setLastPoroPosition(newPoroPosition);
-      console.log("",poros)
+      console.log("", poros);
     };
 
     if (ballPositionRef.current.left >= lastPoroPosition) {

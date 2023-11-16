@@ -4,12 +4,10 @@ import MusicOff from "../assets/music_off.svg";
 import MusicNext from "../assets/music_next.svg";
 import { distanceMusicPlay } from "../SoundUtils";
 
-const MusicPlayer = ({mute, setMute, gameSpeed, setGameSpeed}) => {
+const MusicPlayer = ({ mute, setMute }) => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
-  const [showSlider, setShowSlider] = useState(false);
-  
 
   // Initialize the audioRef.current value only once, when the component mounts
   if (audioRef.current === null) {
@@ -62,14 +60,14 @@ const MusicPlayer = ({mute, setMute, gameSpeed, setGameSpeed}) => {
   };
   const handleSpeedChange = (event) => {
     setGameSpeed(event.target.value);
-    console.log(gameSpeed)
+    console.log(gameSpeed);
   };
 
   const handleMuteClick = () => {
-    setMute(prevMute => !prevMute); // Toggles the mute state
+    setMute((prevMute) => !prevMute); // Toggles the mute state
     distanceMusicPlay(0, !mute); // Pass the opposite of the current mute state
     console.log("mute clicked", !mute); // Logging the new state
-}
+  };
 
   return (
     <>
@@ -87,32 +85,11 @@ const MusicPlayer = ({mute, setMute, gameSpeed, setGameSpeed}) => {
           </button>
         )}
         {!mute ? (
-        <button className="music-svg" onClick={() => handleMuteClick()}>mute</button>
+          <button onClick={() => handleMuteClick()}>mute</button>
         ) : (
-          <button className="music-svg" onClick={() => handleMuteClick()}>unmute</button>
+          <button onClick={() => handleMuteClick()}>unmute</button>
         )}
-        <input
-          className="volume-slider"
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={gameSpeed}
-          onChange={handleSpeedChange}
-        />
       </div>
-      <div className={`slider-container ${showSlider ? "" : "hidden"}`}>
-        <input
-          className="volume-slider"
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={audioRef.current.volume}
-          onChange={handleVolumeChange}
-        />
-      </div>{" "}
-      
     </>
   );
 };
