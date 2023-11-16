@@ -283,17 +283,8 @@ body {
 
 /* UI-Stuff */
 
-.navbar svg {
-  position: absolute;
-  top: -5%;
-  left: 50%;
-  transform: translate(-50%, -10%);
-  min-width: 600px;
-  min-height: 129px;
-  z-index: -1;
-}
-
 .navbar {
+ 
   position: absolute;
   top: 5%;
   left: 50%;
@@ -304,15 +295,19 @@ body {
 }
 
 .navbar-content {
-  position: relative;
+  
+  border: 4px dotted gold;
+  background-color: rgba(255, 0, 0, 0.773);
+  outline: 2px solid gold;
+  border-radius: 40px;
   width: 100%;
-  height: 100%;
-  flex-shrink: 0;
+  height: 600px;
   display: flex;
-  justify-content: space-between;
+  
 }
 
 .nav-left {
+  flex-basis: 40%;
   display: flex;
   flex-direction: row;
   height: 80px;
@@ -342,8 +337,10 @@ body {
 }
 
 .nav-center {
+  flex-basis: 20%;
   height: 130px;
   z-index: 100000;
+  text-align: center;
 }
 .nav-center .scoresContainer {
 }
@@ -352,18 +349,36 @@ body {
 }
 
 .nav-center .scoresContainer .scores-button svg {
-  max-width: 68px;
-  max-height: 68px;
-  flex-shrink: 0;
-  z-index: 10000;
+}
+.scores-button {
+  border: none;
+  background: none; /* Removes any default background */
+  padding: 0; /* Removes default padding */
+  margin: 0; /* Removes default margin */
+  font: inherit; /* Inherits font from the parent element */
+  color: inherit; /* Inherits text color from the parent element */
+  cursor: pointer; /* Changes cursor to pointer to indicate it's clickable */
+  width: 70%;
+  height: auto;
+}
+.settings-button {
+  border: none;
+  background: none; /* Removes any default background */
+  padding: 0; /* Removes default padding */
+  margin: 0; /* Removes default margin */
+  font: inherit; /* Inherits font from the parent element */
+  color: inherit; /* Inherits text color from the parent element */
+  cursor: pointer; /* Changes cursor to pointer to indicate it's clickable */
+  height: auto;
 }
 
 .nav-right {
+  
+  flex-basis: 40%;
   display: flex;
-  flex-direction: row;
-  height: 80px;
+  flex-direction: column;  /* Change to column for vertical alignment */
+  justify-content: flex-end;  /* Aligns children to the end (bottom) */
   box-sizing: border-box;
-  padding: 8px;
 }
 
 .nav-right .settings-button {
@@ -373,4 +388,8 @@ body {
 }
 
 .nav-right .settingsContainer .game-speed {
+}
+
+.highscorewindow-table {
+  background-color: red;
 }
