@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import MusicOn from "../assets/music_on.svg";
 import MusicOff from "../assets/music_off.svg";
 import MusicNext from "../assets/music_next.svg";
-import { distanceMusicPlay } from "../SoundUtils";
+
 
 const MusicPlayer = ({ mute, setMute }) => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
@@ -50,18 +50,11 @@ const MusicPlayer = ({ mute, setMute }) => {
     setIsPlaying(!isPlaying);
     
   };
-  const handleVolumeChange = (event) => {
-    const volume = event.target.value;
-    audioRef.current.volume = volume;
-  };
-  const handleSpeedChange = (event) => {
-    setGameSpeed(event.target.value);
-    console.log(gameSpeed);
-  };
+ 
 
   const handleMuteClick = () => {
     setMute((prevMute) => !prevMute); // Toggles the mute state
-    distanceMusicPlay(0, !mute); // Pass the opposite of the current mute state
+    
     console.log("mute clicked", !mute); // Logging the new state
   };
 

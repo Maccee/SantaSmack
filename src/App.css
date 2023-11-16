@@ -33,13 +33,13 @@ body {
 }
 .inputButton {
   z-index: 2000;
-    width: 100%;
+  width: 100%;
   max-width: 100px;
   text-align: center;
   padding: 0.5rem;
-    font-family: "Lobster", cursive;
+  font-family: "Lobster", cursive;
   font-size: 1rem;
-    text-decoration: none;
+  text-decoration: none;
   color: #fff;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
   background: #5e0d0c;
@@ -47,12 +47,9 @@ body {
   border-radius: 15px;
   border: 1px solid #4c0300;
   box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.25),
-    /* highlight */
-    inset 0 0 6px #a23227,
-    /* inner glow */
-    inset 0 80px 80px -40px #ac3223,
-    /* gradient */
-    1px 1px 3px rgba(0, 0, 0, 0.75);
+    /* highlight */ inset 0 0 6px #a23227,
+    /* inner glow */ inset 0 80px 80px -40px #ac3223,
+    /* gradient */ 1px 1px 3px rgba(0, 0, 0, 0.75);
   /* shadow */
   overflow: visible;
   /* IE9 & 10 */
@@ -188,19 +185,24 @@ body {
   transform: translateY(-100%);
   z-index: -10;
 }
-
 .background {
   background-image: url("./assets/bg3-lp.png");
   background-size: contain;
-  background-repeat: repeat-x;
   height: 55vh;
-
   bottom: 0vh;
   position: absolute;
+}
+.background2 {
+  background-image: url("./assets/bg2-lp.png");
+  background-size: contain;
+  height: 80vh;
+  position: absolute;
+  z-index: -10;
 }
 
 @keyframes moveDown {
   0% {
+    
     background-position: 0 0;
   }
   100% {
@@ -208,31 +210,21 @@ body {
   }
 }
 
+
 .snow {
   background-image: url("./assets/snow.png");
   position: absolute;
-  background-size: auto;
+  
   background-repeat: repeat;
   height: 95vh;
-  animation: moveDown 90s linear infinite; /* adjust duration and timing function as needed */
+  animation: moveDown 200s linear infinite; /* adjust duration and timing function as needed */
 }
 .snow2 {
   background-image: url("./assets/snow.png");
   position: absolute;
-  background-size: auto;
   background-repeat: repeat;
-  height: 95vh;
-  animation: moveDown 140s linear infinite; /* adjust duration and timing function as needed */
-}
-
-.background2 {
-  background-image: url("./assets/bg2-lp.png");
-  background-size: contain;
-  background-repeat: repeat-x;
-  width: 300000px;
-  height: 80vh;
-  position: absolute;
-  z-index: -10;
+    height: 75vh;
+  animation: moveDown 350s linear infinite; /* adjust duration and timing function as needed */
 }
 
 .marker {

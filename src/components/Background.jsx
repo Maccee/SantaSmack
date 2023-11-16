@@ -18,14 +18,14 @@ const Background = ({ scrollLeft, gameAreaWidth }) => {
       <div
         className="snow"
         style={{
-          transform: `translateX(-${scrollLeft / 3}px)`,
+          transform: `translateX(-${scrollLeft / 1}px)`,
           width: `${gameAreaWidth}px`,
         }}
       ></div>
       <div
         className="snow2"
         style={{
-          transform: `translateX(-${scrollLeft / 3}px)`,
+          transform: `translateX(-${scrollLeft / 4}px)`,
           width: `${gameAreaWidth}px`,
         }}
       ></div>

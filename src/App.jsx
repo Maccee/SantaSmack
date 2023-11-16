@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./App.css";
 import { postDataToAzureFunction, getDataFromAzureFunction } from "./ApiUtils";
 import { calculateHitStrength, defineHitStrength, resetGame } from "./Utils";
-import { distanceMusicPlay } from "./SoundUtils";
+
 import {
   useWindowEventHandlers,
   useGameInitialization,
@@ -22,11 +22,12 @@ import Hype from "./components/Hype";
 import InputName from "./components/InputName";
 import Settings from "./components/Settings";
 
-
 // APP COMPONENT
 const App = () => {
   // HAS SET PLAYER NAME
-  const [playerName, setPlayerName] = useState(localStorage.getItem('playerName') || null);
+  const [playerName, setPlayerName] = useState(
+    localStorage.getItem("playerName") || null
+  );
 
   // Define game area width, height and ground level
   const [gameAreaWidth, setGameAreaWidth] = useState(10000); // in px
@@ -155,9 +156,7 @@ const App = () => {
     };
 
     if (isHit && horizontalVelocityRef.current === 0) {
-
       if (parseFloat(distance) > parseFloat(highScoreData[19].distance)) {
-
         let newHighScoresound = new Audio("highscore.mp3");
         if (juhaMode) {
           let audio = new Audio("/iddqd/kuitenkinjoihankohtuu.mp3");
@@ -170,10 +169,7 @@ const App = () => {
     }
   }, [distance, horizontalVelocityRef.current]);
 
-  // LETS PLAY MUSIC WHILE WE ARE IN SPEEEEEED !!
-  useEffect(() => {
-    distanceMusicPlay(horizontalVelocityRef, mute);
-  }, [horizontalVelocityRef.current]);
+  
 
   // Dynamically generate gamearea
   useEffect(() => {
@@ -237,15 +233,13 @@ const App = () => {
             }
             let poroHitAudio = new Audio("bells.mp3");
             if (juhaMode) {
-
               poroHitAudio = new Audio("hyvahienohomma.mp3");
             }
             if (!mute) {
-            poroHitAudio.play();
+              poroHitAudio.play();
             }
 
             hitPorosRef.current.add(index); // Mark this poro as hit
-
           } else if (!isInCollision && hitPorosRef.current.has(index)) {
             hitPorosRef.current.delete(index);
           }
@@ -283,6 +277,7 @@ const App = () => {
           );
         });
 
+        // SESSION HIGHEST
         if (Math.abs(horizontalVelocityRef.current) > 0) {
           const newDistance = parseFloat(
             (ballPositionRef.current.left / 100).toFixed(2)
@@ -389,28 +384,30 @@ const App = () => {
       handleMouseUp();
     }
   };
+
+  // STYLE FOR GAMEAREA BLUR IF NO NAME
   const blurStyle = {
     filter: "blur(5px)", // You can adjust the blur intensity as needed
   };
-  
+
   // APP RENDER
   return (
     <>
-
       <div className="navbar">
-        <div className="nav-left">LEFT: DAILY CHALLENGE COMPONENT PLACE HERE</div>
-        <div className="nav-center">CENTER:
+        <div className="nav-left">
+          LEFT: DAILY CHALLENGE COMPONENT PLACE HERE
+        </div>
+        <div className="nav-center">
+          CENTER:
           <HighScoreData highScoreData={highScoreData} />
           {playerName === null && <InputName setPlayerName={setPlayerName} />}
         </div>
-        <div className="nav-right">RIGHT:
+        <div className="nav-right">
+          RIGHT:
           <Settings gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
           <MusicPlayer mute={mute} setMute={setMute} />
         </div>
-
       </div>
-
-      
 
       <HUD
         showHUD={showHUD}
@@ -435,7 +432,9 @@ const App = () => {
 
       {highScoreData[19] &&
         highScoreData.length >= 20 &&
-        parseFloat(distance) > parseFloat(highScoreData[19].distance) && <Hype />}
+        parseFloat(distance) > parseFloat(highScoreData[19].distance) && (
+          <Hype />
+        )}
 
       <div
         className="game-area"

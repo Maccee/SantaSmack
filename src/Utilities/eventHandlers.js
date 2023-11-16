@@ -55,6 +55,7 @@ export const useGameInitialization = (
       if (event.keyCode === 220 || event.keyCode === 192) {
         toggleHUD();
       }
+      
     };
     window.addEventListener("keydown", handleKeyDown);
     if (gameAreaRef.current) {
