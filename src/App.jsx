@@ -385,7 +385,6 @@ const App = () => {
     filter: "blur(5px)", // You can adjust the blur intensity as needed
   };
   
-
   // APP RENDER
   return (
     <>
