@@ -27,7 +27,6 @@ export const defineHitStrength = (juhamode) => {
 
   playAudio(juhamode);
 
-
   return parsedHitStrength;
 };
 
@@ -39,7 +38,6 @@ const playAudio = (juhamode) => {
   const juhamodeFiles = [
     "./iddqd/kympinkahenkympin.mp3",
     "./iddqd/eivarmastimeeohimaalista.mp3",
-
   ];
 
   if (juhamode) {
@@ -51,7 +49,7 @@ const playAudio = (juhamode) => {
   // Play the audio file
   const audio = new Audio(audioFile);
   audio.play();
-}
+};
 
 export const resetGame = (
   setHitAngle,

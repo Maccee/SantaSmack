@@ -1,5 +1,5 @@
 body {
-  font-family: "Mountains of Christmas", serif;
+  font-family: "Luckiest Guy", cursive;
   background-color: #3e210b;
 }
 
@@ -184,7 +184,8 @@ body {
 
 .marker {
   position: absolute;
-  bottom: 0;
+  display: flex;
+  justify-content: center;
 }
 
 .marker img {
@@ -192,15 +193,14 @@ body {
 }
 
 .marker div {
-  background-color: rgba(255, 255, 255, 0.477);
+  background-color: rgba(255, 255, 255, 0);
   border-radius: 10px;
-  padding: 0 2.5rem 0 2.3rem;
+  padding: 0 1rem 0 1rem;
   position: absolute;
-  left: 10px;
-  font-size: 3.9rem;
+  font-size: 2.9rem;
   color: rgb(0, 0, 0);
   font-weight: 700;
-  font-family: "Mountains of Christmas", serif;
+  font-family: "Luckiest Guy", cursive;
 }
 
 @keyframes fontGrowAndShrink {
@@ -228,7 +228,7 @@ body {
 }
 
 .hype {
-  font-family: "Mountains of Christmas", serif;
+  font-family: "Luckiest Guy", cursive;
   color: yellow;
   font-weight: 700;
   opacity: 0;
