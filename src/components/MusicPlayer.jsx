@@ -48,11 +48,7 @@ const MusicPlayer = ({ mute, setMute }) => {
 
   const toggleMusic = () => {
     setIsPlaying(!isPlaying);
-    if (isPlaying) {
-      setShowSlider(false);
-    } else {
-      setShowSlider(true);
-    }
+    
   };
   const handleVolumeChange = (event) => {
     const volume = event.target.value;

@@ -22,7 +22,7 @@ const Porot = ({ setPoros, gameAreaHeight, ballPositionRef }) => {
       setLocalPoros((prevPoros) => [...prevPoros, newPoro]);
       setPoros((prevPoros) => [...prevPoros, newPoro]); // Update parent state
       setLastPoroPosition(newPoroPosition);
-      console.log("", poros);
+      
     };
 
     if (ballPositionRef.current.left >= lastPoroPosition) {
