@@ -290,6 +290,9 @@ body {
   position: absolute;
   z-index: 10000;
   border: 2px solid blue;
+  top: 5%;
+  left: 50%;
+  transform: translate(-50%, 0%);
 }
 
 .nav-left {
