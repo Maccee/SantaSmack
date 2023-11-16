@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 const HighScoreData = ({ highScoreData }) => {
-  const [showHighScoreData, setShowHighScoreData] = useState(true);
+  const [showHighScoreData, setShowHighScoreData] = useState(false);
 
-  const firstColumnData = highScoreData.slice(0, 10);
-  const secondColumnData = highScoreData.slice(10, 20);
+  let firstColumnData = [];
+  let secondColumnData = [];
+
+  if (Array.isArray(highScoreData)) {
+    firstColumnData = highScoreData.slice(0, 10);
+    secondColumnData = highScoreData.slice(10, 20);
+  } else {
+    return null;
+  }
 
   return (
     <div className="highscorewindow">

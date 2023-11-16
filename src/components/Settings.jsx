@@ -7,7 +7,7 @@ const Settings = ({ gameSpeed, setGameSpeed }) => {
   return (
     <>
       <div className="settingsContainer">
-        SETTINGS CONTAINER
+        
         <button
           className="settings-button"
           onClick={() => setShowSettings((prev) => !prev)}

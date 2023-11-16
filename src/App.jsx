@@ -416,11 +416,11 @@ const App = () => {
   return (
     <>
       <div className="navbar">
-        <div className="nav-left">DAILY CHALLENGE</div>
-        <div className="nav-center">
+        <div className="nav-left">LEFT: DAILY CHALLENGE COMPONENT PLACE HERE</div>
+        <div className="nav-center">CENTER:
           <HighScoreData highScoreData={highScoreData} />
         </div>
-        <div className="nav-right">
+        <div className="nav-right">RIGHT:
           <Settings gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
           <MusicPlayer mute={mute} setMute={setMute} />
         </div>
