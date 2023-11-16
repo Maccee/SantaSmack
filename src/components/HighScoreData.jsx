@@ -2,13 +2,14 @@
 import React, { useState } from "react";
 const HighScoreData = ({ highScoreData }) => {
   const [showHighScoreData, setShowHighScoreData] = useState(false);
-
+  let sortedData = [];
   let firstColumnData = [];
   let secondColumnData = [];
 
   if (Array.isArray(highScoreData)) {
-    firstColumnData = highScoreData.slice(0, 10);
-    secondColumnData = highScoreData.slice(10, 20);
+    sortedData = highScoreData.sort((a, b) => b.distance - a.distance).slice(0, 20);
+    firstColumnData = sortedData.slice(0, 10);
+    secondColumnData = sortedData.slice(10, 20);
   } else {
     return null;
   }
