@@ -3,16 +3,13 @@ import TrophyArrowImg from "../assets/trophy_outer-arrow.svg";
 import TrophyImg from "../assets/trophy_inner.svg";
 
 const HighScoreData = ({ highScoreData }) => {
-  const [showHighScoreData, setShowHighScoreData] = useState(false);
+  const [showHighScoreData, setShowHighScoreData] = useState(true);
   const [highScoreOpen, setHighScoreOpen] = useState(false);
   let sortedData = [];
   let firstColumnData = [];
   let secondColumnData = [];
 
-  const handleButtonPress = () => {
-    setHighScoreOpen((prev) => !prev);
-    setShowHighScoreData((prev) => !prev);
-  };
+  
 
   if (Array.isArray(highScoreData)) {
     sortedData = highScoreData
@@ -26,9 +23,6 @@ const HighScoreData = ({ highScoreData }) => {
 
   return (
     <>
-      <button className="scores-button" onClick={() => handleButtonPress()}>
-        <img src={TrophyImg} />
-      </button>
       
       {showHighScoreData && (
         <div className="highscorewindow-table">

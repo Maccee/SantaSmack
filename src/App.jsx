@@ -23,6 +23,7 @@ import Hype from "./components/Hype";
 import InputName from "./components/InputName";
 import Settings from "./components/Settings";
 import TargetImg from "./assets/target.png";
+import Navbar from "./components/Navbar";
 
 // APP COMPONENT
 const App = () => {
@@ -393,29 +394,7 @@ const App = () => {
   // APP RENDER
   return (
     <>
-      <div className="navbar">
-        <div className="navbar-content">
-          <div className="nav-left">
-            <img src={TargetImg} alt="Target" />
-            <div className="session-high">
-              <p>
-                SESSION
-                <br />
-                LONGEST DICK
-              </p>{" "}
-              <p className="longest-score">{highScore.toFixed(2)} M</p>
-            </div>
-          </div>
-          <div className="nav-center">
-            <HighScoreData highScoreData={highScoreData} />
-            {/* {playerName === null && <InputName setPlayerName={setPlayerName} />} */}
-          </div>
-          <div className="nav-right">
-            <Settings gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
-            <MusicPlayer mute={mute} setMute={setMute} />
-          </div>
-        </div>
-      </div>
+      <Navbar highScoreData={highScoreData} />
 
       <HUD
         showHUD={showHUD}

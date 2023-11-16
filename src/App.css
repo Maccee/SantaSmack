@@ -284,7 +284,7 @@ body {
 /* UI-Stuff */
 
 .navbar {
- 
+  text-align: center;
   position: absolute;
   top: 5%;
   left: 50%;
@@ -293,103 +293,51 @@ body {
   min-height: 129px;
   z-index: 100;
 }
-
-.navbar-content {
-  
+.navbarContent {
   border: 4px dotted gold;
-  background-color: rgba(255, 0, 0, 0.773);
+  background-color: rgb(255, 0, 0);
   outline: 2px solid gold;
   border-radius: 40px;
-  width: 100%;
-  height: 600px;
   display: flex;
-  
+  flex-direction: column;
+  justify-content: space-between;
 }
-
-.nav-left {
-  flex-basis: 40%;
+.navbarTop {
   display: flex;
   flex-direction: row;
-  height: 80px;
-  box-sizing: border-box;
-  padding: 8px;
+  align-items: center;
 }
-.session-high {
-  padding-left: 8px;
-  display: flex;
-  font-family: Luckiest Guy;
-  flex-direction: column;
-  justify-content: center;
-  flex-shrink: 0;
-  color: #ffe4af;
-  font-size: 16px;
-  letter-spacing: 0.96px;
+.highScoreButtonContainer {
+  position: relative;
+  z-index: -40;
 }
-.session-high .longest-score {
-  color: #fff;
-  text-align: center;
-  font-family: Luckiest Guy;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  letter-spacing: 1.44px;
-}
-
-.nav-center {
-  flex-basis: 20%;
-  height: 130px;
-  z-index: 100000;
-  text-align: center;
-}
-.nav-center .scoresContainer {
-}
-
-.nav-center .scoresContainer .scores-button {
-}
-
-.nav-center .scoresContainer .scores-button svg {
-}
-.scores-button {
+.highScoreButton {
+  transform: translate(0%, -40%);
   border: none;
-  background: none; /* Removes any default background */
-  padding: 0; /* Removes default padding */
-  margin: 0; /* Removes default margin */
-  font: inherit; /* Inherits font from the parent element */
-  color: inherit; /* Inherits text color from the parent element */
-  cursor: pointer; /* Changes cursor to pointer to indicate it's clickable */
-  width: 70%;
-  height: auto;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
 }
-.settings-button {
-  border: none;
-  background: none; /* Removes any default background */
-  padding: 0; /* Removes default padding */
-  margin: 0; /* Removes default margin */
-  font: inherit; /* Inherits font from the parent element */
-  color: inherit; /* Inherits text color from the parent element */
-  cursor: pointer; /* Changes cursor to pointer to indicate it's clickable */
-  height: auto;
-}
-
-.nav-right {
-  
+.navbarLeft {
   flex-basis: 40%;
+  text-align: left;
+}
+.navbarCenter {
+  flex-basis: 20%;
+}
+.navbarRight {
+  text-align: right;
+  flex-basis: 40%;
+}
+.highScoreBox {
+  justify-content: space-between;
   display: flex;
-  flex-direction: column;  /* Change to column for vertical alignment */
-  justify-content: flex-end;  /* Aligns children to the end (bottom) */
-  box-sizing: border-box;
+  width: 100%;
+  
 }
 
-.nav-right .settings-button {
-}
 
-.nav-right .settingsContainer {
-}
 
-.nav-right .settingsContainer .game-speed {
-}
-
-.highscorewindow-table {
-  background-color: red;
-}
