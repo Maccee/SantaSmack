@@ -28,7 +28,7 @@ import Navbar from "./components/Navbar";
 // APP COMPONENT
 const App = () => {
   // HAS SET PLAYER NAME
-  const [playerName, setPlayerName] = useState(null);
+  const [playerName, setPlayerName] = useState(localStorage.getItem('playerName') || null);
 
   // Define game area width, height and ground level
   const [gameAreaWidth, setGameAreaWidth] = useState(10000); // in px
@@ -395,7 +395,8 @@ const App = () => {
   return (
     <>
       <Navbar highScoreData={highScoreData} />
-
+      
+      {playerName === null && <InputName setPlayerName={setPlayerName} />}
       <HUD
         showHUD={showHUD}
         lastHitPosition={lastHitPosition}

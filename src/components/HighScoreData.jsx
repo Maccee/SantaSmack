@@ -4,7 +4,7 @@ import TrophyImg from "../assets/trophy_inner.svg";
 
 const HighScoreData = ({ highScoreData }) => {
   const [showHighScoreData, setShowHighScoreData] = useState(true);
-  const [highScoreOpen, setHighScoreOpen] = useState(false);
+  
   let sortedData = [];
   let firstColumnData = [];
   let secondColumnData = [];
