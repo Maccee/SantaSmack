@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import GameSpeed from "./GameSpeed";
-import settingsImg from "../assets/Juha.png";
+import settingsIcon from "../assets/settings.png";
 
 const Settings = ({ gameSpeed, setGameSpeed }) => {
   const [showSettings, setShowSettings] = useState(false);
@@ -12,7 +12,7 @@ const Settings = ({ gameSpeed, setGameSpeed }) => {
           className="settings-button"
           onClick={() => setShowSettings((prev) => !prev)}
         >
-          <img src={settingsImg}></img>
+          <img src={settingsIcon}></img>
         </button>
         {showSettings && (
           <GameSpeed gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />

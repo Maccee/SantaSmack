@@ -33,7 +33,6 @@ body {
   height: 30px;
 }
 .inputButton {
-  
 }
 .santa {
   width: fit-content;
@@ -265,35 +264,35 @@ body {
   left: 50%;
   transform: translate(-50%, 0%);
   z-index: 1;
-  }
+}
 .navbar {
   padding: 0.3rem;
   text-align: center;
   min-width: 600px;
 }
 .valotausta {
-  background-color: red;
-  background-image: url("./assets/green_stripes.png");
-  background-repeat: repeat;
   background-size: cover;
-  border-radius: 20px;
-  animation: moveDown2 10s linear infinite;
-}
-@keyframes moveDown2 {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 0% 600%;
-  }
+  background-color: #ffe4af;
+  border-radius: 25px;
+  border: #ffe4af solid 4px;
+  box-shadow: 2px 2px 4px 0px #000;
 }
 .navbarContent {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: rgb(255, 0, 0);
   border-radius: 20px;
-  padding: 0.5rem;
+  padding: 0.2rem 1.5rem;
+  border-radius: 20px;
+  z-index: 200;
+  outline: gray dotted 9px;
+  animation: blink 1s infinite;
+  outline-offset: 0px;
+  background: var(
+    --navbar-radial,
+    radial-gradient(50% 33.33% at 50% 20%, #bd2828 3.84%, #870404 100%)
+  );
+  box-shadow: 4px 4px 30px 0px #ffffffc9 inset;
 }
 .navbarTop {
   display: flex;
@@ -305,7 +304,6 @@ body {
   text-align: center;
 }
 .highScoreButton {
-  transform: translate(0%, 0%);
   border: none;
   background: none;
   padding: 0;
@@ -313,34 +311,113 @@ body {
   font: inherit;
   color: inherit;
   cursor: pointer;
+  position: absolute;
+  z-index: 1;
 }
 .navbarLeft {
-  flex-basis: 40%;
+  flex-basis: 35%;
   text-align: left;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.navbarLeft img {
+  width: 42px;
+  height: 40px;
+  flex-shrink: 0;
+}
+.sesDist {
+  color: #fff;
+  font-family: Luckiest Guy;
+  font-size: 24px;
+  line-height: normal;
+  letter-spacing: 1.44px;
+}
+.sessionLongest {
+  display: flex;
+  flex-direction: column;
+  font-family: "Luckiest Guy", cursive;
+  color: #ffe4af;
+  padding-left: 1rem;
+  letter-spacing: 0.96px;
 }
 .navbarCenter {
-  flex-basis: 20%;
+  flex-basis: 30%;
+  display: flex;
+  justify-content: center;
 }
+.navbarCenter img {
+  width: 100%;
+}
+
 .navbarRight {
   text-align: right;
-  flex-basis: 40%;
+  flex-basis: 35%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
+.navbarRight button {
+  border: none;
+  background: none;
+  padding: 0 0 0 0.5rem;
+}
+
+.navbarRight img {
+  height: 55px;
+}
+
 .highScoreBox {
   justify-content: space-around;
   display: flex;
   width: 100%;
-  background-color: red;
   border-radius: 20px;
+  min-height: 400px;
 }
 .dailyChallenge {
   flex-basis: 20%;
 }
 .highScoreData {
-  
   width: 100%;
 }
 .dailyChallengeTop5 {
   flex-basis: 20%;
 }
 
+.navbar:before,
+.navbar:after {
+  content: "";
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  border-radius: 25px;
 
+  background-color: #bd2828;
+  background-size: 400%;
+  width: calc(100%);
+  height: calc(100%);
+  z-index: -1;
+  animation: blink-blur 1s infinite;
+}
+
+@keyframes blink-blur {
+  50% {
+    background-color: #0cd366;
+  }
+}
+
+.navbar:after {
+  filter: blur(50px);
+}
+
+@keyframes blink {
+  0% {
+    outline-color: #bd2828;
+  }
+  50% {
+    outline-color: #0cd366;
+  }
+  100% {
+    outline-color: #bd2828;
+  }
+}

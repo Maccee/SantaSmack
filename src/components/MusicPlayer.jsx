@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import MusicOn from "../assets/music_on.svg";
-import MusicOff from "../assets/music_off.svg";
-import MusicNext from "../assets/music_next.svg";
 import { distanceMusicPlay } from "../SoundUtils";
+import musicOn from "../assets/music-on.png";
+import soundOn from "../assets/sound-on.png";
+import musicOff from "../assets/music-off.png";
+import soundOff from "../assets/sound-off.png";
 
 const MusicPlayer = ({ mute, setMute }) => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
@@ -48,7 +49,6 @@ const MusicPlayer = ({ mute, setMute }) => {
 
   const toggleMusic = () => {
     setIsPlaying(!isPlaying);
-    
   };
   const handleVolumeChange = (event) => {
     const volume = event.target.value;
@@ -67,23 +67,19 @@ const MusicPlayer = ({ mute, setMute }) => {
 
   return (
     <>
-      <div className="button-container">
-        <button onClick={toggleMusic}>Toggle Music
-          {isPlaying ? (
-            <img src={MusicOff} className="music-svg" />
-          ) : (
-            <img src={MusicOn} className="music-svg" />
-          )}
+      <div className="audioControl">
+        <button onClick={toggleMusic}>
+          {isPlaying ? <img src={musicOff} /> : <img src={musicOn} />}
         </button>
-        {isPlaying && (
-          <button onClick={playNextTrack}>Play Next
-            <img src={MusicNext} className="music-svg" />
-          </button>
-        )}
+
         {!mute ? (
-          <button onClick={() => handleMuteClick()}>mute</button>
+          <button onClick={() => handleMuteClick()}>
+            <img src={soundOff} />
+          </button>
         ) : (
-          <button onClick={() => handleMuteClick()}>unmute</button>
+          <button onClick={() => handleMuteClick()}>
+            <img src={soundOn} />
+          </button>
         )}
       </div>
     </>
