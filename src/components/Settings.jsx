@@ -15,7 +15,9 @@ const Settings = ({ gameSpeed, setGameSpeed }) => {
           <img src={settingsIcon}></img>
         </button>
         {showSettings && (
-          <GameSpeed gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
+          <div>
+            <GameSpeed gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
+          </div>
         )}
       </div>
     </>
