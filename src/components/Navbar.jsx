@@ -6,7 +6,16 @@ import measureImg from "../assets/measure.png";
 import MusicPlayer from "./MusicPlayer";
 import Settings from "./Settings";
 
-const Navbar = ({ highScoreData, mute, setMute, highScore, gameSpeed, setGameSpeed }) => {
+const Navbar = ({
+  highScoreData,
+  mute,
+  setMute,
+  highScore,
+  gameSpeed,
+  setGameSpeed,
+  dailyChallengeDistance,
+  dailyChallengeData,
+}) => {
   const [highScoreOpen, setHighScoreOpen] = useState(false);
   const handleButtonClick = () => {
     setHighScoreOpen((prev) => !prev);
@@ -45,19 +54,32 @@ const Navbar = ({ highScoreData, mute, setMute, highScore, gameSpeed, setGameSpe
                   <img src={logoImg}></img>
                 </div>
                 <div className="navbarRight">
-                  <Settings gameSpeed={gameSpeed} setGameSpeed={setGameSpeed}/>
-                  <MusicPlayer mute={mute} setMute={setMute}/>
+                  <Settings gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
+                  <MusicPlayer mute={mute} setMute={setMute} />
                 </div>
               </div>
               {highScoreOpen && (
                 <>
                   <div className="highScoreBox">
-                    <div className="dailyChallenge">DAILY CHALLENGE</div>
+                    <div className="dailyChallenge">
+                      DAILY CHALLENGE
+                      <br />
+                      {dailyChallengeDistance} M <br />
+                      {dailyChallengeData[0].name} with{" "}
+                      {dailyChallengeData[0].distance} M
+                    </div>
                     <div className="highScoreData">
                       <HighScoreData highScoreData={highScoreData} />
                     </div>
                     <div className="dailyChallengeTop5">
-                      DAILY CHALLENGE TOP5
+                      <h2>DAILY CHALLENGE TOP5</h2>
+                      <ul>
+                        {dailyChallengeData.map((entry, index) => (
+                          <li key={index}>
+                            {entry.name}: {entry.distance} M
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
                 </>

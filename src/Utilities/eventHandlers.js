@@ -36,7 +36,7 @@ export const useGameInitialization = (
   getDataFromAzureFunction,
   setHighScoreData,
   dailyChallengeDistance,
-  setDailyChallengeName
+  setDailyChallengeData
 ) => {
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -69,7 +69,7 @@ export const useGameInitialization = (
     getClosestDistanceFromAzureFunction(dailyChallengeDistance)
       .then((dailyChallengeData) => {
         if (dailyChallengeData) {
-          setDailyChallengeName(dailyChallengeData); // Set the entire object
+          setDailyChallengeData(dailyChallengeData); // Set the entire object
         } else {
           console.log("No matching entry found");
         }

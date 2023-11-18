@@ -8,7 +8,6 @@ import {
   useGameInitialization,
 } from "./Utilities/eventHandlers";
 
-
 // Component Imports
 import Santa from "./components/Santa";
 import Markers from "./components/Markers";
@@ -89,8 +88,8 @@ const App = () => {
   // HIGHSCORE
   const [highScoreData, setHighScoreData] = useState({});
 
-  const dailyChallengeDistance = 50;
-  const [dailyChallengeName, setDailyChallengeName] = useState(null);
+  const dailyChallengeDistance = 500;
+  const [dailyChallengeData, setDailyChallengeData] = useState(null);
 
   // SCROLLING
   const gameAreaRef = useRef(null);
@@ -112,8 +111,7 @@ const App = () => {
     getDataFromAzureFunction,
     setHighScoreData,
     dailyChallengeDistance,
-    setDailyChallengeName,
-    dailyChallengeName
+    setDailyChallengeData
   );
   // Check screen resize to prevent possible cheating
   useWindowEventHandlers(horizontalVelocityRef);
@@ -167,8 +165,6 @@ const App = () => {
       handleNewHighScore();
     }
   }, [distance, horizontalVelocityRef.current]);
-
-  
 
   // Dynamically generate gamearea
   useEffect(() => {
@@ -389,7 +385,16 @@ const App = () => {
   // APP RENDER
   return (
     <>
-      <Navbar highScoreData={highScoreData} mute={mute} setMute={setMute} highScore={highScore} gameSpeed={gameSpeed} setGameSpeed={setGameSpeed}/>
+      <Navbar
+        highScoreData={highScoreData}
+        mute={mute}
+        setMute={setMute}
+        highScore={highScore}
+        gameSpeed={gameSpeed}
+        setGameSpeed={setGameSpeed}
+        dailyChallengeDistance={dailyChallengeDistance}
+        dailyChallengeData={dailyChallengeData}
+      />
 
       {playerName === null && <InputName setPlayerName={setPlayerName} />}
       <HUD
