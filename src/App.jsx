@@ -389,7 +389,7 @@ const App = () => {
   // APP RENDER
   return (
     <>
-      <Navbar highScoreData={highScoreData} mute={mute} setMute={setMute} highScore={highScore} />
+      <Navbar highScoreData={highScoreData} mute={mute} setMute={setMute} highScore={highScore} gameSpeed={gameSpeed} setGameSpeed={setGameSpeed}/>
 
       {playerName === null && <InputName setPlayerName={setPlayerName} />}
       <HUD

@@ -3,7 +3,7 @@ import React from "react";
 const GameSpeed = ({ gameSpeed, setGameSpeed }) => {
   const handleSpeedChange = (event) => {
     setGameSpeed(event.target.value);
-    console.log(gameSpeed);
+    
   };
 
   return (
