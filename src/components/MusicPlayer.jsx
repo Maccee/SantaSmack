@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { distanceMusicPlay } from "../SoundUtils";
+
 import musicOn from "../assets/music-on.png";
 import soundOn from "../assets/sound-on.png";
 import musicOff from "../assets/music-off.png";
@@ -61,7 +61,7 @@ const MusicPlayer = ({ mute, setMute }) => {
 
   const handleMuteClick = () => {
     setMute((prevMute) => !prevMute); // Toggles the mute state
-    distanceMusicPlay(0, !mute); // Pass the opposite of the current mute state
+    
     console.log("mute clicked", !mute); // Logging the new state
   };
 
@@ -69,16 +69,16 @@ const MusicPlayer = ({ mute, setMute }) => {
     <>
       <div className="audioControl">
         <button onClick={toggleMusic}>
-          {isPlaying ? <img src={musicOff} /> : <img src={musicOn} />}
+          {isPlaying ? <img src={musicOn} /> : <img src={musicOff} />}
         </button>
 
         {!mute ? (
           <button onClick={() => handleMuteClick()}>
-            <img src={soundOff} />
+            <img src={soundOn} />
           </button>
         ) : (
           <button onClick={() => handleMuteClick()}>
-            <img src={soundOn} />
+            <img src={soundOff} />
           </button>
         )}
       </div>

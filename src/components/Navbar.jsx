@@ -6,7 +6,7 @@ import measureImg from "../assets/measure.png";
 import MusicPlayer from "./MusicPlayer";
 import Settings from "./Settings";
 
-const Navbar = ({ highScoreData }) => {
+const Navbar = ({ highScoreData, mute, setMute, highScore }) => {
   const [highScoreOpen, setHighScoreOpen] = useState(false);
   const handleButtonClick = () => {
     setHighScoreOpen((prev) => !prev);
@@ -38,7 +38,7 @@ const Navbar = ({ highScoreData }) => {
                       <br />
                       LONGEST
                     </p>
-                    <p className="sesDist">1999.99 M</p>
+                    <p className="sesDist">{highScore} M</p>
                   </div>
                 </div>
                 <div className="navbarCenter">
@@ -46,7 +46,7 @@ const Navbar = ({ highScoreData }) => {
                 </div>
                 <div className="navbarRight">
                   <Settings />
-                  <MusicPlayer />
+                  <MusicPlayer mute={mute} setMute={setMute}/>
                 </div>
               </div>
               {highScoreOpen && (

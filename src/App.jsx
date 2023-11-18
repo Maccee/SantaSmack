@@ -1,28 +1,24 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import { postDataToAzureFunction, getDataFromAzureFunction } from "./ApiUtils";
 import { calculateHitStrength, defineHitStrength, resetGame } from "./Utils";
-import { distanceMusicPlay } from "./SoundUtils";
+
 import {
   useWindowEventHandlers,
   useGameInitialization,
 } from "./Utilities/eventHandlers";
-import navbarImg from "./assets/navbar-bg.png";
+
 
 // Component Imports
 import Santa from "./components/Santa";
 import Markers from "./components/Markers";
 import Ball from "./components/Ball";
-import HighScoreData from "./components/HighScoreData";
 import HUD from "./components/HUD";
 import Background from "./components/Background";
-import MusicPlayer from "./components/MusicPlayer";
 import Ground from "./components/Ground";
 import Porot from "./components/Porot";
 import Hype from "./components/Hype";
 import InputName from "./components/InputName";
-import Settings from "./components/Settings";
-import TargetImg from "./assets/target.png";
 import Navbar from "./components/Navbar";
 
 // APP COMPONENT
@@ -78,7 +74,7 @@ const App = () => {
   const [mouseDownTime, setMouseDownTime] = useState(0); // The performance.now time when mouse is pressed down
 
   // MUSAT
-  const [mute, setMute] = useState(true);
+  const [mute, setMute] = useState(false);
 
   // COLLISION
   const [poros, setPoros] = useState([]);
@@ -172,10 +168,7 @@ const App = () => {
     }
   }, [distance, horizontalVelocityRef.current]);
 
-  // LETS PLAY MUSIC WHILE WE ARE IN SPEEEEEED !!
-  useEffect(() => {
-    distanceMusicPlay(horizontalVelocityRef, mute);
-  }, [horizontalVelocityRef.current]);
+  
 
   // Dynamically generate gamearea
   useEffect(() => {
@@ -351,7 +344,7 @@ const App = () => {
       setIsHit(true);
       setIsSpinning(true);
 
-      const hitStrengthValue = defineHitStrength(juhaMode);
+      const hitStrengthValue = defineHitStrength(juhaMode, mute);
       setHitStrength(hitStrengthValue);
 
       const angle =
@@ -396,7 +389,7 @@ const App = () => {
   // APP RENDER
   return (
     <>
-      <Navbar highScoreData={highScoreData} />
+      <Navbar highScoreData={highScoreData} mute={mute} setMute={setMute} highScore={highScore} />
 
       {playerName === null && <InputName setPlayerName={setPlayerName} />}
       <HUD
