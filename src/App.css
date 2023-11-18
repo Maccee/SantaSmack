@@ -314,6 +314,7 @@ body {
   position: absolute;
   z-index: 1;
 }
+
 .navbarLeft {
   flex-basis: 35%;
   text-align: left;
@@ -357,6 +358,7 @@ body {
   flex-direction: row;
   justify-content: flex-end;
 }
+
 .navbarRight button {
   border: none;
   background: none;
