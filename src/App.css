@@ -272,26 +272,44 @@ body {
 }
 .valotausta {
   background-size: cover;
-  background-color: #ffe4af; /* Initial background color */
   border-radius: 25px;
+  border: solid #ffe4af 8px;
+  box-shadow: 2px 2px 4px 0px #000;
+  animation: blink-blur 1s infinite;
   transition: background-color 1s; /* Transition for background color change */
-  animation: glowing 0.5s infinite ; /* Apply the glowing animation */
 }
-
+@keyframes blink-blur {
+  0% {
+    box-shadow: 0px 0px 100px 0px #bd2828;
+  }
+  50% {
+    box-shadow: 0px 0px 100px 0px #0cd366;
+  }
+  100% {
+    box-shadow: 0px 0px 100px 0px #bd2828;
+  }
+}
 /* Keyframes for glowing effect */
-@keyframes glowing {
-  0% {  border: red dotted 9px;}
-  50% { box-shadow: 2px 2px 50px 5px #ffe4af; border: green dotted 9px;}
-  100% {  border: red dotted 9px;}
+@keyframes blink {
+  0% {
+    outline-color: #bd2828;
+  }
+  50% {
+    outline-color: #0cd366;
+  }
+  100% {
+    outline-color: #bd2828;
+  }
 }
 .navbarContent {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-radius: 20px;
+  border-radius: 15px;
   padding: 0.2rem 1.5rem;
-  border-radius: 20px;
   z-index: 200;
+  outline: gray dotted 8px;
+  animation: blink 1s infinite; /* Apply the glowing animation */
   outline-offset: 0px;
   background: var(
     --navbar-radial,
@@ -368,6 +386,7 @@ body {
   border: none;
   background: none;
   padding: 0 0 0 0.5rem;
+  cursor: pointer;
 }
 
 .navbarRight img {

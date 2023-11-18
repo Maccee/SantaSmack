@@ -80,8 +80,6 @@ const Navbar = ({
           </button>
         </div>
       </div>
-      
-      
     </>
   );
 };
