@@ -264,18 +264,25 @@ body {
   left: 50%;
   transform: translate(-50%, 0%);
   z-index: 1;
+  border-radius: 25px;
 }
 .navbar {
-  padding: 0.3rem;
   text-align: center;
   min-width: 600px;
 }
 .valotausta {
   background-size: cover;
-  background-color: #ffe4af;
+  background-color: #ffe4af; /* Initial background color */
   border-radius: 25px;
-  border: #ffe4af solid 4px;
-  box-shadow: 2px 2px 4px 0px #000;
+  transition: background-color 1s; /* Transition for background color change */
+  animation: glowing 0.5s infinite ; /* Apply the glowing animation */
+}
+
+/* Keyframes for glowing effect */
+@keyframes glowing {
+  0% {  border: red dotted 9px;}
+  50% { box-shadow: 2px 2px 50px 5px #ffe4af; border: green dotted 9px;}
+  100% {  border: red dotted 9px;}
 }
 .navbarContent {
   display: flex;
@@ -285,8 +292,6 @@ body {
   padding: 0.2rem 1.5rem;
   border-radius: 20px;
   z-index: 200;
-  outline: gray dotted 9px;
-  animation: blink 1s infinite;
   outline-offset: 0px;
   background: var(
     --navbar-radial,
@@ -300,8 +305,10 @@ body {
   align-items: center;
 }
 .highScoreButtonContainer {
-  z-index: 40;
+  position: relative;
   text-align: center;
+  z-index: -1;
+  transform: translate(-0%, -43%);
 }
 .highScoreButton {
   border: none;
@@ -311,8 +318,6 @@ body {
   font: inherit;
   color: inherit;
   cursor: pointer;
-  position: absolute;
-  z-index: 1;
 }
 
 .navbarLeft {
@@ -384,42 +389,4 @@ body {
 }
 .dailyChallengeTop5 {
   flex-basis: 20%;
-}
-
-.navbar:before,
-.navbar:after {
-  content: "";
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  border-radius: 25px;
-
-  background-color: #bd2828;
-  background-size: 400%;
-  width: calc(100%);
-  height: calc(100%);
-  z-index: -1;
-  animation: blink-blur 1s infinite;
-}
-
-@keyframes blink-blur {
-  50% {
-    background-color: #0cd366;
-  }
-}
-
-.navbar:after {
-  filter: blur(50px);
-}
-
-@keyframes blink {
-  0% {
-    outline-color: #bd2828;
-  }
-  50% {
-    outline-color: #0cd366;
-  }
-  100% {
-    outline-color: #bd2828;
-  }
 }
