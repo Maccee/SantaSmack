@@ -2,7 +2,9 @@ body {
   font-family: "Luckiest Guy", cursive;
   background-color: #3e210b;
 }
-
+.orientation-warning-container {
+  display: none;
+}
 .game-area {
   box-sizing: border-box;
   position: relative;
@@ -881,5 +883,27 @@ input[type="range"]:focus::-ms-fill-upper {
   .questionMarkPopup p {
     font-size: 1rem;
     margin-bottom: 1rem;
+  }
+}
+
+@media only screen and (max-height: 600px) {
+  .orientation-warning-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999; /* Make sure it's on top of everything */
+  }
+
+  .orientation-warning-content {
+    text-align: center;
+    color: white;
+    font-size: 24px;
+    font-family: Luckiest Guy;
   }
 }

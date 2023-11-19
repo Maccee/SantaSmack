@@ -19,6 +19,7 @@ import Porot from "./components/Porot";
 import Hype from "./components/Hype";
 import InputName from "./components/InputName";
 import Navbar from "./components/Navbar";
+import OrientationWarning from "./components/OrientationWarning";
 
 // APP COMPONENT
 const App = () => {
@@ -27,7 +28,6 @@ const App = () => {
   const [playerName, setPlayerName] = useState(
     localStorage.getItem("playerName") || null
   );
-
 
   // Define game area width, height and ground level
   const [gameAreaWidth, setGameAreaWidth] = useState(10000); // in px
@@ -397,7 +397,7 @@ const App = () => {
         dailyChallengeDistance={dailyChallengeDistance}
         dailyChallengeData={dailyChallengeData}
       />
-
+      <OrientationWarning />
       {playerName === null && <InputName setPlayerName={setPlayerName} />}
       <HUD
         showHUD={showHUD}
