@@ -627,7 +627,7 @@ input[type="range"]:focus::-ms-fill-upper {
   font-family: Luckiest Guy;
   font-size: 1rem;
   line-height: 1.1rem;
-  letter-spacing: 1.2px;
+  letter-spacing: 1.1px;
 }
 
 .highScoreBox h2 {
@@ -713,11 +713,11 @@ input[type="range"]:focus::-ms-fill-upper {
   display: flex;
   justify-content: center;
   flex-direction: row;
-  padding: 0.5rem;
+  padding: 0.5rem 0;
 }
 
 .highscorewindow-table div:first-child {
-  padding: 0 20px 0 0;
+  padding: 0 10px 0 0;
 }
 .highscorewindow-table div:last-child {
   padding: 0 0px 0 00px;
@@ -731,7 +731,7 @@ input[type="range"]:focus::-ms-fill-upper {
 .dailyChallengeTop5 .dist {
   color: #fff;
   text-align: right;
-  padding-left: 40px;
+  padding-left: 10px;
 }
 .highscorewindow-table .top1,
 .dailyChallengeTop5 .top1 {
