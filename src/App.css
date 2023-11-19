@@ -44,20 +44,51 @@ body {
 }
 
 .inputname input {
-  background: 0;
+  background: none;
   border: 0;
   outline: none;
-  border-bottom: 5px dashed #bdc3c7; /* Add this line to create the underline effect */
+  border-bottom: 5px dashed #bdc3c7;
   width: 180px;
   color: #fff;
   font-family: Luckiest Guy;
   font-size: 1.2rem;
   transition: width 0.3s 0.2s ease;
   text-align: center;
+
   &:focus {
     width: 240px;
-    border-bottom: 5px dashed #fbb03b; /* Change the underline color on focus */
+    border-bottom: 5px dashed #fbb03b;
   }
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  &:-webkit-autofill {
+    -webkit-text-fill-color: #fff;
+  }
+}
+
+.inputname input:invalid:not(:focus),
+.inputname input:valid {
+  width: 180px;
+  color: #fff;
+  font-family: Luckiest Guy;
+  font-size: 1.2rem;
+  transition: width 0.3s 0.2s ease;
+  text-align: center;
+}
+
+.inputname input:invalid:not(:focus) {
+  border-bottom: 5px dashed #bdc3c7;
+}
+
+.inputname input:valid:focus {
+  width: 240px;
+  border-bottom: 5px dashed #fbb03b;
 }
 
 .inputButton {
@@ -757,4 +788,7 @@ input[type="range"]:focus::-ms-fill-upper {
 .questionMarkPopup p {
   font-size: 1.2rem;
   margin-bottom: 1rem;
+}
+
+@media only screen and (max-width: 600px) {
 }

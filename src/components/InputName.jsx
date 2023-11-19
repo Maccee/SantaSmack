@@ -1,38 +1,40 @@
 import React, { useState } from "react";
 
 const InputName = ({ setPlayerName }) => {
-  const [name, setName] = useState(null);
+  const [name, setName] = useState(""); // Initialize with an empty string
+  const [isValid, setIsValid] = useState(true);
 
   const handleInputChange = (event) => {
     setName(event.target.value);
+    setIsValid(event.target.checkValidity());
   };
 
   const handleButtonClick = () => {
-    if (name.length >= 15 || name === "") {
+    if (!name || name.length >= 15 || !isValid) {
       return;
     } else {
       setPlayerName(name);
       localStorage.setItem("playerName", name);
     }
   };
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      e.preventDefault(); // Prevents the default behavior (e.g., form submission)
-      handleButtonClick(); // Call your click handler function
+      e.preventDefault();
+      handleButtonClick();
     }
   };
 
   const inputStyle = {
     top: "300px",
     flexDirection: "column",
-    width: "300px", // Corrected property name
+    width: "300px",
   };
 
   const labelStyle = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    // Other styling properties if needed
   };
 
   return (
@@ -52,6 +54,7 @@ const InputName = ({ setPlayerName }) => {
           className="inputButton"
           onClick={handleButtonClick}
           onKeyDown={handleKeyDown}
+          disabled={name.length >= 15 || name === ""}
         >
           LET'S SMACK
         </button>
