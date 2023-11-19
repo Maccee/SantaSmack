@@ -75,9 +75,11 @@ const Navbar = ({
           </div>
         </div>
         <div className="highScoreButtonContainer">
-          <button className="highScoreButton" onClick={handleButtonClick}>
-            <img src={highscorenappi} alt="High Score Button" />
-          </button>
+          {highScoreData &&
+            <button className="highScoreButton" onClick={handleButtonClick}>
+              <img src={highscorenappi} alt="High Score Button" />
+            </button>
+          }
         </div>
       </div>
     </>
