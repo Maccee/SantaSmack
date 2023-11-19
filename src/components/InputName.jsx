@@ -9,22 +9,25 @@ const InputName = ({ setPlayerName }) => {
 
   const handleButtonClick = () => {
     if (name.length >= 15 || name === "") {
-        return;
+      return;
     } else {
-
       setPlayerName(name);
-      localStorage.setItem('playerName', name);
-
+      localStorage.setItem("playerName", name);
     }
-};
-
+  };
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevents the default behavior (e.g., form submission)
+      handleButtonClick(); // Call your click handler function
+    }
+  };
 
   const inputStyle = {
     top: "300px",
     flexDirection: "column",
-    width: "300px" // Corrected property name
+    width: "300px", // Corrected property name
   };
-  
+
   const labelStyle = {
     display: "flex",
     justifyContent: "center",
@@ -36,17 +39,21 @@ const InputName = ({ setPlayerName }) => {
     <>
       <div className="inputname highscorewindow-table" style={inputStyle}>
         <label htmlFor="nameInput" style={labelStyle}>
-          ANNAPPA NIMESI
+          What's your name?
         </label>
         <input
           className="inputField"
           id="nameInput"
-          placeholder="nimi.."
+          placeholder=""
           value={name}
           onChange={handleInputChange}
         />
-        <button className="inputButton" onClick={handleButtonClick}>
-          Submit
+        <button
+          className="inputButton"
+          onClick={handleButtonClick}
+          onKeyDown={handleKeyDown}
+        >
+          LET'S SMACK
         </button>
       </div>
     </>
