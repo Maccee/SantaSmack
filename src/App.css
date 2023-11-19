@@ -303,7 +303,6 @@ body {
   position: absolute;
   font-size: 2.9rem;
   color: rgb(0, 0, 0);
-  font-weight: 700;
   font-family: "Luckiest Guy", cursive;
 }
 
@@ -790,5 +789,97 @@ input[type="range"]:focus::-ms-fill-upper {
   margin-bottom: 1rem;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 650px) {
+  .navbar {
+    text-align: center;
+    width: 350px;
+  }
+  .navbarContent {
+    padding: 0.2rem 0.5rem;
+  }
+
+  .navbarLeft img {
+    width: 30px;
+    height: auto;
+  }
+  .sesDist {
+    font-size: 15px;
+    letter-spacing: 0.8px;
+    min-width: 80px;
+  }
+  .sessionLongest {
+    padding-left: 0.5rem;
+    font-size: 13px;
+  }
+
+  .navbarRight {
+    justify-content: center;
+  }
+  .navbarRight button {
+    width: 35px;
+  }
+
+  .navbarRight img {
+    height: 35px;
+  }
+
+  .highScoreBox {
+    font-size: 0.8rem;
+    line-height: 0.9rem;
+    letter-spacing: 0.5px;
+  }
+
+  .highScoreBox h2 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .dailyChallengeContainer {
+    padding-top: 0.2rem;
+  }
+
+  .dailyChallengeDistance {
+    width: 90px;
+    height: 50px;
+    padding: 0.5rem 0.2rem 0.2rem 0.2rem;
+    margin-top: 0.4rem;
+    font-size: 14px;
+    -webkit-text-stroke: 0.5px black;
+    text-shadow: 0.5px 0.5px 0 #000, -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000,
+      -0.5px 0.5px 0 #000, 0.5px 0.5px 0 #000;
+  }
+
+  .dailyChallengeDistance span {
+    font-size: 20px;
+  }
+
+  .highscorewindow-table {
+    padding: 0.5rem 0;
+    flex-direction: column;
+    justify-content: center;
+    padding-inline: 2rem;
+  }
+
+  .highscorewindow-table div:first-child {
+    padding: 0 4px 0 0;
+  }
+  .highscorewindow-table div:last-child {
+    padding: 0 4px 0 0;
+  }
+
+  .questionMarkPopup {
+    width: 220px;
+    height: 150px;
+    letter-spacing: 1px;
+  }
+
+  .questionMarkPopup h2 {
+    font-size: 1.5rem;
+    margin: 1.5rem 0;
+    color: #ffe4af;
+  }
+  .questionMarkPopup p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
 }
