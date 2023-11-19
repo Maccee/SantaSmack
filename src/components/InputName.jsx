@@ -8,16 +8,16 @@ const InputName = ({ setPlayerName }) => {
   };
 
   const handleButtonClick = () => {
-    if (name.length >= 15) {
-      return;
-    }
-    if (name === "") {
-      return;
+    if (name.length >= 15 || name === "") {
+        return;
     } else {
+
       setPlayerName(name);
       localStorage.setItem('playerName', name);
+
     }
-  };
+};
+
 
   const inputStyle = {
     top: "300px",

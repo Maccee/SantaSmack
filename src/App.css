@@ -187,7 +187,15 @@ body {
   background-size: auto;
   background-repeat: repeat;
   height: 95vh;
-  animation: moveDown 60s linear infinite; /* adjust duration and timing function as needed */
+  animation: moveDown 90s linear infinite; /* adjust duration and timing function as needed */
+}
+.snow2 {
+  background-image: url("./assets/snow.png");
+  position: absolute;
+  background-size: auto;
+  background-repeat: repeat;
+  height: 95vh;
+  animation: moveDown 140s linear infinite; /* adjust duration and timing function as needed */
 }
 
 .background2 {
