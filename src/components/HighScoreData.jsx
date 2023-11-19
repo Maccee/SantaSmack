@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import TrophyArrowImg from "../assets/trophy_outer-arrow.svg";
 import TrophyImg from "../assets/trophy_inner.svg";
 
-const HighScoreData = ({ highScoreData, selectedOption }) => {
+const HighScoreData = ({ allTimeData, selectedOption }) => {
   const [showHighScoreData, setShowHighScoreData] = useState(true);
 
   let sortedData = [];
   let firstColumnData = [];
   let secondColumnData = [];
 
-  if (Array.isArray(highScoreData)) {
-    sortedData = highScoreData
+  if (Array.isArray(allTimeData)) {
+    sortedData = allTimeData
       .sort((a, b) => b.distance - a.distance)
       .slice(0, 20);
     firstColumnData = sortedData.slice(0, 10);

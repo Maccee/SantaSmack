@@ -34,7 +34,7 @@ export const useGameInitialization = (
   toggleHUD,
   gameAreaRef,
   getDataFromAzureFunction,
-  setHighScoreData,
+  setAllTimeData,
   dailyChallengeDistance,
   setDailyChallengeData
 ) => {
@@ -63,7 +63,7 @@ export const useGameInitialization = (
       //gameAreaRef.current.focus();
     }
     getDataFromAzureFunction().then((sortedResult) => {
-      setHighScoreData(sortedResult);
+      setAllTimeData(sortedResult);
     });
 
     getClosestDistanceFromAzureFunction(dailyChallengeDistance)

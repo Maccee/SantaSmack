@@ -9,7 +9,7 @@ import QuestionMarkPopup from "./QuestionMarkPopup";
 import QuestionMarkImg from "../assets/questionmark.png";
 
 const Navbar = ({
-  highScoreData,
+  allTimeData,
   mute,
   setMute,
   highScore,
@@ -116,7 +116,7 @@ const Navbar = ({
                     </h2>
 
                     <HighScoreData
-                      highScoreData={highScoreData}
+                      allTimeData={allTimeData}
                       selectedOption={selectedhighscoreOption}
                     />
                   </div>

@@ -88,7 +88,7 @@ const App = () => {
   const [poroHitCounter, setPoroHitCounter] = useState(0);
 
   // HIGHSCORE
-  const [highScoreData, setHighScoreData] = useState({});
+  const [allTimeData, setAllTimeData] = useState({});
 
   const dailyChallengeDistance = 500;
   const [dailyChallengeData, setDailyChallengeData] = useState(null);
@@ -111,7 +111,7 @@ const App = () => {
     toggleHUD,
     gameAreaRef,
     getDataFromAzureFunction,
-    setHighScoreData,
+    setAllTimeData,
     dailyChallengeDistance,
     setDailyChallengeData
   );
@@ -152,11 +152,11 @@ const App = () => {
       };
       await postDataToAzureFunction(data);
       const updatedScores = await getDataFromAzureFunction();
-      setHighScoreData(updatedScores);
+      setAllTimeData(updatedScores);
     };
 
     if (isHit && horizontalVelocityRef.current === 0) {
-      if (parseFloat(distance) > parseFloat(highScoreData[19].distance)) {
+      if (parseFloat(distance) > parseFloat(allTimeData[19].distance)) {
         let newHighScoresound = new Audio("highscore.mp3");
         if (juhaMode) {
           let audio = new Audio("/iddqd/kuitenkinjoihankohtuu.mp3");
@@ -389,7 +389,7 @@ const App = () => {
   return (
     <>
       <Navbar
-        highScoreData={highScoreData}
+        allTimeData={allTimeData}
         mute={mute}
         setMute={setMute}
         highScore={highScore}
@@ -421,9 +421,9 @@ const App = () => {
         poroHitCounter={poroHitCounter}
       />
 
-      {highScoreData[19] &&
-        highScoreData.length >= 20 &&
-        parseFloat(distance) > parseFloat(highScoreData[19].distance) && (
+      {allTimeData[19] &&
+        allTimeData.length >= 20 &&
+        parseFloat(distance) > parseFloat(allTimeData[19].distance) && (
           <Hype />
         )}
 
