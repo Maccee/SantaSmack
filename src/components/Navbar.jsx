@@ -20,6 +20,8 @@ const Navbar = ({
 }) => {
   const [highScoreOpen, setHighScoreOpen] = useState(false);
   const [showQuestionMarkPopup, setShowQuestionMarkPopup] = useState(false);
+  const [selectedhighscoreOption, setSelectedhighscoreOption] =
+    useState("ALL TIME");
   const handleButtonClick = () => {
     setHighScoreOpen((prev) => !prev);
   };
@@ -90,8 +92,33 @@ const Navbar = ({
                     </div>
                   </div>
                   <div className="highScoreData">
-                    <h2>ALL TIME HIGHSCORES</h2>
-                    <HighScoreData highScoreData={highScoreData} />
+                    <h2>
+                      HIGHSCORES{" "}
+                      <button
+                        className={`highscoreOptionButton ${
+                          selectedhighscoreOption === "ALL TIME"
+                            ? "selected"
+                            : ""
+                        }`}
+                        onClick={() => setSelectedhighscoreOption("ALL TIME")}
+                      >
+                        ALL TIME
+                      </button>
+                      {" / "}
+                      <button
+                        className={`highscoreOptionButton ${
+                          selectedhighscoreOption === "WEEKLY" ? "selected" : ""
+                        }`}
+                        onClick={() => setSelectedhighscoreOption("WEEKLY")}
+                      >
+                        WEEKLY
+                      </button>
+                    </h2>
+
+                    <HighScoreData
+                      highScoreData={highScoreData}
+                      selectedOption={selectedhighscoreOption}
+                    />
                   </div>
                 </div>
               </>

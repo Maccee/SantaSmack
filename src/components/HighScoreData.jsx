@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import TrophyArrowImg from "../assets/trophy_outer-arrow.svg";
 import TrophyImg from "../assets/trophy_inner.svg";
 
-const HighScoreData = ({ highScoreData }) => {
+const HighScoreData = ({ highScoreData, selectedOption }) => {
   const [showHighScoreData, setShowHighScoreData] = useState(true);
 
   let sortedData = [];
@@ -21,7 +21,7 @@ const HighScoreData = ({ highScoreData }) => {
 
   return (
     <>
-      {showHighScoreData && (
+      {showHighScoreData && selectedOption === "ALL TIME" && (
         <div className="highscorewindow-table">
           <div>
             {firstColumnData.map((item, index) => (
@@ -43,7 +43,30 @@ const HighScoreData = ({ highScoreData }) => {
           </div>
         </div>
       )}
+      {showHighScoreData && selectedOption === "WEEKLY" && (
+        <div className="highscorewindow-table">
+          <div>
+            {firstColumnData.map((item, index) => (
+              <p key={index}>
+                {index + 1}. {item.name}{" "}
+                <span className={`${index < 3 ? `top${index + 1}` : ""} dist`}>
+                  {item.distance} W
+                </span>
+              </p>
+            ))}
+          </div>
+          <div>
+            {secondColumnData.map((item, index) => (
+              <p key={index + 10}>
+                {index + 11}. {item.name}{" "}
+                <span className="dist">{item.distance} W</span>
+              </p>
+            ))}
+          </div>
+        </div>
+      )}
     </>
   );
 };
+
 export default HighScoreData;
