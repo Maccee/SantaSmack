@@ -25,6 +25,7 @@ body {
   justify-content: center;
   align-items: center;
   gap: 1rem;
+  z-index: 6000;
 }
 .inputField {
   border-radius: 1rem;
@@ -32,34 +33,6 @@ body {
   height: 30px;
 }
 .inputButton {
-  z-index: 2000;
-    width: 100%;
-  max-width: 100px;
-  text-align: center;
-  padding: 0.5rem;
-    font-family: "Lobster", cursive;
-  font-size: 1rem;
-    text-decoration: none;
-  color: #fff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
-  background: #5e0d0c;
-  outline: none;
-  border-radius: 15px;
-  border: 1px solid #4c0300;
-  box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.25),
-    /* highlight */
-    inset 0 0 6px #a23227,
-    /* inner glow */
-    inset 0 80px 80px -40px #ac3223,
-    /* gradient */
-    1px 1px 3px rgba(0, 0, 0, 0.75);
-  /* shadow */
-  overflow: visible;
-  /* IE9 & 10 */
-  -webkit-transition: 500ms linear;
-  -moz-transition: 500ms linear;
-  -o-transition: 500ms linear;
-  transition: 500ms linear;
 }
 .santa {
   width: fit-content;
@@ -86,7 +59,7 @@ body {
   height: 100px;
   border-radius: 100px;
   position: absolute;
-  background-image: url("./assets/pallo-lp.png");
+  background-image: url("./assets/pallo-2.png");
   background-size: contain;
   animation: spin 1s linear infinite;
   z-index: 2;
@@ -293,38 +266,154 @@ body {
 }
 
 /* UI-Stuff */
-
-.navbar {
+.navbarOuter {
   position: absolute;
-  z-index: 10000;
-  border: 2px solid blue;
   top: 5%;
   left: 50%;
   transform: translate(-50%, 0%);
+  z-index: 1;
+  border-radius: 25px;
+}
+.navbar {
+  text-align: center;
+  min-width: 600px;
+}
+.valotausta {
+  background-size: cover;
+  border-radius: 25px;
+  border: solid #ffe4af 8px;
+  box-shadow: 2px 2px 4px 0px #000;
+  animation: blink-blur 1s infinite;
+  transition: background-color 1s; /* Transition for background color change */
+}
+@keyframes blink-blur {
+  0% {
+    box-shadow: 0px 0px 100px 0px #bd2828;
+  }
+  50% {
+    box-shadow: 0px 0px 100px 0px #0cd366;
+  }
+  100% {
+    box-shadow: 0px 0px 100px 0px #bd2828;
+  }
+}
+/* Keyframes for glowing effect */
+@keyframes blink {
+  0% {
+    outline-color: #bd2828;
+  }
+  50% {
+    outline-color: #0cd366;
+  }
+  100% {
+    outline-color: #bd2828;
+  }
+}
+.navbarContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 15px;
+  padding: 0.2rem 1.5rem;
+  z-index: 200;
+  outline: gray dotted 8px;
+  animation: blink 1s infinite; /* Apply the glowing animation */
+  outline-offset: 0px;
+  background: var(
+    --navbar-radial,
+    radial-gradient(50% 33.33% at 50% 20%, #bd2828 3.84%, #870404 100%)
+  );
+  box-shadow: 4px 4px 30px 0px #ffffffc9 inset;
+}
+.navbarTop {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.highScoreButtonContainer {
+  position: relative;
+  text-align: center;
+  z-index: -1;
+  transform: translate(-0%, -43%);
+}
+.highScoreButton {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
 }
 
-.nav-left {
-  border: 2px solid blue;
+.navbarLeft {
+  flex-basis: 35%;
+  text-align: left;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.navbarLeft img {
+  width: 42px;
+  height: 40px;
+  flex-shrink: 0;
+}
+.sesDist {
+  color: #fff;
+  font-family: Luckiest Guy;
+  font-size: 24px;
+  line-height: normal;
+  letter-spacing: 1.44px;
+}
+.sessionLongest {
+  display: flex;
+  flex-direction: column;
+  font-family: "Luckiest Guy", cursive;
+  color: #ffe4af;
+  padding-left: 1rem;
+  letter-spacing: 0.96px;
+}
+.navbarCenter {
+  flex-basis: 30%;
+  display: flex;
+  justify-content: center;
+}
+.navbarCenter img {
+  width: 100%;
 }
 
-.nav-center {
-  border: 2px solid blue;
-}
-.nav-center .scoresContainer {
-}
-
-.nav-center .scoresContainer .scores-button {
-}
-
-.nav-right {
-  border: 2px solid rgb(26, 255, 0);
+.navbarRight {
+  text-align: right;
+  flex-basis: 35%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 
-.nav-right .settings-button {
+.navbarRight button {
+  border: none;
+  background: none;
+  padding: 0 0 0 0.5rem;
+  cursor: pointer;
 }
 
-.nav-right .settingsContainer {
+.navbarRight img {
+  height: 55px;
 }
 
-.nav-right .settingsContainer .game-speed {
+.highScoreBox {
+  justify-content: space-around;
+  display: flex;
+  width: 100%;
+  border-radius: 20px;
+  min-height: 400px;
+}
+.dailyChallenge {
+  flex-basis: 20%;
+}
+.highScoreData {
+  width: 100%;
+}
+.dailyChallengeTop5 {
+  flex-basis: 20%;
 }

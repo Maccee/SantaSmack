@@ -19,14 +19,14 @@ export const calculateHitStrength = (
   return hitStrength;
 };
 
-export const defineHitStrength = (juhamode) => {
+export const defineHitStrength = (juhamode, mute) => {
   const hitStrength = (Math.random() * (55 - 50) + 50).toFixed(2);
   const parsedHitStrength = parseFloat(hitStrength);
 
   // Play audio if hitStrength is above the threshold
-
-  playAudio(juhamode);
-
+  if (!mute) {
+    playAudio(juhamode);
+  }
   return parsedHitStrength;
 };
 
@@ -84,7 +84,7 @@ export const resetGame = (
     top: resetTop,
     left: resetLeft,
   });
-  
+
   setPoroHits(0);
   setConsecutivePoroHits(0);
 

@@ -1,13 +1,20 @@
-
 import React, { useState } from "react";
+import TrophyArrowImg from "../assets/trophy_outer-arrow.svg";
+import TrophyImg from "../assets/trophy_inner.svg";
+
 const HighScoreData = ({ highScoreData }) => {
-  const [showHighScoreData, setShowHighScoreData] = useState(false);
+  const [showHighScoreData, setShowHighScoreData] = useState(true);
+  
   let sortedData = [];
   let firstColumnData = [];
   let secondColumnData = [];
 
+  
+
   if (Array.isArray(highScoreData)) {
-    sortedData = highScoreData.sort((a, b) => b.distance - a.distance).slice(0, 20);
+    sortedData = highScoreData
+      .sort((a, b) => b.distance - a.distance)
+      .slice(0, 20);
     firstColumnData = sortedData.slice(0, 10);
     secondColumnData = sortedData.slice(10, 20);
   } else {
@@ -15,13 +22,8 @@ const HighScoreData = ({ highScoreData }) => {
   }
 
   return (
-    <div className="highscorewindow">
-      <button
-        className="scores-button"
-        onClick={() => setShowHighScoreData((prev) => !prev)}
-      >
-        Scores
-      </button>
+    <>
+      
       {showHighScoreData && (
         <div className="highscorewindow-table">
           <div>
@@ -42,10 +44,9 @@ const HighScoreData = ({ highScoreData }) => {
               </p>
             ))}
           </div>
-
         </div>
       )}
-    </div>
+    </>
   );
 };
 export default HighScoreData;

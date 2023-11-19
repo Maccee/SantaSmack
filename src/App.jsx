@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import { postDataToAzureFunction, getDataFromAzureFunction } from "./ApiUtils";
 import { calculateHitStrength, defineHitStrength, resetGame } from "./Utils";
-import { distanceMusicPlay } from "./SoundUtils";
+
 import {
   useWindowEventHandlers,
   useGameInitialization,
@@ -12,21 +12,22 @@ import {
 import Santa from "./components/Santa";
 import Markers from "./components/Markers";
 import Ball from "./components/Ball";
-import HighScoreData from "./components/HighScoreData";
 import HUD from "./components/HUD";
 import Background from "./components/Background";
-import MusicPlayer from "./components/MusicPlayer";
 import Ground from "./components/Ground";
 import Porot from "./components/Porot";
 import Hype from "./components/Hype";
 import InputName from "./components/InputName";
-import Settings from "./components/Settings";
-
+import Navbar from "./components/Navbar";
 
 // APP COMPONENT
 const App = () => {
   // HAS SET PLAYER NAME
-  const [playerName, setPlayerName] = useState(localStorage.getItem('playerName') || null);
+
+  const [playerName, setPlayerName] = useState(
+    localStorage.getItem("playerName") || null
+  );
+
 
   // Define game area width, height and ground level
   const [gameAreaWidth, setGameAreaWidth] = useState(10000); // in px
@@ -74,7 +75,7 @@ const App = () => {
   const [mouseDownTime, setMouseDownTime] = useState(0); // The performance.now time when mouse is pressed down
 
   // MUSAT
-  const [mute, setMute] = useState(true);
+  const [mute, setMute] = useState(false);
 
   // COLLISION
   const [poros, setPoros] = useState([]);
@@ -89,8 +90,8 @@ const App = () => {
   // HIGHSCORE
   const [highScoreData, setHighScoreData] = useState({});
 
-  const dailyChallengeDistance = 50;
-  const [dailyChallengeName, setDailyChallengeName] = useState(null);
+  const dailyChallengeDistance = 500;
+  const [dailyChallengeData, setDailyChallengeData] = useState(null);
 
   // SCROLLING
   const gameAreaRef = useRef(null);
@@ -112,8 +113,7 @@ const App = () => {
     getDataFromAzureFunction,
     setHighScoreData,
     dailyChallengeDistance,
-    setDailyChallengeName,
-    dailyChallengeName
+    setDailyChallengeData
   );
   // Check screen resize to prevent possible cheating
   useWindowEventHandlers(horizontalVelocityRef);
@@ -155,9 +155,7 @@ const App = () => {
     };
 
     if (isHit && horizontalVelocityRef.current === 0) {
-
       if (parseFloat(distance) > parseFloat(highScoreData[19].distance)) {
-
         let newHighScoresound = new Audio("highscore.mp3");
         if (juhaMode) {
           let audio = new Audio("/iddqd/kuitenkinjoihankohtuu.mp3");
@@ -169,11 +167,6 @@ const App = () => {
       handleNewHighScore();
     }
   }, [distance, horizontalVelocityRef.current]);
-
-  // LETS PLAY MUSIC WHILE WE ARE IN SPEEEEEED !!
-  useEffect(() => {
-    distanceMusicPlay(horizontalVelocityRef, mute);
-  }, [horizontalVelocityRef.current]);
 
   // Dynamically generate gamearea
   useEffect(() => {
@@ -237,15 +230,13 @@ const App = () => {
             }
             let poroHitAudio = new Audio("bells.mp3");
             if (juhaMode) {
-
               poroHitAudio = new Audio("hyvahienohomma.mp3");
             }
             if (!mute) {
-            poroHitAudio.play();
+              poroHitAudio.play();
             }
 
             hitPorosRef.current.add(index); // Mark this poro as hit
-
           } else if (!isInCollision && hitPorosRef.current.has(index)) {
             hitPorosRef.current.delete(index);
           }
@@ -351,7 +342,7 @@ const App = () => {
       setIsHit(true);
       setIsSpinning(true);
 
-      const hitStrengthValue = defineHitStrength(juhaMode);
+      const hitStrengthValue = defineHitStrength(juhaMode, mute);
       setHitStrength(hitStrengthValue);
 
       const angle =
@@ -392,26 +383,22 @@ const App = () => {
   const blurStyle = {
     filter: "blur(5px)", // You can adjust the blur intensity as needed
   };
-  
+
   // APP RENDER
   return (
     <>
+      <Navbar
+        highScoreData={highScoreData}
+        mute={mute}
+        setMute={setMute}
+        highScore={highScore}
+        gameSpeed={gameSpeed}
+        setGameSpeed={setGameSpeed}
+        dailyChallengeDistance={dailyChallengeDistance}
+        dailyChallengeData={dailyChallengeData}
+      />
 
-      <div className="navbar">
-        <div className="nav-left">LEFT: DAILY CHALLENGE COMPONENT PLACE HERE</div>
-        <div className="nav-center">CENTER:
-          <HighScoreData highScoreData={highScoreData} />
-          {playerName === null && <InputName setPlayerName={setPlayerName} />}
-        </div>
-        <div className="nav-right">RIGHT:
-          <Settings gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
-          <MusicPlayer mute={mute} setMute={setMute} />
-        </div>
-
-      </div>
-
-      
-
+      {playerName === null && <InputName setPlayerName={setPlayerName} />}
       <HUD
         showHUD={showHUD}
         lastHitPosition={lastHitPosition}
@@ -435,7 +422,9 @@ const App = () => {
 
       {highScoreData[19] &&
         highScoreData.length >= 20 &&
-        parseFloat(distance) > parseFloat(highScoreData[19].distance) && <Hype />}
+        parseFloat(distance) > parseFloat(highScoreData[19].distance) && (
+          <Hype />
+        )}
 
       <div
         className="game-area"

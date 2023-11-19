@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const InputName = ({ setPlayerName }) => {
-  const [name, setName] = useState("");
+  const [name, setName] = useState(null);
 
   const handleInputChange = (event) => {
     setName(event.target.value);
@@ -11,8 +11,10 @@ const InputName = ({ setPlayerName }) => {
     if (name.length >= 15 || name === "") {
         return;
     } else {
-        setPlayerName(name);
-        localStorage.setItem('playerName', name); // Storing the name in local storage
+
+      setPlayerName(name);
+      localStorage.setItem('playerName', name);
+
     }
 };
 
