@@ -148,6 +148,7 @@ const App = () => {
         hitStrength: hitStrength,
         gameAreaHeight: gameAreaHeight,
         distance: distance,
+        poroHits: poroHits
       };
       await postDataToAzureFunction(data);
       const updatedScores = await getDataFromAzureFunction();
