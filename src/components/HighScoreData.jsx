@@ -4,12 +4,10 @@ import TrophyImg from "../assets/trophy_inner.svg";
 
 const HighScoreData = ({ highScoreData }) => {
   const [showHighScoreData, setShowHighScoreData] = useState(true);
-  
+
   let sortedData = [];
   let firstColumnData = [];
   let secondColumnData = [];
-
-  
 
   if (Array.isArray(highScoreData)) {
     sortedData = highScoreData
@@ -23,7 +21,6 @@ const HighScoreData = ({ highScoreData }) => {
 
   return (
     <>
-      
       {showHighScoreData && (
         <div className="highscorewindow-table">
           <div>
@@ -31,7 +28,7 @@ const HighScoreData = ({ highScoreData }) => {
               <p key={index}>
                 {index + 1}. {item.name}{" "}
                 <span className={`${index < 3 ? `top${index + 1}` : ""} dist`}>
-                  {item.distance}
+                  {item.distance} M
                 </span>
               </p>
             ))}
@@ -40,7 +37,7 @@ const HighScoreData = ({ highScoreData }) => {
             {secondColumnData.map((item, index) => (
               <p key={index + 10}>
                 {index + 11}. {item.name}{" "}
-                <span className="dist">{item.distance}</span>
+                <span className="dist">{item.distance} M</span>
               </p>
             ))}
           </div>

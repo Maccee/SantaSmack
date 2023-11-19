@@ -5,6 +5,8 @@ import highscorenappi from "../assets/highscore_nappi.png";
 import measureImg from "../assets/measure.png";
 import MusicPlayer from "./MusicPlayer";
 import Settings from "./Settings";
+import QuestionMarkPopup from "./QuestionMarkPopup";
+import QuestionMarkImg from "../assets/questionmark.png";
 
 const Navbar = ({
   highScoreData,
@@ -17,6 +19,7 @@ const Navbar = ({
   dailyChallengeData,
 }) => {
   const [highScoreOpen, setHighScoreOpen] = useState(false);
+  const [showQuestionMarkPopup, setShowQuestionMarkPopup] = useState(false);
   const handleButtonClick = () => {
     setHighScoreOpen((prev) => !prev);
   };
@@ -49,25 +52,46 @@ const Navbar = ({
             {highScoreOpen && (
               <>
                 <div className="highScoreBox">
-                  <div className="dailyChallenge">
-                    DAILY CHALLENGE
-                    <br />
-                    {dailyChallengeDistance} M <br />
-                    {dailyChallengeData[0].name} with{" "}
-                    {dailyChallengeData[0].distance} M
+                  <div className="dailyChallengeContainer">
+                    <div className="dailyChallenge">
+                      <h2>
+                        DAILY CHALLENGE{" "}
+                        <button
+                          className="questionMarkButton"
+                          onClick={() =>
+                            setShowQuestionMarkPopup((prev) => !prev)
+                          }
+                        >
+                          <img src={QuestionMarkImg} alt="question mark" />
+                        </button>
+                      </h2>
+                      {showQuestionMarkPopup && <QuestionMarkPopup />}
+                      <div className="dailyChallengeDistance">
+                        CLOSEST TO <br />
+                        <span>{dailyChallengeDistance} M</span>
+                      </div>
+                    </div>
+                    <div className="dailyChallengeTop5">
+                      <h2>DAILY CHALLENGE TOP5</h2>
+                      <ul>
+                        {dailyChallengeData.map((entry, index) => (
+                          <li key={index}>
+                            {index + 1}. {entry.name}{" "}
+                            <span
+                              className={`${
+                                index < 3 ? `top${index + 1}` : ""
+                              } dist`}
+                            >
+                              {entry.distance} M
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                   <div className="highScoreData">
+                    <h2>ALL TIME HIGHSCORES</h2>
                     <HighScoreData highScoreData={highScoreData} />
-                  </div>
-                  <div className="dailyChallengeTop5">
-                    <h2>DAILY CHALLENGE TOP5</h2>
-                    <ul>
-                      {dailyChallengeData.map((entry, index) => (
-                        <li key={index}>
-                          {entry.name}: {entry.distance} M
-                        </li>
-                      ))}
-                    </ul>
                   </div>
                 </div>
               </>

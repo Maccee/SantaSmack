@@ -446,6 +446,7 @@ const App = () => {
             gameAreaHeight={gameAreaHeight}
           />
           <Porot
+            hitPorosRef={hitPorosRef}
             setPoros={setPoros}
             gameAreaWidth={gameAreaWidth}
             gameAreaHeight={gameAreaHeight}

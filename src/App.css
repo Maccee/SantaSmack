@@ -364,6 +364,7 @@ body {
   font-size: 24px;
   line-height: normal;
   letter-spacing: 1.44px;
+  min-width: 140px;
 }
 .sessionLongest {
   display: flex;
@@ -401,19 +402,297 @@ body {
   height: 55px;
 }
 
-.highScoreBox {
-  justify-content: space-around;
+.settingsPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 200px;
+  border-radius: 25px;
+  border: 5px solid #ffe4af;
+  background: var(
+    --navbar-radial,
+    radial-gradient(52.92% 33.67% at 50% 19.88%, #bd2828 0.52%, #870404 100%)
+  );
+  box-shadow: 4px 4px 30px 0px #fff inset, 4px 4px 4px 0px #000;
+  padding: 20px;
+  z-index: 1;
+  color: #fff;
+  text-align: center;
+  font-family: Luckiest Guy;
+  font-size: 1.3rem;
+  letter-spacing: 1.2px;
   display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.settingsPopup h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #ffe4af;
+}
+
+.setting {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+/* input range muotoilut. Valitettavasti pitää olla näin pitkä, tai muuten ei toimi kaikilla laitteilla */
+
+input[type="range"] {
+  width: calc(100% - 20px);
+  margin: 0.5rem;
+  background-color: transparent;
+  -webkit-appearance: none;
+}
+input[type="range"]:focus {
+  outline: none;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  background: #ffe4af;
+  border: 0.2px solid rgba(1, 1, 1, 0);
+  border-radius: 5px;
+  width: 100%;
+  height: 15px;
+  cursor: pointer;
+  padding: 0;
+}
+input[type="range"]::-webkit-slider-thumb {
+  margin-top: -2.7px;
+  width: 20px;
+  height: 20px;
+  background: #bd2828;
+  border: 0px solid rgba(0, 0, 0, 0);
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+input[type="range"]:focus::-webkit-slider-runnable-track {
+  background: #ffe7b9;
+}
+input[type="range"]::-moz-range-track {
+  background: #ffe4af;
+  border: 0.2px solid rgba(1, 1, 1, 0);
+  border-radius: 5px;
+  width: 100%;
+  height: 15px;
+  cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #bd2828;
+  border: 0px solid rgba(0, 0, 0, 0);
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+input[type="range"]::-ms-track {
+  background: transparent;
+  border-color: transparent;
+  border-width: 2.5px 0;
+  color: transparent;
+  width: 100%;
+  height: 15px;
+  cursor: pointer;
+}
+input[type="range"]::-ms-fill-lower {
+  background: #ffe1a5;
+  border: 0.2px solid rgba(1, 1, 1, 0);
+  border-radius: 2.5px;
+}
+input[type="range"]::-ms-fill-upper {
+  background: #ffe4af;
+  border: 0.2px solid rgba(1, 1, 1, 0);
+  border-radius: 2.6px;
+}
+input[type="range"]::-ms-thumb {
+  width: 20px;
+  height: 20px;
+  background: #bd2828;
+  border: 0px solid rgba(0, 0, 0, 0);
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 0px;
+  /*Needed to keep the Edge thumb centred*/
+}
+input[type="range"]:focus::-ms-fill-lower {
+  background: #ffe4af;
+}
+input[type="range"]:focus::-ms-fill-upper {
+  background: #ffe7b9;
+}
+@supports (-ms-ime-align: auto) {
+  /* Pre-Chromium Edge only styles, selector taken from hhttps://stackoverflow.com/a/32202953/7077589 */
+  input[type="range"] {
+    margin: 0;
+    /*Edge starts the margin from the thumb, not the track as other browsers do*/
+  }
+}
+
+.highScoreBox {
+  justify-content: space-evenly;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   border-radius: 20px;
   min-height: 400px;
+  color: #fff;
+  font-family: Luckiest Guy;
+  font-size: 1rem;
+  line-height: 1.1rem;
+  letter-spacing: 1.2px;
 }
+
+.highScoreBox h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #ffe4af;
+}
+
+.dailyChallengeContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-top: 0.5rem;
+}
+
 .dailyChallenge {
-  flex-basis: 20%;
+  flex-basis: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
+.dailyChallengeDistance {
+  display: flex;
+  width: 130px;
+  height: 70px;
+  padding: 0.2rem;
+  transform: rotate(-10deg);
+  margin-top: 0.8rem;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  background-color: #ffe4af;
+  border-radius: 10px;
+  outline: #000 dashed 2px;
+  outline-offset: -5px;
+  color: #fbb03b;
+  text-align: center;
+  font-size: 20px;
+  -webkit-text-stroke: 1px black;
+  text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000,
+    -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.dailyChallengeDistance span {
+  color: #fbb03b;
+  font-size: 36px;
+  line-height: 100%;
+}
+
 .highScoreData {
   width: 100%;
 }
 .dailyChallengeTop5 {
-  flex-basis: 20%;
+  flex-basis: 50%;
+}
+
+.dailyChallengeTop5 li {
+  display: flex;
+  justify-content: space-between;
+  margin-inline: 1rem;
+}
+
+.dailyChallengeTop5 ul {
+  padding: 0.5rem;
+}
+
+.highscorewindow-table {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  padding: 0.5rem;
+}
+
+.highscorewindow-table div:first-child {
+  padding: 0 20px 0 0;
+}
+.highscorewindow-table div:last-child {
+  padding: 0 0px 0 00px;
+}
+
+.highscorewindow-table div p {
+  display: flex;
+  justify-content: space-between;
+}
+.highscorewindow-table .dist,
+.dailyChallengeTop5 .dist {
+  color: #fff;
+  text-align: right;
+  padding-left: 40px;
+}
+.highscorewindow-table .top1,
+.dailyChallengeTop5 .top1 {
+  color: gold;
+}
+.highscorewindow-table .top2,
+.dailyChallengeTop5 .top2 {
+  color: silver;
+}
+.highscorewindow-table .top3,
+.dailyChallengeTop5 .top3 {
+  color: #cd7f32;
+}
+
+.questionMarkButton {
+  border: none;
+  background: none;
+  padding: 0 0 0 0.5rem;
+  cursor: pointer;
+}
+
+.questionMarkPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 200px;
+  border-radius: 25px;
+  border: 5px solid #ffe4af;
+  background: var(
+    --navbar-radial,
+    radial-gradient(52.92% 33.67% at 50% 19.88%, #bd2828 0.52%, #870404 100%)
+  );
+  box-shadow: 4px 4px 30px 0px #fff inset, 4px 4px 4px 0px #000;
+  padding: 2rem 3rem;
+  z-index: 1;
+  color: #fff;
+  text-align: center;
+  font-family: Luckiest Guy;
+  font-size: 1.3rem;
+  letter-spacing: 1.2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.questionMarkPopup h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #ffe4af;
+}
+.questionMarkPopup p {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
 }
