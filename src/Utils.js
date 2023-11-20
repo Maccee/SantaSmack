@@ -67,7 +67,8 @@ export const resetGame = (
   bottomLimit,
   setPoroHitCounter,
   setPoroHits,
-  setConsecutivePoroHits
+  setConsecutivePoroHits,
+  setResized
 ) => {
   const resetTop = bottomLimit - 250;
   const resetLeft = 100;
@@ -84,6 +85,8 @@ export const resetGame = (
     top: resetTop,
     left: resetLeft,
   });
+
+  setResized(false);
 
   setPoroHits(0);
   setConsecutivePoroHits(0);

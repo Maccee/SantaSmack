@@ -101,6 +101,7 @@ const App = () => {
 
   //Koodit
   const [juhaMode, setJuhaMode] = useState(false);
+  const [resized, setResized] = useState(false)
 
   // TOGGLE HUD
   const toggleHUD = () => {
@@ -119,7 +120,7 @@ const App = () => {
     setDailyChallengeData
   );
   // Check screen resize to prevent possible cheating
-  useWindowEventHandlers(horizontalVelocityRef);
+  useWindowEventHandlers(setResized);
 
   // HITBOX
   useEffect(() => {
@@ -168,7 +169,7 @@ const App = () => {
       setDailyChallengeData(top5ByDistance);
     };
 
-    if (isHit && horizontalVelocityRef.current === 0) {
+    if (isHit && horizontalVelocityRef.current === 0 && !resized) {
       if (
         allTimeData.length <= 20 ||
         parseFloat(distance) > parseFloat(allTimeData[19].distance)
@@ -345,7 +346,8 @@ const App = () => {
         bottomLimit,
         setPoroHitCounter,
         setPoroHits,
-        setConsecutivePoroHits
+        setConsecutivePoroHits,
+        setResized
       );
     }
 
@@ -400,7 +402,9 @@ const App = () => {
   const blurStyle = {
     filter: "blur(5px)", // You can adjust the blur intensity as needed
   };
-
+  if (allTimeData[19]) {
+  console.log(parseFloat(distance), parseFloat(allTimeData[19].distance))
+  }
   // APP RENDER
   return (
     <>
