@@ -23,6 +23,8 @@ const Navbar = ({
   const [showQuestionMarkPopup, setShowQuestionMarkPopup] = useState(false);
   const [selectedhighscoreOption, setSelectedhighscoreOption] =
     useState("ALL TIME");
+  const [musicVolume, setMusicVolume] = useState(0.5);
+
   const handleButtonClick = () => {
     setHighScoreOpen((prev) => !prev);
   };
@@ -33,7 +35,6 @@ const Navbar = ({
           <div className="navbarContent">
             <div className="navbarTop">
               <div className="navbarLeft">
-                <span className="version">v0.1</span>
                 <img src={measureImg}></img>
                 <div className="sessionLongest">
                   <p>
@@ -48,8 +49,8 @@ const Navbar = ({
                 <img src={logoImg}></img>
               </div>
               <div className="navbarRight">
-                <Settings gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
-                <MusicPlayer mute={mute} setMute={setMute} />
+                <Settings gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} setMusicVolume={setMusicVolume} musicVolume={musicVolume} />
+                <MusicPlayer mute={mute} setMute={setMute} musicVolume={musicVolume} />
               </div>
             </div>
             {highScoreOpen && (

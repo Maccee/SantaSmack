@@ -7,9 +7,10 @@ body {
 }
 .version {
   position: absolute;
-  bottom: 135px;
-  right: 15px;
+  bottom: 10px;
+  right: 10px;
   color: #ffe4af;
+  font-size: 0.7rem;
 }
 .game-area {
   box-sizing: border-box;
@@ -527,6 +528,9 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+.setting p {
+  width: 50%;
 }
 
 /* input range muotoilut. Valitettavasti pitää olla näin pitkä, tai muuten ei toimi kaikilla laitteilla */
