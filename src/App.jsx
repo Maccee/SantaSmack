@@ -157,6 +157,7 @@ const App = () => {
       const updatedScores = await getDataFromAzureFunction();
       setAllTimeData(updatedScores);
       setWeeklyData(filterDataForWeek(updatedScores));
+      setDailyChallengeData(updatedScores);
     };
 
     if (isHit && horizontalVelocityRef.current === 0) {

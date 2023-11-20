@@ -77,18 +77,24 @@ const Navbar = ({
                     <div className="dailyChallengeTop5">
                       <h2>DAILY CHALLENGE TOP5</h2>
                       <ul>
-                        {dailyChallengeData.map((entry, index) => (
-                          <li key={index}>
-                            {index + 1}. {entry.name}{" "}
-                            <span
-                              className={`${
-                                index < 3 ? `top${index + 1}` : ""
-                              } dist`}
-                            >
-                              {entry.distance} M
-                            </span>
-                          </li>
-                        ))}
+                        {dailyChallengeData.map((entry, index) => {
+                          // Calculate the difference from the dailyChallengeDistance
+                          const difference = entry.distance - dailyChallengeDistance;
+
+                          // Determine the sign to display based on whether the distance is over or under
+                          const sign = difference > 0 ? "+" : "-";
+
+                          return (
+                            <li key={index}>
+                              {index + 1}. {entry.name}{" "}
+                              <span
+                                className={`${index < 3 ? `top${index + 1}` : ""} dist`}
+                              >
+                                {sign}{Math.abs(difference).toFixed(2)} M
+                              </span>
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                   </div>
@@ -96,20 +102,18 @@ const Navbar = ({
                     <h2>
                       HIGHSCORES{" "}
                       <button
-                        className={`highscoreOptionButton ${
-                          selectedhighscoreOption === "ALL TIME"
-                            ? "selected"
-                            : ""
-                        }`}
+                        className={`highscoreOptionButton ${selectedhighscoreOption === "ALL TIME"
+                          ? "selected"
+                          : ""
+                          }`}
                         onClick={() => setSelectedhighscoreOption("ALL TIME")}
                       >
                         ALL TIME
                       </button>
                       {" / "}
                       <button
-                        className={`highscoreOptionButton ${
-                          selectedhighscoreOption === "WEEKLY" ? "selected" : ""
-                        }`}
+                        className={`highscoreOptionButton ${selectedhighscoreOption === "WEEKLY" ? "selected" : ""
+                          }`}
                         onClick={() => setSelectedhighscoreOption("WEEKLY")}
                       >
                         WEEKLY
@@ -128,9 +132,11 @@ const Navbar = ({
           </div>
         </div>
         <div className="highScoreButtonContainer">
-          <button className="highScoreButton" onClick={handleButtonClick}>
-            <img src={highscorenappi} alt="High Score Button" />
-          </button>
+          {allTimeData &&
+            <button className="highScoreButton" onClick={handleButtonClick}>
+              <img src={highscorenappi} alt="High Score Button" />
+            </button>
+          }
         </div>
       </div>
     </>
