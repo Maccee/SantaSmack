@@ -101,7 +101,7 @@ const App = () => {
 
   //Koodit
   const [juhaMode, setJuhaMode] = useState(false);
-  const [resized, setResized] = useState(false)
+  const [resized, setResized] = useState(false);
 
   // TOGGLE HUD
   const toggleHUD = () => {
@@ -156,8 +156,13 @@ const App = () => {
       };
       await postDataToAzureFunction(data);
       const updatedScores = await getDataFromAzureFunction();
-      setAllTimeData(updatedScores);
+      const sortedByDistance = updatedScores.sort(
+        (a, b) => b.distance - a.distance
+      );
+      setAllTimeData(sortedByDistance);
+
       setWeeklyData(filterDataForWeek(updatedScores));
+
       const top5ByDistance = updatedScores
         .map((score) => ({
           ...score,
@@ -170,18 +175,7 @@ const App = () => {
     };
 
     if (isHit && horizontalVelocityRef.current === 0 && !resized) {
-      if (
-        allTimeData.length <= 20 ||
-        parseFloat(distance) > parseFloat(allTimeData[19].distance)
-      ) {
-        let newHighScoresound = new Audio("highscore.mp3");
-        if (juhaMode) {
-          let audio = new Audio("/iddqd/kuitenkinjoihankohtuu.mp3");
-          audio.play();
-        } else {
-          newHighScoresound.play();
-        }
-      }
+      
       handleNewHighScore();
     }
   }, [distance, horizontalVelocityRef.current]);
@@ -402,9 +396,9 @@ const App = () => {
   const blurStyle = {
     filter: "blur(5px)", // You can adjust the blur intensity as needed
   };
-  if (allTimeData[19]) {
-  console.log(parseFloat(distance), parseFloat(allTimeData[19].distance))
-  }
+
+  
+
   // APP RENDER
   return (
     <>
@@ -443,8 +437,8 @@ const App = () => {
       />
 
       {allTimeData[19] &&
-        allTimeData.length >= 20 &&
-        parseFloat(distance) > parseFloat(allTimeData[19].distance) && <Hype />}
+        typeof allTimeData[19].distance === "number" &&
+        distance > allTimeData[19].distance && <Hype mute={mute} />}
 
       <div
         className="game-area"
