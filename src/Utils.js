@@ -22,11 +22,12 @@ export const calculateHitStrength = (
 export const defineHitStrength = (juhamode, mute) => {
   const hitStrength = (Math.random() * (55 - 50) + 50).toFixed(2);
   const parsedHitStrength = parseFloat(hitStrength);
-
+const test = 150;
   // Play audio if hitStrength is above the threshold
   if (!mute) {
     playAudio(juhamode);
   }
+  //return test;
   return parsedHitStrength;
 };
 
@@ -67,7 +68,8 @@ export const resetGame = (
   bottomLimit,
   setPoroHitCounter,
   setPoroHits,
-  setConsecutivePoroHits
+  setConsecutivePoroHits,
+  setResized
 ) => {
   const resetTop = bottomLimit - 250;
   const resetLeft = 100;
@@ -84,6 +86,8 @@ export const resetGame = (
     top: resetTop,
     left: resetLeft,
   });
+
+  setResized(false);
 
   setPoroHits(0);
   setConsecutivePoroHits(0);

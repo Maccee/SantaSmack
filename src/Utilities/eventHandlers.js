@@ -5,16 +5,16 @@ let keySequence = [];
 let keySequenceString = "";
 const secretCode = "iddqd";
 
-export const useWindowEventHandlers = (horizontalVelocityRef) => {
+export const useWindowEventHandlers = (setResized) => {
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
-        horizontalVelocityRef.current = 0;
+        setResized(true);
       }
     };
 
     const handleResize = () => {
-      horizontalVelocityRef.current = 0;
+      setResized(true);
     };
 
     window.addEventListener("resize", handleResize);
@@ -26,7 +26,7 @@ export const useWindowEventHandlers = (horizontalVelocityRef) => {
       window.removeEventListener("resize", handleResize);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [horizontalVelocityRef]);
+  }, []);
 };
 
 export const useGameInitialization = (
@@ -64,11 +64,15 @@ export const useGameInitialization = (
       //gameAreaRef.current.focus();
     }
     getDataFromAzureFunction().then((result) => {
-      setAllTimeData(result);
+      const top20ByDistance = result
+        .sort((a, b) => b.distance - a.distance)
+        .slice(0, 20);
+
+      setAllTimeData(top20ByDistance);
+
       let weeklyData = filterDataForWeek(result);
       setWeeklyData(weeklyData);
     });
-
 
     getClosestDistanceFromAzureFunction(dailyChallengeDistance)
       .then((dailyChallengeData) => {
@@ -87,14 +91,16 @@ export const useGameInitialization = (
 };
 
 export function getLastMondayInUTC() {
-  const nowUtc = new Date(Date.UTC(
-    new Date().getUTCFullYear(),
-    new Date().getUTCMonth(),
-    new Date().getUTCDate(),
-    new Date().getUTCHours(),
-    new Date().getUTCMinutes(),
-    new Date().getUTCSeconds()
-  ));
+  const nowUtc = new Date(
+    Date.UTC(
+      new Date().getUTCFullYear(),
+      new Date().getUTCMonth(),
+      new Date().getUTCDate(),
+      new Date().getUTCHours(),
+      new Date().getUTCMinutes(),
+      new Date().getUTCSeconds()
+    )
+  );
   let dayOfWeek = nowUtc.getUTCDay(); // Sunday - 0, Monday - 1, etc.
   let difference = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // If it's Sunday in UTC, go back 6 days, else go to the last Monday
   nowUtc.setUTCDate(nowUtc.getUTCDate() + difference);
@@ -105,12 +111,10 @@ export function getLastMondayInUTC() {
 // Function to filter data from last Monday to current time
 export function filterDataForWeek(data) {
   const lastMonday = getLastMondayInUTC();
-  return data.filter(item => {
+  return data.filter((item) => {
     // Add 'Z' to indicate UTC time
-    const itemDateUtc = new Date(item.dateTime + 'Z');
-   
+    const itemDateUtc = new Date(item.dateTime + "Z");
+
     return itemDateUtc >= lastMonday && itemDateUtc <= new Date(); // Checks if the date falls in the current week
   });
 }
-
-

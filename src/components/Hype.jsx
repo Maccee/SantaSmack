@@ -3,16 +3,19 @@ import React, { useEffect, useState } from "react";
 // Audio initialized outside the component
 const audio = new Audio("wow.mp3");
 
-const Hype = () => {
+const Hype = ({ mute }) => {
   const [soundPlayed, setSoundPlayed] = useState(false);
 
   useEffect(() => {
-    const PlayAudio = () => {
+    const playAudio = () => {
       audio.play();
       setSoundPlayed(true); // Mark as played
     };
-    PlayAudio();
-  }, []); // Depend on ball position and sound played status
+
+    if (!mute && !soundPlayed) {
+      playAudio();
+    }
+  }, [ mute, soundPlayed]); // Depend on these props and state
 
   return (
     <>
