@@ -5,6 +5,12 @@ body {
 .orientation-warning-container {
   display: none;
 }
+.version {
+  position: absolute;
+  bottom: 135px;
+  right: 15px;
+  color: #ffe4af;
+}
 .game-area {
   box-sizing: border-box;
   position: relative;

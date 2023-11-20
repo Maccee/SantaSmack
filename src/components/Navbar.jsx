@@ -33,7 +33,7 @@ const Navbar = ({
           <div className="navbarContent">
             <div className="navbarTop">
               <div className="navbarLeft">
-                {" "}
+                <span className="version">v0.1</span>
                 <img src={measureImg}></img>
                 <div className="sessionLongest">
                   <p>
