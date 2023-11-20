@@ -132,7 +132,9 @@ const Navbar = ({
           </div>
         </div>
         <div className="highScoreButtonContainer">
+
           {allTimeData &&
+
             <button className="highScoreButton" onClick={handleButtonClick}>
               <img src={highscorenappi} alt="High Score Button" />
             </button>
