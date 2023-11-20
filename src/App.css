@@ -281,8 +281,8 @@ body {
   position: absolute;
   background-size: 1700px;
   background-repeat: repeat;
-  height: 85vh;
-  left: 120px;
+  height: 95vh;
+  left: -120px;
   
   animation: moveDown 140s linear infinite; /* adjust duration and timing function as needed */
 }
@@ -291,7 +291,7 @@ body {
   background-image: url("./assets/bg2-lp.png");
   background-size: contain;
   background-repeat: repeat-x;
-  width: 300000px;
+  
   height: 80vh;
   position: absolute;
   z-index: -10;
