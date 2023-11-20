@@ -1,24 +1,23 @@
 import React, { useEffect, useRef } from "react";
 
-const QuestionMarkPopup = ({ isOpen, closePopup }) => {
+const QuestionMarkPopup = ({ setShowQuestionMarkPopup }) => {
   const ref = useRef();
 
   useEffect(() => {
     const checkIfClickedOutside = (e) => {
-      // If the menu is open and the clicked target is not within the menu,
-      // then close the menu
-      if (isOpen && ref.current && !ref.current.contains(e.target)) {
-        closePopup();
+      console.log("Document clicked");
+      if (ref.current && !ref.current.contains(e.target)) {
+        console.log("Closing popup");
+        setShowQuestionMarkPopup(false);
       }
     };
 
     document.addEventListener("mousedown", checkIfClickedOutside);
 
     return () => {
-      // Cleanup the event listener
       document.removeEventListener("mousedown", checkIfClickedOutside);
     };
-  }, [isOpen, closePopup]);
+  }, []);
 
   return (
     <div className="questionMarkPopup" ref={ref}>
@@ -33,3 +32,4 @@ const QuestionMarkPopup = ({ isOpen, closePopup }) => {
 };
 
 export default QuestionMarkPopup;
+

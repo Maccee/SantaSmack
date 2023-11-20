@@ -160,7 +160,7 @@ const App = () => {
     };
 
     if (isHit && horizontalVelocityRef.current === 0) {
-      if (parseFloat(distance) > parseFloat(allTimeData[19].distance)) {
+      if (allTimeData.length < 19 || parseFloat(distance) > parseFloat(allTimeData[19].distance)) {
         let newHighScoresound = new Audio("highscore.mp3");
         if (juhaMode) {
           let audio = new Audio("/iddqd/kuitenkinjoihankohtuu.mp3");

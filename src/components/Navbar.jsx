@@ -68,7 +68,7 @@ const Navbar = ({
                           <img src={QuestionMarkImg} alt="question mark" />
                         </button>
                       </h2>
-                      {showQuestionMarkPopup && <QuestionMarkPopup />}
+                      {showQuestionMarkPopup && <QuestionMarkPopup setShowQuestionMarkPopup={setShowQuestionMarkPopup} />}
                       <div className="dailyChallengeDistance">
                         CLOSEST TO <br />
                         <span>{dailyChallengeDistance} M</span>
