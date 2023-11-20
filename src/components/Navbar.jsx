@@ -1,12 +1,12 @@
 import { useState } from "react";
 import HighScoreData from "./HighScoreData";
-import logoImg from "../assets/santa_smack_logo.png";
-import highscorenappi from "../assets/highscore_nappi.png";
-import measureImg from "../assets/measure.png";
+import logoImg from "../assets/santa_smack_logo.webp";
+import highscorenappi from "../assets/highscore_nappi.webp";
+import measureImg from "../assets/measure.webp";
 import MusicPlayer from "./MusicPlayer";
 import Settings from "./Settings";
 import QuestionMarkPopup from "./QuestionMarkPopup";
-import QuestionMarkImg from "../assets/questionmark.png";
+import QuestionMarkImg from "../assets/questionmark.webp";
 
 const Navbar = ({
   allTimeData,
@@ -23,6 +23,8 @@ const Navbar = ({
   const [showQuestionMarkPopup, setShowQuestionMarkPopup] = useState(false);
   const [selectedhighscoreOption, setSelectedhighscoreOption] =
     useState("ALL TIME");
+  const [musicVolume, setMusicVolume] = useState(0.5);
+
   const handleButtonClick = () => {
     setHighScoreOpen((prev) => !prev);
   };
@@ -33,7 +35,6 @@ const Navbar = ({
           <div className="navbarContent">
             <div className="navbarTop">
               <div className="navbarLeft">
-                <span className="version">v0.1</span>
                 <img src={measureImg}></img>
                 <div className="sessionLongest">
                   <p>
@@ -48,8 +49,17 @@ const Navbar = ({
                 <img src={logoImg}></img>
               </div>
               <div className="navbarRight">
-                <Settings gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} />
-                <MusicPlayer mute={mute} setMute={setMute} />
+                <Settings
+                  gameSpeed={gameSpeed}
+                  setGameSpeed={setGameSpeed}
+                  setMusicVolume={setMusicVolume}
+                  musicVolume={musicVolume}
+                />
+                <MusicPlayer
+                  mute={mute}
+                  setMute={setMute}
+                  musicVolume={musicVolume}
+                />
               </div>
             </div>
             {highScoreOpen && (
@@ -68,7 +78,11 @@ const Navbar = ({
                           <img src={QuestionMarkImg} alt="question mark" />
                         </button>
                       </h2>
-                      {showQuestionMarkPopup && <QuestionMarkPopup setShowQuestionMarkPopup={setShowQuestionMarkPopup} />}
+                      {showQuestionMarkPopup && (
+                        <QuestionMarkPopup
+                          setShowQuestionMarkPopup={setShowQuestionMarkPopup}
+                        />
+                      )}
                       <div className="dailyChallengeDistance">
                         CLOSEST TO <br />
                         <span>{dailyChallengeDistance} M</span>
@@ -79,7 +93,8 @@ const Navbar = ({
                       <ul>
                         {dailyChallengeData.map((entry, index) => {
                           // Calculate the difference from the dailyChallengeDistance
-                          const difference = entry.distance - dailyChallengeDistance;
+                          const difference =
+                            entry.distance - dailyChallengeDistance;
 
                           // Determine the sign to display based on whether the distance is over or under
                           const sign = difference > 0 ? "+" : "-";
@@ -88,9 +103,12 @@ const Navbar = ({
                             <li key={index}>
                               {index + 1}. {entry.name}{" "}
                               <span
-                                className={`${index < 3 ? `top${index + 1}` : ""} dist`}
+                                className={`${
+                                  index < 3 ? `top${index + 1}` : ""
+                                } dist`}
                               >
-                                {sign}{Math.abs(difference).toFixed(2)} M
+                                {sign}
+                                {Math.abs(difference).toFixed(2)} M
                               </span>
                             </li>
                           );
@@ -102,18 +120,20 @@ const Navbar = ({
                     <h2>
                       HIGHSCORES{" "}
                       <button
-                        className={`highscoreOptionButton ${selectedhighscoreOption === "ALL TIME"
-                          ? "selected"
-                          : ""
-                          }`}
+                        className={`highscoreOptionButton ${
+                          selectedhighscoreOption === "ALL TIME"
+                            ? "selected"
+                            : ""
+                        }`}
                         onClick={() => setSelectedhighscoreOption("ALL TIME")}
                       >
                         ALL TIME
                       </button>
                       {" / "}
                       <button
-                        className={`highscoreOptionButton ${selectedhighscoreOption === "WEEKLY" ? "selected" : ""
-                          }`}
+                        className={`highscoreOptionButton ${
+                          selectedhighscoreOption === "WEEKLY" ? "selected" : ""
+                        }`}
                         onClick={() => setSelectedhighscoreOption("WEEKLY")}
                       >
                         WEEKLY
@@ -132,13 +152,11 @@ const Navbar = ({
           </div>
         </div>
         <div className="highScoreButtonContainer">
-
-          {allTimeData &&
-
+          {Object.keys(allTimeData).length > 0 && (
             <button className="highScoreButton" onClick={handleButtonClick}>
               <img src={highscorenappi} alt="High Score Button" />
             </button>
-          }
+          )}
         </div>
       </div>
     </>

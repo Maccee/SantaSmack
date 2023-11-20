@@ -40,24 +40,25 @@ const InputName = ({ setPlayerName }) => {
   return (
     <>
       <div className="inputname highscorewindow-table" style={inputStyle}>
-        <label htmlFor="nameInput" style={labelStyle}>
-          What's your name?
-        </label>
-        <input
-          className="inputField"
-          id="nameInput"
-          placeholder=""
-          value={name}
-          onChange={handleInputChange}
-        />
-        <button
-          className="inputButton"
-          onClick={handleButtonClick}
-          onKeyDown={handleKeyDown}
-          disabled={name.length >= 15 || name === ""}
-        >
-          LET'S SMACK
-        </button>
+        <form onSubmit={handleButtonClick}>
+          <label htmlFor="nameInput" style={labelStyle}>
+            What's your name?
+          </label><br/>
+          <input
+            className="inputField"
+            id="nameInput"
+            placeholder=""
+            value={name}
+            onChange={handleInputChange}
+          /><br/><br/>
+          <button
+            type="submit"
+            className="inputButton"
+            disabled={name.length >= 15 || name === ""}
+          >
+            LET'S SMACK
+          </button>
+        </form>
       </div>
     </>
   );

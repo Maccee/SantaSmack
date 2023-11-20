@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import PoroImg from "../assets/poro.png"; // Assuming you have an image named poro.png
-import HitPoroImg from "../assets/poro-potku.png"; // Assuming you have an image named poro.png
+import PoroImg from "../assets/poro.webp"; // Assuming you have an image named poro.png
+import HitPoroImg from "../assets/poro-potku.webp"; // Assuming you have an image named poro.png
 
 const Porot = ({ hitPorosRef, setPoros, gameAreaHeight, ballPositionRef }) => {
   const [lastPoroPosition, setLastPoroPosition] = useState(500); // Starting position for the first poro

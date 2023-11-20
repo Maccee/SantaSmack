@@ -1,53 +1,48 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
-import musicOn from "../assets/music-on.png";
-import soundOn from "../assets/sound-on.png";
-import musicOff from "../assets/music-off.png";
-import soundOff from "../assets/sound-off.png";
+import musicOn from "../assets/music-on.webp";
+import soundOn from "../assets/sound-on.webp";
+import musicOff from "../assets/music-off.webp";
+import soundOff from "../assets/sound-off.webp";
 
-const MusicPlayer = ({ mute, setMute }) => {
+const MusicPlayer = ({ mute, setMute, musicVolume }) => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
 
-  if (audioRef.current === null) {
-    audioRef.current = new Audio(`1.mp3`);
-    audioRef.current.volume = 0.4;
-  }
-
+  // Initialize and handle track change
   useEffect(() => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio(`${currentTrackIndex + 1}.mp3`);
+    } else {
+      audioRef.current.src = `${currentTrackIndex + 1}.mp3`;
+    }
+    audioRef.current.volume = musicVolume;
+
     const audio = audioRef.current;
     const playNextTrack = () => {
       setCurrentTrackIndex((prevIndex) => (prevIndex + 1) % 4);
     };
+
+    if (isPlaying) {
+      audio.play();
+    }
+
     audio.addEventListener("ended", playNextTrack);
     return () => {
       audio.removeEventListener("ended", playNextTrack);
     };
-  }, []);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    audio.src = `${currentTrackIndex + 1}.mp3`;
-    if (isPlaying) {
-      audio.load();
-      audio.play();
-    } else {
-      audio.pause();
-    }
   }, [currentTrackIndex, isPlaying]);
 
-  const playNextTrack = () => {
-    setCurrentTrackIndex((prevIndex) => (prevIndex + 1) % 4);
-  };
+  // Update volume
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = musicVolume;
+    }
+  }, [musicVolume]);
 
   const toggleMusic = () => {
     setIsPlaying(!isPlaying);
-  };
-
-  const handleVolumeChange = (event) => {
-    const volume = event.target.value;
-    audioRef.current.volume = volume;
   };
 
   const handleMuteClick = () => {
@@ -55,23 +50,22 @@ const MusicPlayer = ({ mute, setMute }) => {
   };
 
   return (
-    <>
-      <div className="audioControl">
-        <button onClick={toggleMusic}>
-          {isPlaying ? <img src={musicOn} /> : <img src={musicOff} />}
-        </button>
-
-        {!mute ? (
-          <button onClick={() => handleMuteClick()}>
-            <img src={soundOn} />
-          </button>
+    <div className="audioControl">
+      <button onClick={toggleMusic}>
+        {isPlaying ? (
+          <img src={musicOn} alt="Music On" />
         ) : (
-          <button onClick={() => handleMuteClick()}>
-            <img src={soundOff} />
-          </button>
+          <img src={musicOff} alt="Music Off" />
         )}
-      </div>
-    </>
+      </button>
+      <button onClick={handleMuteClick}>
+        {!mute ? (
+          <img src={soundOn} alt="Sound On" />
+        ) : (
+          <img src={soundOff} alt="Sound Off" />
+        )}
+      </button>
+    </div>
   );
 };
 

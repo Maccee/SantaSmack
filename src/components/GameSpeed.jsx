@@ -15,6 +15,7 @@ const GameSpeed = ({ gameSpeed, setGameSpeed }) => {
         value={gameSpeed}
         onChange={handleSpeedChange}
       />
+      x {Number(gameSpeed).toFixed(1)}
     </div>
   );
 };
