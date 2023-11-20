@@ -143,8 +143,21 @@ const App = () => {
     }
   }, [ballPosition.top]);
 
-  // CHECK FOR YOUR DISTANCE OF THE SESSION!
+  // CHECK FOR HIGHSCORE
   useEffect(() => {
+    const isNewHighScore = (dataSet) => {
+      const playerScore = dataSet.find((item) => item.name === playerName);
+      return !playerScore || distance > playerScore.distance;
+    };
+
+    const isCloserToDailyChallenge = () => {
+      const playerDifference = Math.abs(distance - dailyChallengeDistance);
+      return dailyChallengeData.some(
+        (score) =>
+          playerDifference < Math.abs(score.distance - dailyChallengeDistance)
+      );
+    };
+
     const handleNewHighScore = async () => {
       const data = {
         name: playerName,
@@ -157,14 +170,45 @@ const App = () => {
       await postDataToAzureFunction(data);
       // UPDATING ALL HIGHSCORES
       const updatedScores = await getDataFromAzureFunction();
+
       // SORT ALL SCORES BY DISTANCE
-      const sortedByDistance = updatedScores.sort(
-        (a, b) => b.distance - a.distance
-      );
-      setAllTimeData(sortedByDistance);
+      const onlyOneNameData = {};
+      updatedScores.forEach((item) => {
+        if (
+          !onlyOneNameData[item.name] ||
+          onlyOneNameData[item.name] < item.distance
+        ) {
+          onlyOneNameData[item.name] = item.distance;
+        }
+      });
+      const dataArray = Object.keys(onlyOneNameData).map((name) => {
+        return { name, distance: onlyOneNameData[name] };
+      });
+      const top20ByDistance = dataArray
+        .sort((a, b) => b.distance - a.distance)
+        .slice(0, 20);
+      setAllTimeData(top20ByDistance);
 
-      setWeeklyData(filterDataForWeek(updatedScores));
+      // WEEKLY DATA PROCESSING
+      const weeklyResult = filterDataForWeek(updatedScores);
+      const weeklyOneNameData = {};
+      weeklyResult.forEach((item) => {
+        if (
+          !weeklyOneNameData[item.name] ||
+          weeklyOneNameData[item.name] < item.distance
+        ) {
+          weeklyOneNameData[item.name] = item.distance;
+        }
+      });
+      const weeklyDataArray = Object.keys(weeklyOneNameData).map((name) => {
+        return { name, distance: weeklyOneNameData[name] };
+      });
+      const top20WeeklyByDistance = weeklyDataArray
+        .sort((a, b) => b.distance - a.distance)
+        .slice(0, 20);
+      setWeeklyData(top20WeeklyByDistance);
 
+      // DAILY CHALLENGE
       const top5ByDistance = updatedScores
         .map((score) => ({
           ...score,
@@ -172,12 +216,16 @@ const App = () => {
         }))
         .sort((a, b) => a.difference - b.difference)
         .slice(0, 5);
-
       setDailyChallengeData(top5ByDistance);
     };
 
-    if (isHit && horizontalVelocityRef.current === 0 && !resized) {
-      
+    // THIS IS THE CHECK !!
+    if (
+      isHit && 
+      horizontalVelocityRef.current === 0 && 
+      !resized && 
+      (isNewHighScore(allTimeData) || isNewHighScore(weeklyData) || isCloserToDailyChallenge())
+    ) {
       handleNewHighScore();
     }
   }, [distance, horizontalVelocityRef.current]);
@@ -398,8 +446,6 @@ const App = () => {
   const blurStyle = {
     filter: "blur(5px)", // You can adjust the blur intensity as needed
   };
-
-  
 
   // APP RENDER
   return (
