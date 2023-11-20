@@ -1,4 +1,4 @@
-import SantaImg from "../assets/pukki.png";
+import SantaImg from "../assets/pukki.webp";
 import Bat from "./Bat";
 
 const Santa = ({

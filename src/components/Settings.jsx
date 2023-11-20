@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import GameSpeed from "./GameSpeed";
-import settingsIcon from "../assets/settings.png";
+import settingsIcon from "../assets/settings.webp";
 import MusicVolume from "./MusicVolume";
 
 const Settings = ({ gameSpeed, setGameSpeed, setMusicVolume, musicVolume }) => {

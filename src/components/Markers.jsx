@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import KylttiImg from "../assets/kyltti-lp-silver.png"; // Picture of a sign where distance is displayed in game area.
+import KylttiImg from "../assets/kyltti-lp-silver.webp"; // Picture of a sign where distance is displayed in game area.
 
 const Markers = ({ gameAreaWidth, gameAreaHeight }) => {
   // Only recalculate markers if gameAreaWidth changes

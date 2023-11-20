@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 
-import musicOn from "../assets/music-on.png";
-import soundOn from "../assets/sound-on.png";
-import musicOff from "../assets/music-off.png";
-import soundOff from "../assets/sound-off.png";
+import musicOn from "../assets/music-on.webp";
+import soundOn from "../assets/sound-on.webp";
+import musicOff from "../assets/music-off.webp";
+import soundOff from "../assets/sound-off.webp";
 
 const MusicPlayer = ({ mute, setMute, musicVolume }) => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
@@ -52,10 +52,18 @@ const MusicPlayer = ({ mute, setMute, musicVolume }) => {
   return (
     <div className="audioControl">
       <button onClick={toggleMusic}>
-        {isPlaying ? <img src={musicOn} alt="Music On" /> : <img src={musicOff} alt="Music Off" />}
+        {isPlaying ? (
+          <img src={musicOn} alt="Music On" />
+        ) : (
+          <img src={musicOff} alt="Music Off" />
+        )}
       </button>
       <button onClick={handleMuteClick}>
-        {!mute ? <img src={soundOn} alt="Sound On" /> : <img src={soundOff} alt="Sound Off" />}
+        {!mute ? (
+          <img src={soundOn} alt="Sound On" />
+        ) : (
+          <img src={soundOff} alt="Sound Off" />
+        )}
       </button>
     </div>
   );
