@@ -279,9 +279,11 @@ body {
 .snow2 {
   background-image: url("./assets/snow.png");
   position: absolute;
-  background-size: auto;
+  background-size: 1700px;
   background-repeat: repeat;
-  height: 95vh;
+  height: 85vh;
+  left: 120px;
+  
   animation: moveDown 140s linear infinite; /* adjust duration and timing function as needed */
 }
 
