@@ -147,7 +147,7 @@ body {
   height: 100px;
   border-radius: 100px;
   position: absolute;
-  background-image: url("./assets/pallo-2.png");
+  background-image: url("./assets/pallo-2.webp");
   background-size: contain;
   animation: spin 1s linear infinite;
   z-index: 2;
@@ -244,14 +244,14 @@ body {
 .ground {
   height: 50px;
   position: absolute;
-  background-image: url("./assets/bg-new.png");
+  background-image: url("./assets/bg-new.webp");
   background-size: contain;
   transform: translateY(-100%);
   z-index: -10;
 }
 
 .background {
-  background-image: url("./assets/bg3-lp.png");
+  background-image: url("./assets/bg3-lp.webp");
   background-size: contain;
   background-repeat: repeat-x;
   height: 55vh;
@@ -270,7 +270,7 @@ body {
 }
 
 .snow {
-  background-image: url("./assets/snow.png");
+  background-image: url("./assets/snow.webp");
   position: absolute;
   background-size: auto;
   background-repeat: repeat;
@@ -278,7 +278,7 @@ body {
   animation: moveDown 90s linear infinite; /* adjust duration and timing function as needed */
 }
 .snow2 {
-  background-image: url("./assets/snow.png");
+  background-image: url("./assets/snow.webp");
   position: absolute;
   background-size: 1700px;
   background-repeat: repeat;
@@ -289,7 +289,7 @@ body {
 }
 
 .background2 {
-  background-image: url("./assets/bg2-lp.png");
+  background-image: url("./assets/bg2-lp.webp");
   background-size: contain;
   background-repeat: repeat-x;
 

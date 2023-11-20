@@ -1,12 +1,12 @@
 import { useState } from "react";
 import HighScoreData from "./HighScoreData";
-import logoImg from "../assets/santa_smack_logo.png";
-import highscorenappi from "../assets/highscore_nappi.png";
-import measureImg from "../assets/measure.png";
+import logoImg from "../assets/santa_smack_logo.webp";
+import highscorenappi from "../assets/highscore_nappi.webp";
+import measureImg from "../assets/measure.webp";
 import MusicPlayer from "./MusicPlayer";
 import Settings from "./Settings";
 import QuestionMarkPopup from "./QuestionMarkPopup";
-import QuestionMarkImg from "../assets/questionmark.png";
+import QuestionMarkImg from "../assets/questionmark.webp";
 
 const Navbar = ({
   allTimeData,
@@ -49,8 +49,17 @@ const Navbar = ({
                 <img src={logoImg}></img>
               </div>
               <div className="navbarRight">
-                <Settings gameSpeed={gameSpeed} setGameSpeed={setGameSpeed} setMusicVolume={setMusicVolume} musicVolume={musicVolume} />
-                <MusicPlayer mute={mute} setMute={setMute} musicVolume={musicVolume} />
+                <Settings
+                  gameSpeed={gameSpeed}
+                  setGameSpeed={setGameSpeed}
+                  setMusicVolume={setMusicVolume}
+                  musicVolume={musicVolume}
+                />
+                <MusicPlayer
+                  mute={mute}
+                  setMute={setMute}
+                  musicVolume={musicVolume}
+                />
               </div>
             </div>
             {highScoreOpen && (
