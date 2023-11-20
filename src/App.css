@@ -283,7 +283,7 @@ body {
   background-repeat: repeat;
   height: 95vh;
   left: -120px;
-  
+
   animation: moveDown 140s linear infinite; /* adjust duration and timing function as needed */
 }
 
@@ -291,7 +291,7 @@ body {
   background-image: url("./assets/bg2-lp.png");
   background-size: contain;
   background-repeat: repeat-x;
-  
+
   height: 80vh;
   position: absolute;
   z-index: -10;
@@ -643,6 +643,11 @@ input[type="range"]:focus::-ms-fill-upper {
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
   color: #ffe4af;
+}
+
+.dailyChallengeContainer h2 {
+  display: flex;
+  align-items: flex-start;
 }
 
 .highScoreBox h2 .highscoreOptionButton {
