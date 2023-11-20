@@ -158,7 +158,11 @@ const App = () => {
       setAllTimeData(updatedScores);
       setWeeklyData(filterDataForWeek(updatedScores));
       const top5ByDistance = updatedScores
-        .sort((a, b) => b.distance - a.distance)
+        .map((score) => ({
+          ...score,
+          difference: Math.abs(score.distance - dailyChallengeDistance),
+        }))
+        .sort((a, b) => a.difference - b.difference)
         .slice(0, 5);
 
       setDailyChallengeData(top5ByDistance);
