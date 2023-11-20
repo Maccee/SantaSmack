@@ -2,7 +2,9 @@ body {
   font-family: "Luckiest Guy", cursive;
   background-color: #3e210b;
 }
-
+.orientation-warning-container {
+  display: none;
+}
 .game-area {
   box-sizing: border-box;
   position: relative;
@@ -17,23 +19,102 @@ body {
 }
 .inputname {
   position: absolute;
-  top: 300px;
+  top: 400px;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 0%);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 1rem;
   z-index: 6000;
+  width: 300px;
+  height: 200px;
+  border-radius: 25px;
+  border: 5px solid #ffe4af;
+  background: var(
+    --navbar-radial,
+    radial-gradient(52.92% 33.67% at 50% 19.88%, #bd2828 0.52%, #870404 100%)
+  );
+  box-shadow: 4px 4px 30px 0px #fff inset, 4px 4px 4px 0px #000;
+  padding: 20px;
+  color: #ffe1a5;
+  text-align: center;
+  font-family: Luckiest Guy;
+  font-size: 1.5rem;
+  letter-spacing: 1.2px;
 }
-.inputField {
-  border-radius: 1rem;
-  width: 100%;
-  height: 30px;
+
+.inputname input {
+  background: none;
+  border: 0;
+  outline: none;
+  border-bottom: 5px dashed #bdc3c7;
+  width: 180px;
+  color: #fff;
+  font-family: Luckiest Guy;
+  font-size: 1.2rem;
+  transition: width 0.3s 0.2s ease;
+  text-align: center;
+
+  &:focus {
+    width: 240px;
+    border-bottom: 5px dashed #fbb03b;
+  }
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  &:-webkit-autofill {
+    -webkit-text-fill-color: #fff;
+  }
 }
+
+.inputname input:invalid:not(:focus),
+.inputname input:valid {
+  width: 180px;
+  color: #fff;
+  font-family: Luckiest Guy;
+  font-size: 1.2rem;
+  transition: width 0.3s 0.2s ease;
+  text-align: center;
+}
+
+.inputname input:invalid:not(:focus) {
+  border-bottom: 5px dashed #bdc3c7;
+}
+
+.inputname input:valid:focus {
+  width: 240px;
+  border-bottom: 5px dashed #fbb03b;
+}
+
 .inputButton {
+  background: none;
+  border: 2px solid #ffe4af;
+  border-radius: 10px;
+  color: #fff;
+  font-family: Luckiest Guy;
+  padding: 10px 20px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  outline: none; /* Remove the default focus outline */
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2); /* Add a subtle background on hover */
+  }
 }
+
+.inputButton:focus {
+  background-color: #ffe4af;
+  color: #231f20;
+}
+
 .santa {
   width: fit-content;
   transform: translateY(-100%);
@@ -84,11 +165,11 @@ body {
   position: absolute;
   z-index: 3;
   font-size: 2rem;
-  color: rgb(0, 0, 0);
+  font-family: "Luckiest Guy", cursive;
+  color: #231f20;
   padding: 0.5rem;
   border-radius: 10px;
-  font-weight: 700;
-  background-color: rgba(255, 255, 255, 0.792);
+  background-color: #ffe4af;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -97,7 +178,7 @@ body {
 }
 
 .st0 {
-  fill: #77b3d4;
+  fill: #0cd366;
 }
 
 .st1 {
@@ -224,7 +305,6 @@ body {
   position: absolute;
   font-size: 2.9rem;
   color: rgb(0, 0, 0);
-  font-weight: 700;
   font-family: "Luckiest Guy", cursive;
 }
 
@@ -276,7 +356,7 @@ body {
 }
 .navbar {
   text-align: center;
-  min-width: 600px;
+  width: 600px;
 }
 .valotausta {
   background-size: cover;
@@ -364,6 +444,7 @@ body {
   font-size: 24px;
   line-height: normal;
   letter-spacing: 1.44px;
+  min-width: 140px;
 }
 .sessionLongest {
   display: flex;
@@ -401,19 +482,428 @@ body {
   height: 55px;
 }
 
-.highScoreBox {
-  justify-content: space-around;
+.settingsPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 200px;
+  border-radius: 25px;
+  border: 5px solid #ffe4af;
+  background: var(
+    --navbar-radial,
+    radial-gradient(52.92% 33.67% at 50% 19.88%, #bd2828 0.52%, #870404 100%)
+  );
+  box-shadow: 4px 4px 30px 0px #fff inset, 4px 4px 4px 0px #000;
+  padding: 20px;
+  z-index: 1;
+  color: #fff;
+  text-align: center;
+  font-family: Luckiest Guy;
+  font-size: 1.3rem;
+  letter-spacing: 1.2px;
   display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.settingsPopup h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #ffe4af;
+}
+
+.setting {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+/* input range muotoilut. Valitettavasti pitää olla näin pitkä, tai muuten ei toimi kaikilla laitteilla */
+
+input[type="range"] {
+  width: calc(100% - 20px);
+  margin: 0.5rem;
+  background-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+}
+input[type="range"]:focus {
+  outline: none;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  background: #ffe4af;
+  border: 0.2px solid rgba(1, 1, 1, 0);
+  border-radius: 5px;
+  width: 100%;
+  height: 15px;
+  cursor: pointer;
+  padding: 0;
+}
+input[type="range"]::-webkit-slider-thumb {
+  margin-top: -2.7px;
+  width: 20px;
+  height: 20px;
+  background: #bd2828;
+  border: 0px solid rgba(0, 0, 0, 0);
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+input[type="range"]:focus::-webkit-slider-runnable-track {
+  background: #ffe7b9;
+}
+input[type="range"]::-moz-range-track {
+  background: #ffe4af;
+  border: 0.2px solid rgba(1, 1, 1, 0);
+  border-radius: 5px;
+  width: 100%;
+  height: 15px;
+  cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #bd2828;
+  border: 0px solid rgba(0, 0, 0, 0);
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+input[type="range"]::-ms-track {
+  background: transparent;
+  border-color: transparent;
+  border-width: 2.5px 0;
+  color: transparent;
+  width: 100%;
+  height: 15px;
+  cursor: pointer;
+}
+input[type="range"]::-ms-fill-lower {
+  background: #ffe1a5;
+  border: 0.2px solid rgba(1, 1, 1, 0);
+  border-radius: 2.5px;
+}
+input[type="range"]::-ms-fill-upper {
+  background: #ffe4af;
+  border: 0.2px solid rgba(1, 1, 1, 0);
+  border-radius: 2.6px;
+}
+input[type="range"]::-ms-thumb {
+  width: 20px;
+  height: 20px;
+  background: #bd2828;
+  border: 0px solid rgba(0, 0, 0, 0);
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 0px;
+  /*Needed to keep the Edge thumb centred*/
+}
+input[type="range"]:focus::-ms-fill-lower {
+  background: #ffe4af;
+}
+input[type="range"]:focus::-ms-fill-upper {
+  background: #ffe7b9;
+}
+@supports (-ms-ime-align: auto) {
+  /* Pre-Chromium Edge only styles, selector taken from hhttps://stackoverflow.com/a/32202953/7077589 */
+  input[type="range"] {
+    margin: 0;
+    /*Edge starts the margin from the thumb, not the track as other browsers do*/
+  }
+}
+
+.highScoreBox {
+  justify-content: space-evenly;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   border-radius: 20px;
   min-height: 400px;
+  color: #fff;
+  font-family: Luckiest Guy;
+  font-size: 1rem;
+  line-height: 1.1rem;
+  letter-spacing: 1.1px;
 }
+
+.highScoreBox h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #ffe4af;
+}
+
+.highScoreBox h2 .highscoreOptionButton {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  color: grey;
+}
+
+.highScoreBox h2 .highscoreOptionButton.selected {
+  color: #fff;
+}
+
+.dailyChallengeContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-top: 0.5rem;
+}
+
 .dailyChallenge {
-  flex-basis: 20%;
+  flex-basis: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
+.dailyChallengeDistance {
+  display: flex;
+  width: 130px;
+  height: 70px;
+  padding: 0.2rem;
+  transform: rotate(-10deg);
+  margin-top: 0.8rem;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  background-color: #ffe4af;
+  border-radius: 10px;
+  outline: #000 dashed 2px;
+  outline-offset: -5px;
+  color: #fbb03b;
+  text-align: center;
+  font-size: 20px;
+  -webkit-text-stroke: 1px black;
+  text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000,
+    -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.dailyChallengeDistance span {
+  color: #fbb03b;
+  font-size: 36px;
+  line-height: 100%;
+}
+
 .highScoreData {
   width: 100%;
 }
 .dailyChallengeTop5 {
-  flex-basis: 20%;
+  flex-basis: 50%;
+}
+
+.dailyChallengeTop5 li {
+  display: flex;
+  justify-content: space-between;
+  margin-inline: 1rem;
+}
+
+.dailyChallengeTop5 ul {
+  padding: 0.5rem;
+}
+
+.highscorewindow-table {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  padding: 0.5rem 0;
+}
+
+.highscorewindow-table div:first-child {
+  padding: 0 10px 0 0;
+}
+.highscorewindow-table div:last-child {
+  padding: 0 0px 0 00px;
+}
+
+.highscorewindow-table div p {
+  display: flex;
+  justify-content: space-between;
+}
+.highscorewindow-table .dist,
+.dailyChallengeTop5 .dist {
+  color: #fff;
+  text-align: right;
+  padding-left: 10px;
+}
+.highscorewindow-table .top1,
+.dailyChallengeTop5 .top1 {
+  color: gold;
+}
+.highscorewindow-table .top2,
+.dailyChallengeTop5 .top2 {
+  color: silver;
+}
+.highscorewindow-table .top3,
+.dailyChallengeTop5 .top3 {
+  color: #cd7f32;
+}
+
+.questionMarkButton {
+  border: none;
+  background: none;
+  padding: 0 0 0 0.5rem;
+  cursor: pointer;
+}
+
+.questionMarkPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 200px;
+  border-radius: 25px;
+  border: 5px solid #ffe4af;
+  background: var(
+    --navbar-radial,
+    radial-gradient(52.92% 33.67% at 50% 19.88%, #bd2828 0.52%, #870404 100%)
+  );
+  box-shadow: 4px 4px 30px 0px #fff inset, 4px 4px 4px 0px #000;
+  padding: 2rem 3rem;
+  z-index: 1;
+  color: #fff;
+  text-align: center;
+  font-family: Luckiest Guy;
+  font-size: 1.3rem;
+  letter-spacing: 1.2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.questionMarkPopup h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #ffe4af;
+}
+.questionMarkPopup p {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+@media only screen and (max-width: 650px) {
+  .navbar {
+    text-align: center;
+    width: 350px;
+  }
+  .navbarContent {
+    padding: 0.2rem 0.5rem;
+  }
+
+  .navbarLeft img {
+    width: 30px;
+    height: auto;
+  }
+  .sesDist {
+    font-size: 15px;
+    letter-spacing: 0.8px;
+    min-width: 80px;
+  }
+  .sessionLongest {
+    padding-left: 0.5rem;
+    font-size: 13px;
+  }
+
+  .navbarRight {
+    justify-content: center;
+  }
+  .navbarRight button {
+    width: 35px;
+  }
+
+  .navbarRight img {
+    height: 35px;
+  }
+
+  .highScoreBox {
+    font-size: 0.8rem;
+    line-height: 0.9rem;
+    letter-spacing: 0.5px;
+  }
+
+  .highScoreBox h2 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .dailyChallengeContainer {
+    padding-top: 0.2rem;
+  }
+
+  .dailyChallengeDistance {
+    width: 90px;
+    height: 50px;
+    padding: 0.5rem 0.2rem 0.2rem 0.2rem;
+    margin-top: 0.4rem;
+    font-size: 14px;
+    -webkit-text-stroke: 0.5px black;
+    text-shadow: 0.5px 0.5px 0 #000, -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000,
+      -0.5px 0.5px 0 #000, 0.5px 0.5px 0 #000;
+  }
+
+  .dailyChallengeDistance span {
+    font-size: 20px;
+  }
+
+  .highscorewindow-table {
+    padding: 0.5rem 0;
+    flex-direction: column;
+    justify-content: center;
+    padding-inline: 2rem;
+  }
+
+  .highscorewindow-table div:first-child {
+    padding: 0 4px 0 0;
+  }
+  .highscorewindow-table div:last-child {
+    padding: 0 4px 0 0;
+  }
+
+  .questionMarkPopup {
+    width: 220px;
+    height: 150px;
+    letter-spacing: 1px;
+  }
+
+  .questionMarkPopup h2 {
+    font-size: 1.5rem;
+    margin: 1.5rem 0;
+    color: #ffe4af;
+  }
+  .questionMarkPopup p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@media only screen and (max-height: 600px) {
+  .orientation-warning-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999; /* Make sure it's on top of everything */
+  }
+
+  .orientation-warning-content {
+    text-align: center;
+    color: white;
+    font-size: 24px;
+    font-family: Luckiest Guy;
+  }
 }

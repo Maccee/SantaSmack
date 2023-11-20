@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import PoroImg from "../assets/poro-lp.png"; // Assuming you have an image named poro.png
+import PoroImg from "../assets/poro.png"; // Assuming you have an image named poro.png
+import HitPoroImg from "../assets/poro-potku.png"; // Assuming you have an image named poro.png
 
-const Porot = ({ setPoros, gameAreaHeight, ballPositionRef }) => {
+const Porot = ({ hitPorosRef, setPoros, gameAreaHeight, ballPositionRef }) => {
   const [lastPoroPosition, setLastPoroPosition] = useState(500); // Starting position for the first poro
   const [poros, setLocalPoros] = useState([]); // Local state to manage poros for rendering
 
@@ -22,7 +23,6 @@ const Porot = ({ setPoros, gameAreaHeight, ballPositionRef }) => {
       setLocalPoros((prevPoros) => [...prevPoros, newPoro]);
       setPoros((prevPoros) => [...prevPoros, newPoro]); // Update parent state
       setLastPoroPosition(newPoroPosition);
-      
     };
 
     if (ballPositionRef.current.left >= lastPoroPosition) {
@@ -35,14 +35,14 @@ const Porot = ({ setPoros, gameAreaHeight, ballPositionRef }) => {
       {poros.map((position, index) => (
         <img
           key={`${position.x}-${position.y}-${index}`}
-          src={PoroImg}
+          src={hitPorosRef.current.has(index) ? HitPoroImg : PoroImg}
           alt="Poro"
           style={{
             position: "absolute",
             left: `${position.x}px`,
-            top: `${gameAreaHeight - 250}px`,
-            width: `170px`,
-            zIndex: `-1`,
+            top: `${gameAreaHeight - 260}px`,
+            height: `230px`,
+            objectFit: "contain",
           }}
         />
       ))}
