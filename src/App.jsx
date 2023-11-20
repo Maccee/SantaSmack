@@ -92,7 +92,7 @@ const App = () => {
   const [allTimeData, setAllTimeData] = useState({});
   const [weeklyData, setWeeklyData] = useState({});
 
-  const dailyChallengeDistance = 500;
+  const dailyChallengeDistance = 510;
   const [dailyChallengeData, setDailyChallengeData] = useState(null);
 
   // SCROLLING
