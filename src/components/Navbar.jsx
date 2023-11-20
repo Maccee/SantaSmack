@@ -68,7 +68,11 @@ const Navbar = ({
                           <img src={QuestionMarkImg} alt="question mark" />
                         </button>
                       </h2>
-                      {showQuestionMarkPopup && <QuestionMarkPopup setShowQuestionMarkPopup={setShowQuestionMarkPopup} />}
+                      {showQuestionMarkPopup && (
+                        <QuestionMarkPopup
+                          setShowQuestionMarkPopup={setShowQuestionMarkPopup}
+                        />
+                      )}
                       <div className="dailyChallengeDistance">
                         CLOSEST TO <br />
                         <span>{dailyChallengeDistance} M</span>
@@ -79,7 +83,8 @@ const Navbar = ({
                       <ul>
                         {dailyChallengeData.map((entry, index) => {
                           // Calculate the difference from the dailyChallengeDistance
-                          const difference = entry.distance - dailyChallengeDistance;
+                          const difference =
+                            entry.distance - dailyChallengeDistance;
 
                           // Determine the sign to display based on whether the distance is over or under
                           const sign = difference > 0 ? "+" : "-";
@@ -88,9 +93,12 @@ const Navbar = ({
                             <li key={index}>
                               {index + 1}. {entry.name}{" "}
                               <span
-                                className={`${index < 3 ? `top${index + 1}` : ""} dist`}
+                                className={`${
+                                  index < 3 ? `top${index + 1}` : ""
+                                } dist`}
                               >
-                                {sign}{Math.abs(difference).toFixed(2)} M
+                                {sign}
+                                {Math.abs(difference).toFixed(2)} M
                               </span>
                             </li>
                           );
@@ -102,18 +110,20 @@ const Navbar = ({
                     <h2>
                       HIGHSCORES{" "}
                       <button
-                        className={`highscoreOptionButton ${selectedhighscoreOption === "ALL TIME"
-                          ? "selected"
-                          : ""
-                          }`}
+                        className={`highscoreOptionButton ${
+                          selectedhighscoreOption === "ALL TIME"
+                            ? "selected"
+                            : ""
+                        }`}
                         onClick={() => setSelectedhighscoreOption("ALL TIME")}
                       >
                         ALL TIME
                       </button>
                       {" / "}
                       <button
-                        className={`highscoreOptionButton ${selectedhighscoreOption === "WEEKLY" ? "selected" : ""
-                          }`}
+                        className={`highscoreOptionButton ${
+                          selectedhighscoreOption === "WEEKLY" ? "selected" : ""
+                        }`}
                         onClick={() => setSelectedhighscoreOption("WEEKLY")}
                       >
                         WEEKLY
@@ -132,13 +142,11 @@ const Navbar = ({
           </div>
         </div>
         <div className="highScoreButtonContainer">
-
-          {allTimeData &&
-
+          {Object.keys(allTimeData).length > 0 && (
             <button className="highScoreButton" onClick={handleButtonClick}>
               <img src={highscorenappi} alt="High Score Button" />
             </button>
-          }
+          )}
         </div>
       </div>
     </>
