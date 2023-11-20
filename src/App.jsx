@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import { postDataToAzureFunction, getDataFromAzureFunction } from "./ApiUtils";
 import { calculateHitStrength, defineHitStrength, resetGame } from "./Utils";
+import { filterDataForWeek } from "./Utilities/eventHandlers";
 
 import {
   useWindowEventHandlers,
@@ -89,6 +90,7 @@ const App = () => {
 
   // HIGHSCORE
   const [allTimeData, setAllTimeData] = useState({});
+  const [weeklyData, setWeeklyData] = useState({});
 
   const dailyChallengeDistance = 500;
   const [dailyChallengeData, setDailyChallengeData] = useState(null);
@@ -112,6 +114,7 @@ const App = () => {
     gameAreaRef,
     getDataFromAzureFunction,
     setAllTimeData,
+    setWeeklyData,
     dailyChallengeDistance,
     setDailyChallengeData
   );
@@ -153,6 +156,7 @@ const App = () => {
       await postDataToAzureFunction(data);
       const updatedScores = await getDataFromAzureFunction();
       setAllTimeData(updatedScores);
+      setWeeklyData(filterDataForWeek(updatedScores));
     };
 
     if (isHit && horizontalVelocityRef.current === 0) {
@@ -390,6 +394,7 @@ const App = () => {
     <>
       <Navbar
         allTimeData={allTimeData}
+        weeklyData={weeklyData}
         mute={mute}
         setMute={setMute}
         highScore={highScore}

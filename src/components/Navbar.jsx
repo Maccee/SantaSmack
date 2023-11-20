@@ -10,6 +10,7 @@ import QuestionMarkImg from "../assets/questionmark.png";
 
 const Navbar = ({
   allTimeData,
+  weeklyData,
   mute,
   setMute,
   highScore,
@@ -117,6 +118,7 @@ const Navbar = ({
 
                     <HighScoreData
                       allTimeData={allTimeData}
+                      weeklyData={weeklyData}
                       selectedOption={selectedhighscoreOption}
                     />
                   </div>
