@@ -35,31 +35,4 @@ const getDataFromAzureFunction = async () => {
   }
 };
 
-const getClosestDistanceFromAzureFunction = async (dailyChallengeDistance) => {
-  try {
-    const response = await axios.get(AZURE_FUNCTION_URL);
-    const data = response.data;
-
-    if (!Array.isArray(data)) {
-      throw new Error("The fetched data is not an array.");
-    }
-
-    // Add a property to each entry for the difference
-    data.forEach(entry => {
-      entry.difference = Math.abs(entry.distance - dailyChallengeDistance);
-    });
-
-    // Sort the array by the difference in ascending order and slice the top 5
-    const closestEntries = data.sort((a, b) => a.difference - b.difference).slice(0, 5);
-
-    // Map the closestEntries to return an array of objects with name and distance
-    return closestEntries.map(entry => ({ name: entry.name, distance: entry.distance }));
-  } catch (error) {
-    console.error("Error getting data from Azure Function:", error);
-    return []; // Return an empty array or handle the error as needed
-  }
-};
-
-
-
-export { postDataToAzureFunction, getDataFromAzureFunction, getClosestDistanceFromAzureFunction };
+export { postDataToAzureFunction, getDataFromAzureFunction };

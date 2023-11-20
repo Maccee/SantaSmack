@@ -10,33 +10,27 @@ const MusicPlayer = ({ mute, setMute }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
 
-  // Initialize the audioRef.current value only once, when the component mounts
   if (audioRef.current === null) {
     audioRef.current = new Audio(`1.mp3`);
-    audioRef.current.volume = 0.1; // Set volume to 75%
+    audioRef.current.volume = 0.4;
   }
 
-  // Effect for playing the next track
   useEffect(() => {
     const audio = audioRef.current;
-
     const playNextTrack = () => {
       setCurrentTrackIndex((prevIndex) => (prevIndex + 1) % 4);
     };
-
     audio.addEventListener("ended", playNextTrack);
-
     return () => {
       audio.removeEventListener("ended", playNextTrack);
     };
   }, []);
 
-  // Effect for changing the track source and playing or pausing
   useEffect(() => {
     const audio = audioRef.current;
-    audio.src = `${currentTrackIndex + 1}.mp3`; // Adjust the path accordingly
+    audio.src = `${currentTrackIndex + 1}.mp3`;
     if (isPlaying) {
-      audio.load(); // Load the new source
+      audio.load();
       audio.play();
     } else {
       audio.pause();
@@ -44,25 +38,20 @@ const MusicPlayer = ({ mute, setMute }) => {
   }, [currentTrackIndex, isPlaying]);
 
   const playNextTrack = () => {
-    setCurrentTrackIndex((prevIndex) => (prevIndex + 1) % 4); // Assuming you have 4 tracks
+    setCurrentTrackIndex((prevIndex) => (prevIndex + 1) % 4);
   };
 
   const toggleMusic = () => {
     setIsPlaying(!isPlaying);
   };
+
   const handleVolumeChange = (event) => {
     const volume = event.target.value;
     audioRef.current.volume = volume;
   };
-  const handleSpeedChange = (event) => {
-    setGameSpeed(event.target.value);
-    console.log(gameSpeed);
-  };
 
   const handleMuteClick = () => {
-    setMute((prevMute) => !prevMute); // Toggles the mute state
-    
-    console.log("mute clicked", !mute); // Logging the new state
+    setMute((prevMute) => !prevMute);
   };
 
   return (
@@ -85,4 +74,5 @@ const MusicPlayer = ({ mute, setMute }) => {
     </>
   );
 };
+
 export default MusicPlayer;

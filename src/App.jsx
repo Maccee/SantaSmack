@@ -92,7 +92,7 @@ const App = () => {
   const [allTimeData, setAllTimeData] = useState({});
   const [weeklyData, setWeeklyData] = useState({});
 
-  const dailyChallengeDistance = 510;
+  const dailyChallengeDistance = 410;
   const [dailyChallengeData, setDailyChallengeData] = useState(null);
 
   // SCROLLING
@@ -155,7 +155,9 @@ const App = () => {
         poroHits: poroHits,
       };
       await postDataToAzureFunction(data);
+      // UPDATING ALL HIGHSCORES
       const updatedScores = await getDataFromAzureFunction();
+      // SORT ALL SCORES BY DISTANCE
       const sortedByDistance = updatedScores.sort(
         (a, b) => b.distance - a.distance
       );

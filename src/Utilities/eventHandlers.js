@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { getClosestDistanceFromAzureFunction } from "../ApiUtils";
 
 let keySequence = [];
 let keySequenceString = "";
@@ -63,34 +62,36 @@ export const useGameInitialization = (
       element.scrollTop = element.scrollHeight - element.clientHeight;
       //gameAreaRef.current.focus();
     }
+
+    // ON REFRESH
     getDataFromAzureFunction().then((result) => {
+      // ALLTIME TOP20
       const top20ByDistance = result
         .sort((a, b) => b.distance - a.distance)
         .slice(0, 20);
-
       setAllTimeData(top20ByDistance);
 
+      // WEEKLY TOP20
       let weeklyData = filterDataForWeek(result);
       setWeeklyData(weeklyData);
-    });
 
-    getClosestDistanceFromAzureFunction(dailyChallengeDistance)
-      .then((dailyChallengeData) => {
-        if (dailyChallengeData) {
-          setDailyChallengeData(dailyChallengeData); // Set the entire object
-        } else {
-          console.log("No matching entry found");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+      // DAILY CHALLENGE TOP5
+      const top5ByDistance = result
+        .map((score) => ({
+          ...score,
+          difference: Math.abs(score.distance - dailyChallengeDistance),
+        }))
+        .sort((a, b) => a.difference - b.difference)
+        .slice(0, 5);
+
+      setDailyChallengeData(top5ByDistance);
+    });
 
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 };
 
-export function getLastMondayInUTC() {
+function getLastMondayInUTC() {
   const nowUtc = new Date(
     Date.UTC(
       new Date().getUTCFullYear(),
