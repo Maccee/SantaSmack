@@ -66,14 +66,45 @@ export const useGameInitialization = (
     // ON REFRESH
     getDataFromAzureFunction().then((result) => {
       // ALLTIME TOP20
-      const top20ByDistance = result
+      const onlyOneNameData = {};
+      result.forEach((item) => {
+        if (
+          !onlyOneNameData[item.name] ||
+          onlyOneNameData[item.name] < item.distance
+        ) {
+          onlyOneNameData[item.name] = item.distance;
+        }
+      });
+      const dataArray = Object.keys(onlyOneNameData).map((name) => {
+        return { name, distance: onlyOneNameData[name] };
+      });
+      const top20ByDistance = dataArray
         .sort((a, b) => b.distance - a.distance)
         .slice(0, 20);
       setAllTimeData(top20ByDistance);
 
       // WEEKLY TOP20
-      let weeklyData = filterDataForWeek(result);
-      setWeeklyData(weeklyData);
+      let weeklyResult = filterDataForWeek(result);
+      const weeklyOneNameData = {};
+
+      weeklyResult.forEach((item) => {
+        if (
+          !weeklyOneNameData[item.name] ||
+          weeklyOneNameData[item.name] < item.distance
+        ) {
+          weeklyOneNameData[item.name] = item.distance;
+        }
+      });
+
+      const weeklyDataArray = Object.keys(weeklyOneNameData).map((name) => {
+        return { name, distance: weeklyOneNameData[name] };
+      });
+
+      const top20WeeklyByDistance = weeklyDataArray
+        .sort((a, b) => b.distance - a.distance)
+        .slice(0, 20);
+
+      setWeeklyData(top20WeeklyByDistance);
 
       // DAILY CHALLENGE TOP5
       const top5ByDistance = result
