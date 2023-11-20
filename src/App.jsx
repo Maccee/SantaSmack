@@ -151,17 +151,24 @@ const App = () => {
         hitStrength: hitStrength,
         gameAreaHeight: gameAreaHeight,
         distance: distance,
-        poroHits: poroHits
+        poroHits: poroHits,
       };
       await postDataToAzureFunction(data);
       const updatedScores = await getDataFromAzureFunction();
       setAllTimeData(updatedScores);
       setWeeklyData(filterDataForWeek(updatedScores));
-      setDailyChallengeData(updatedScores);
+      const top5ByDistance = updatedScores
+        .sort((a, b) => b.distance - a.distance)
+        .slice(0, 5);
+
+      setDailyChallengeData(top5ByDistance);
     };
 
     if (isHit && horizontalVelocityRef.current === 0) {
-      if (allTimeData.length < 19 || parseFloat(distance) > parseFloat(allTimeData[19].distance)) {
+      if (
+        allTimeData.length <= 20 ||
+        parseFloat(distance) > parseFloat(allTimeData[19].distance)
+      ) {
         let newHighScoresound = new Audio("highscore.mp3");
         if (juhaMode) {
           let audio = new Audio("/iddqd/kuitenkinjoihankohtuu.mp3");
@@ -429,9 +436,7 @@ const App = () => {
 
       {allTimeData[19] &&
         allTimeData.length >= 20 &&
-        parseFloat(distance) > parseFloat(allTimeData[19].distance) && (
-          <Hype />
-        )}
+        parseFloat(distance) > parseFloat(allTimeData[19].distance) && <Hype />}
 
       <div
         className="game-area"
