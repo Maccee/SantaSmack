@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
-import MusicOn from "../assets/music_on.svg";
-import MusicOff from "../assets/music_off.svg";
-import MusicNext from "../assets/music_next.svg";
-import { distanceMusicPlay } from "../SoundUtils";
 
-const MusicPlayer = ({mute, setMute, gameSpeed, setGameSpeed}) => {
+import musicOn from "../assets/music-on.png";
+import soundOn from "../assets/sound-on.png";
+import musicOff from "../assets/music-off.png";
+import soundOff from "../assets/sound-off.png";
+
+const MusicPlayer = ({ mute, setMute }) => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
-  const [showSlider, setShowSlider] = useState(false);
-  
 
   // Initialize the audioRef.current value only once, when the component mounts
   if (audioRef.current === null) {
@@ -50,11 +49,6 @@ const MusicPlayer = ({mute, setMute, gameSpeed, setGameSpeed}) => {
 
   const toggleMusic = () => {
     setIsPlaying(!isPlaying);
-    if (isPlaying) {
-      setShowSlider(false);
-    } else {
-      setShowSlider(true);
-    }
   };
   const handleVolumeChange = (event) => {
     const volume = event.target.value;
@@ -62,57 +56,32 @@ const MusicPlayer = ({mute, setMute, gameSpeed, setGameSpeed}) => {
   };
   const handleSpeedChange = (event) => {
     setGameSpeed(event.target.value);
-    console.log(gameSpeed)
+    console.log(gameSpeed);
   };
 
   const handleMuteClick = () => {
-    setMute(prevMute => !prevMute); // Toggles the mute state
-    distanceMusicPlay(0, !mute); // Pass the opposite of the current mute state
+    setMute((prevMute) => !prevMute); // Toggles the mute state
+    
     console.log("mute clicked", !mute); // Logging the new state
-}
+  };
 
   return (
     <>
-      <div className="button-container">
+      <div className="audioControl">
         <button onClick={toggleMusic}>
-          {isPlaying ? (
-            <img src={MusicOff} className="music-svg" />
-          ) : (
-            <img src={MusicOn} className="music-svg" />
-          )}
+          {isPlaying ? <img src={musicOn} /> : <img src={musicOff} />}
         </button>
-        {isPlaying && (
-          <button onClick={playNextTrack}>
-            <img src={MusicNext} className="music-svg" />
+
+        {!mute ? (
+          <button onClick={() => handleMuteClick()}>
+            <img src={soundOn} />
+          </button>
+        ) : (
+          <button onClick={() => handleMuteClick()}>
+            <img src={soundOff} />
           </button>
         )}
-        {!mute ? (
-        <button className="music-svg" onClick={() => handleMuteClick()}>mute</button>
-        ) : (
-          <button className="music-svg" onClick={() => handleMuteClick()}>unmute</button>
-        )}
-        <input
-          className="volume-slider"
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={gameSpeed}
-          onChange={handleSpeedChange}
-        />
       </div>
-      <div className={`slider-container ${showSlider ? "" : "hidden"}`}>
-        <input
-          className="volume-slider"
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={audioRef.current.volume}
-          onChange={handleVolumeChange}
-        />
-      </div>{" "}
-      
     </>
   );
 };

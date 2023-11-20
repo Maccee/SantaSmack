@@ -34,9 +34,10 @@ export const useGameInitialization = (
   toggleHUD,
   gameAreaRef,
   getDataFromAzureFunction,
-  setHighScoreData,
+  setAllTimeData,
+  setWeeklyData,
   dailyChallengeDistance,
-  setDailyChallengeName
+  setDailyChallengeData
 ) => {
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -62,14 +63,17 @@ export const useGameInitialization = (
       element.scrollTop = element.scrollHeight - element.clientHeight;
       //gameAreaRef.current.focus();
     }
-    getDataFromAzureFunction().then((sortedResult) => {
-      setHighScoreData(sortedResult);
+    getDataFromAzureFunction().then((result) => {
+      setAllTimeData(result);
+      let weeklyData = filterDataForWeek(result);
+      setWeeklyData(weeklyData);
     });
+
 
     getClosestDistanceFromAzureFunction(dailyChallengeDistance)
       .then((dailyChallengeData) => {
         if (dailyChallengeData) {
-          setDailyChallengeName(dailyChallengeData); // Set the entire object
+          setDailyChallengeData(dailyChallengeData); // Set the entire object
         } else {
           console.log("No matching entry found");
         }
@@ -81,3 +85,32 @@ export const useGameInitialization = (
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 };
+
+export function getLastMondayInUTC() {
+  const nowUtc = new Date(Date.UTC(
+    new Date().getUTCFullYear(),
+    new Date().getUTCMonth(),
+    new Date().getUTCDate(),
+    new Date().getUTCHours(),
+    new Date().getUTCMinutes(),
+    new Date().getUTCSeconds()
+  ));
+  let dayOfWeek = nowUtc.getUTCDay(); // Sunday - 0, Monday - 1, etc.
+  let difference = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // If it's Sunday in UTC, go back 6 days, else go to the last Monday
+  nowUtc.setUTCDate(nowUtc.getUTCDate() + difference);
+  nowUtc.setUTCHours(0, 0, 0, 0); // Set to start of the day (00:00:00)
+  return nowUtc;
+}
+
+// Function to filter data from last Monday to current time
+export function filterDataForWeek(data) {
+  const lastMonday = getLastMondayInUTC();
+  return data.filter(item => {
+    // Add 'Z' to indicate UTC time
+    const itemDateUtc = new Date(item.dateTime + 'Z');
+   
+    return itemDateUtc >= lastMonday && itemDateUtc <= new Date(); // Checks if the date falls in the current week
+  });
+}
+
+

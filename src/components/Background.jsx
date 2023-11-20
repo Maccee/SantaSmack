@@ -5,15 +5,29 @@ const Background = ({ scrollLeft, gameAreaWidth }) => {
         className="background"
         style={{
           transform: `translateX(-${scrollLeft / 5}px)`,
-          width: `${gameAreaWidth}px`
+          width: `${gameAreaWidth}px`,
         }}
       ></div>
       <div
         className="background2"
-        style={{ 
-          transform: `translateX(-${scrollLeft / 10}px)`, 
-          width: `${gameAreaWidth}px` 
-      }}
+        style={{
+          transform: `translateX(-${scrollLeft / 10}px)`,
+          width: `${gameAreaWidth}px`,
+        }}
+      ></div>
+      <div
+        className="snow"
+        style={{
+          transform: `translateX(-${scrollLeft / 3}px)`,
+          width: `${gameAreaWidth}px`,
+        }}
+      ></div>
+      <div
+        className="snow2"
+        style={{
+          transform: `translateX(-${scrollLeft / 3}px)`,
+          width: `${gameAreaWidth}px`,
+        }}
       ></div>
     </>
   );
