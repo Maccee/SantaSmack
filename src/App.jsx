@@ -77,7 +77,7 @@ const App = () => {
 
   // MUSAT
   const [mute, setMute] = useState(false);
-  //const [poroHitSound, setPoroHitSound] = useState(new Audio("bells.mp3"));
+  
   // COLLISION
   const [poros, setPoros] = useState([]);
   const ballDiameter = 50;
@@ -92,7 +92,7 @@ const App = () => {
   const [allTimeData, setAllTimeData] = useState({});
   const [weeklyData, setWeeklyData] = useState({});
 
-  const dailyChallengeDistance = 999;
+  const dailyChallengeDistance = 410;
   const [dailyChallengeData, setDailyChallengeData] = useState(null);
 
   // SCROLLING
@@ -295,7 +295,7 @@ const App = () => {
               poroHitAudio = new Audio("hyvahienohomma.mp3");
             }
             if (!mute) {
-              poroHitSound.play();
+              poroHitAudio.play();
             }
 
             hitPorosRef.current.add(index); // Mark this poro as hit
