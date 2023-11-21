@@ -255,35 +255,34 @@ body {
   background-size: contain;
   background-repeat: repeat-x;
   height: 55vh;
-
   bottom: 0vh;
   position: absolute;
 }
 
 @keyframes moveDown {
   0% {
-    background-position: 0 0;
+    background-position: 0 600%;
   }
   100% {
-    background-position: 0 600%;
+    background-position: 0 0;
   }
 }
 
 .snow {
-  background-image: url("./assets/snow.webp");
+  background-image: url("./assets/snow2.webp");
   position: absolute;
-  background-size: 1000px;
-  height: 96vh;
-  animation: moveDown 15s linear infinite; /* adjust duration and timing function as needed */
+  background-size: auto;
+  height: 95vh;
+  animation: moveDown 55s linear infinite; /* adjust duration and timing function as needed */
+  z-index: 0;
 }
 .snow2 {
-  background-image: url("./assets/snow.webp");
+  background-image: url("./assets/snow2.webp");
   position: absolute;
-  background-size: 1000px;
+  background-size: auto;
   height: 95vh;
   left: -120px;
-
-  animation: moveDown 50s linear infinite; /* adjust duration and timing function as needed */
+  animation: moveDown 190s linear infinite; /* adjust duration and timing function as needed */
 }
 
 .background2 {
@@ -651,6 +650,7 @@ input[type="range"]:focus::-ms-fill-upper {
   display: flex;
   align-items: flex-start;
 }
+
 
 .highScoreBox h2 .highscoreOptionButton {
   background: none;

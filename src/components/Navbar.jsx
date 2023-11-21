@@ -6,7 +6,6 @@ import measureImg from "../assets/measure.webp";
 import MusicPlayer from "./MusicPlayer";
 import Settings from "./Settings";
 import QuestionMarkPopup from "./QuestionMarkPopup";
-import QuestionMarkImg from "../assets/questionmark.webp";
 
 const Navbar = ({
   allTimeData,
@@ -20,7 +19,7 @@ const Navbar = ({
   dailyChallengeData,
 }) => {
   const [highScoreOpen, setHighScoreOpen] = useState(false);
-  const [showQuestionMarkPopup, setShowQuestionMarkPopup] = useState(false);
+
   const [selectedhighscoreOption, setSelectedhighscoreOption] =
     useState("ALL TIME");
   const [musicVolume, setMusicVolume] = useState(0.5);
@@ -67,22 +66,8 @@ const Navbar = ({
                 <div className="highScoreBox">
                   <div className="dailyChallengeContainer">
                     <div className="dailyChallenge">
-                      <h2>
-                        DAILY CHALLENGE{" "}
-                        <button
-                          className="questionMarkButton"
-                          onClick={() =>
-                            setShowQuestionMarkPopup((prev) => !prev)
-                          }
-                        >
-                          <img src={QuestionMarkImg} alt="question mark" />
-                        </button>
-                      </h2>
-                      {showQuestionMarkPopup && (
-                        <QuestionMarkPopup
-                          setShowQuestionMarkPopup={setShowQuestionMarkPopup}
-                        />
-                      )}
+                      <h2>DAILY CHALLENGE <QuestionMarkPopup /></h2>
+
                       <div className="dailyChallengeDistance">
                         CLOSEST TO <br />
                         <span>{dailyChallengeDistance} M</span>

@@ -1,35 +1,45 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import QuestionMarkImg from "../assets/questionmark.webp";
 
-const QuestionMarkPopup = ({ setShowQuestionMarkPopup }) => {
+const QuestionMarkPopup = () => {
+  const [showQuestionMarkPopup, setShowQuestionMarkPopup] = useState(false);
+
   const ref = useRef();
-
   useEffect(() => {
     const checkIfClickedOutside = (e) => {
-      console.log("Document clicked");
       if (ref.current && !ref.current.contains(e.target)) {
-        console.log("Closing popup");
-        setShowQuestionMarkPopup(false);
+        setShowQuestionMarkPopup((prev) => !prev);
       }
     };
-
-    document.addEventListener("mousedown", checkIfClickedOutside);
-
+    document.addEventListener("click", checkIfClickedOutside);
     return () => {
-      document.removeEventListener("mousedown", checkIfClickedOutside);
+      document.removeEventListener("click", checkIfClickedOutside);
     };
   }, []);
 
   return (
-    <div className="questionMarkPopup" ref={ref}>
-      <h2>DAILY CHALLENGE</h2>
-      <p>Goal is to smack the ball as close to the target.</p>
-      <p>
-        Ready to take on the challenge? Best of luck, and may your every move
-        bring you closer to victory! 💪
-      </p>
-    </div>
+    <>
+      <button
+        className="questionMarkButton"
+        onClick={(event) => {
+          event.stopPropagation(); // Stop event propagation
+          setShowQuestionMarkPopup((prev) => !prev);
+        }}
+      >
+        <img src={QuestionMarkImg} alt="question mark" />
+      </button>
+      {showQuestionMarkPopup && (
+        <div className="questionMarkPopup" ref={ref}>
+          <h2>DAILY CHALLENGE</h2>
+          <p>Goal is to smack the ball as close to the target.</p>
+          <p>
+            Ready to take on the challenge? Best of luck, and may your every
+            move bring you closer to victory! 💪
+          </p>
+        </div>
+      )}
+    </>
   );
 };
 
 export default QuestionMarkPopup;
-

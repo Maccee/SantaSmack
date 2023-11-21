@@ -27,8 +27,8 @@ export const defineHitStrength = (juhamode, mute) => {
   if (!mute) {
     playAudio(juhamode);
   }
-  //return test;
-  return parsedHitStrength;
+  return test;
+  //return parsedHitStrength;
 };
 
 const playAudio = (juhamode) => {
