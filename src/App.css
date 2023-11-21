@@ -265,27 +265,25 @@ body {
     background-position: 0 0;
   }
   100% {
-    background-position: 0 -600%;
+    background-position: 0 600%;
   }
 }
 
 .snow {
   background-image: url("./assets/snow.webp");
   position: absolute;
-  background-size: auto;
-  background-repeat: repeat;
-  height: 95vh;
-  animation: moveDown 90s linear infinite; /* adjust duration and timing function as needed */
+  background-size: 1000px;
+  height: 96vh;
+  animation: moveDown 15s linear infinite; /* adjust duration and timing function as needed */
 }
 .snow2 {
   background-image: url("./assets/snow.webp");
   position: absolute;
-  background-size: 1700px;
-  background-repeat: repeat;
+  background-size: 1000px;
   height: 95vh;
   left: -120px;
 
-  animation: moveDown 140s linear infinite; /* adjust duration and timing function as needed */
+  animation: moveDown 50s linear infinite; /* adjust duration and timing function as needed */
 }
 
 .background2 {
