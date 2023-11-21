@@ -19,7 +19,7 @@ const Hype = ({ mute }) => {
 
   return (
     <>
-      <div className="hype">TOP20!</div>
+      <div className="hype">WOW</div>
     </>
   );
 };

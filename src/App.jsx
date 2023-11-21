@@ -77,7 +77,7 @@ const App = () => {
 
   // MUSAT
   const [mute, setMute] = useState(false);
-  
+
   // COLLISION
   const [poros, setPoros] = useState([]);
   const ballDiameter = 50;
@@ -221,10 +221,12 @@ const App = () => {
 
     // THIS IS THE CHECK !!
     if (
-      isHit && 
-      horizontalVelocityRef.current === 0 && 
-      !resized && 
-      (isNewHighScore(allTimeData) || isNewHighScore(weeklyData) || isCloserToDailyChallenge())
+      isHit &&
+      horizontalVelocityRef.current === 0 &&
+      !resized &&
+      (isNewHighScore(allTimeData) ||
+        isNewHighScore(weeklyData) ||
+        isCloserToDailyChallenge())
     ) {
       handleNewHighScore();
     }
@@ -447,6 +449,7 @@ const App = () => {
     filter: "blur(5px)", // You can adjust the blur intensity as needed
   };
 
+  
   // APP RENDER
   return (
     <>
@@ -483,10 +486,9 @@ const App = () => {
         consecutivePoroHits={consecutivePoroHits}
         poroHitCounter={poroHitCounter}
       />
-
-      {allTimeData[19] &&
-        typeof allTimeData[19].distance === "number" &&
-        distance > allTimeData[19].distance && <Hype mute={mute} />}
+{ distance >= highScore && distance >= 1000 &&
+      <Hype mute={mute} />
+}
 
       <div
         className="game-area"
