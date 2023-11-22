@@ -16,7 +16,8 @@ const HUD = ({
   gameAreaHeight,
   poroHits,
   consecutivePoroHits,
-  poroHitCounter
+  poroHitCounter,
+  gameAreaWidth
 }) => {
   if (!showHUD) {
     return null;
@@ -48,6 +49,7 @@ const HUD = ({
       <p>Porohits: {poroHits}</p>
       <p>Consecutive porohits: {consecutivePoroHits}</p>
       <p>Porohitcounter: {poroHitCounter}</p>
+      <p>Game Area Width: {Math.abs(gameAreaWidth)}</p>
     </div>
   );
 };

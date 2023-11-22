@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import { postDataToAzureFunction, getDataFromAzureFunction } from "./ApiUtils";
 import { calculateHitStrength, defineHitStrength, resetGame } from "./Utils";
@@ -92,7 +92,7 @@ const App = () => {
   const [allTimeData, setAllTimeData] = useState({});
   const [weeklyData, setWeeklyData] = useState({});
 
-  const dailyChallengeDistance = 999;
+  const dailyChallengeDistance = 888;
   const [dailyChallengeData, setDailyChallengeData] = useState(null);
 
   // SCROLLING
@@ -242,12 +242,13 @@ const App = () => {
 
   // MAIN PHYSICS UPDATE
   let lastTime;
-
+  let animationFrameId;
   useEffect(() => {
-    let animationFrameId;
+    
     const updatePosition = (time) => {
       if (lastTime !== undefined) {
         const timeDelta = (time - lastTime) / 7;
+
 
         // Apply physics
         verticalVelocityRef.current += gravity * timeDelta * gameSpeed; // gravity should be scaled properly
@@ -359,12 +360,13 @@ const App = () => {
     };
 
     // GAME LOOP
+    
     animationFrameId = requestAnimationFrame(updatePosition);
     return () => {
       cancelAnimationFrame(animationFrameId);
       lastTime = undefined;
     };
-  }, [bottomLimit, poros, isHit, gameSpeed, poroHitCounter]);
+  }, [bottomLimit, poros,  gameSpeed, poroHitCounter]);
 
   // SET PERFORMANCE TIME
   const handleMouseDown = () => {
@@ -449,7 +451,6 @@ const App = () => {
     filter: "blur(5px)", // You can adjust the blur intensity as needed
   };
 
-  
   // APP RENDER
   return (
     <>
@@ -485,10 +486,10 @@ const App = () => {
         poroHits={poroHits}
         consecutivePoroHits={consecutivePoroHits}
         poroHitCounter={poroHitCounter}
+        gameAreaWidth={gameAreaWidth}
       />
-{ distance >= highScore && distance >= 1000 &&
-      <Hype mute={mute} />
-}
+
+      {distance >= highScore && distance >= 1000 && <Hype mute={mute} />}
 
       <div
         className="game-area"
