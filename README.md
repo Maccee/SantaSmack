@@ -9,4 +9,4 @@ Step into the boots of Santa Claus in this whimsically engaging game! Arm yourse
 
 This game blends precision and a dash of luck as you aim to hit target distances in the daily challenges. Immerse yourself in the holiday spirit with cheerful, seasonal music and a joyful atmosphere. It's a delightful way to enjoy the festive season while testing your skills and aiming for the top scores!
 
-![My Image](src/assets/screen.png)
+![My Image](src/assets/screen.PNG)
