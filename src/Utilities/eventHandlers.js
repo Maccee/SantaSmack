@@ -107,15 +107,26 @@ export const useGameInitialization = (
       setWeeklyData(top20WeeklyByDistance);
 
       // DAILY CHALLENGE TOP5
-      const top5ByDistance = result
-        .map((score) => ({
-          ...score,
-          difference: Math.abs(score.distance - dailyChallengeDistance),
-        }))
+      // DAILY CHALLENGE TOP5
+      const dailyResult = filterDataForDay(result);
+
+      const dailyOneNameData = {};
+      dailyResult.forEach((score) => {
+        const difference = Math.abs(score.distance - dailyChallengeDistance);
+        if (
+          !dailyOneNameData[score.name] ||
+          dailyOneNameData[score.name].difference > difference
+        ) {
+          dailyOneNameData[score.name] = { ...score, difference };
+        }
+      });
+
+      const dailyDataArray = Object.values(dailyOneNameData)
         .sort((a, b) => a.difference - b.difference)
         .slice(0, 5);
 
-      setDailyChallengeData(top5ByDistance);
+      setDailyChallengeData(dailyDataArray);
+
     });
 
     return () => window.removeEventListener("keydown", handleKeyDown);
@@ -149,4 +160,27 @@ export function filterDataForWeek(data) {
 
     return itemDateUtc >= lastMonday && itemDateUtc <= new Date(); // Checks if the date falls in the current week
   });
+}
+
+// Function to filter data from last day to current time
+export function filterDataForDay(data) {
+
+  const lastMonday = getLastDayInUTC();
+  return data.filter((item) => {
+    // Add 'Z' to indicate UTC time
+    const itemDateUtc = new Date(item.dateTime + "Z");
+
+    return itemDateUtc >= lastMonday && itemDateUtc <= new Date(); // Checks if the date falls in the current day
+  });
+}
+function getLastDayInUTC() {
+  const nowUtc = new Date(
+    Date.UTC(
+      new Date().getUTCFullYear(),
+      new Date().getUTCMonth(),
+      new Date().getUTCDate()
+    )
+  );
+  nowUtc.setUTCHours(0, 0, 0, 0); // Set to start of the day (00:00:00)
+  return nowUtc;
 }
