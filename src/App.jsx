@@ -92,7 +92,7 @@ const App = () => {
   const [allTimeData, setAllTimeData] = useState({});
   const [weeklyData, setWeeklyData] = useState({});
 
-  const dailyChallengeDistance = 888;
+  const dailyChallengeDistance = 777;
   const [dailyChallengeData, setDailyChallengeData] = useState(null);
 
   // SCROLLING
@@ -209,8 +209,9 @@ const App = () => {
       setWeeklyData(top20WeeklyByDistance);
 
       // DAILY CHALLENGE
-      const top5ByDistance = updatedScores
-        .map((score) => ({
+      const top5ByDistance = filterDataForDay(updatedScores);
+      
+        top5ByDistance.map((score) => ({
           ...score,
           difference: Math.abs(score.distance - dailyChallengeDistance),
         }))
