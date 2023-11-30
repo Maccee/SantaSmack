@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import { postDataToAzureFunction, getDataFromAzureFunction } from "./ApiUtils";
 import { calculateHitStrength, defineHitStrength, resetGame } from "./Utils";
-import { filterDataForWeek } from "./Utilities/eventHandlers";
+import { filterDataForWeek, filterDataForDay } from "./Utilities/eventHandlers";
 
 import {
   useWindowEventHandlers,
@@ -92,7 +92,7 @@ const App = () => {
   const [allTimeData, setAllTimeData] = useState({});
   const [weeklyData, setWeeklyData] = useState({});
 
-  const dailyChallengeDistance = 777;
+  const dailyChallengeDistance = 555;
   const [dailyChallengeData, setDailyChallengeData] = useState(null);
 
   // SCROLLING
@@ -151,7 +151,9 @@ const App = () => {
     };
 
     const isCloserToDailyChallenge = () => {
+      console.log(dailyChallengeData, "tän se tsekkaa?");
       const playerDifference = Math.abs(distance - dailyChallengeDistance);
+      console.log(playerDifference);
       return dailyChallengeData.some(
         (score) =>
           playerDifference < Math.abs(score.distance - dailyChallengeDistance)
@@ -159,6 +161,7 @@ const App = () => {
     };
 
     const handleNewHighScore = async () => {
+      console.log("pisteet databaseen");
       const data = {
         name: playerName,
         hitAngle: hitAngle,
@@ -208,16 +211,27 @@ const App = () => {
         .slice(0, 20);
       setWeeklyData(top20WeeklyByDistance);
 
-      // DAILY CHALLENGE
-      const top5ByDistance = filterDataForDay(updatedScores);
-      
-        top5ByDistance.map((score) => ({
-          ...score,
-          difference: Math.abs(score.distance - dailyChallengeDistance),
-        }))
+      // DAILY CHALLENGE PROCESSING
+      const dailyOneNameData = {};
+      filterDataForDay(updatedScores).forEach((item) => {
+        // Calculate the difference for each score
+        const difference = Math.abs(item.distance - dailyChallengeDistance);
+
+        // Check if this name is already in the data, and if this score is better
+        if (
+          !dailyOneNameData[item.name] ||
+          dailyOneNameData[item.name].difference > difference
+        ) {
+          dailyOneNameData[item.name] = { ...item, difference };
+        }
+      });
+
+      // Convert to array and sort to find the top 5
+      const dailyDataArray = Object.values(dailyOneNameData)
         .sort((a, b) => a.difference - b.difference)
         .slice(0, 5);
-      setDailyChallengeData(top5ByDistance);
+
+      setDailyChallengeData(dailyDataArray);
     };
 
     // THIS IS THE CHECK !!
@@ -229,6 +243,7 @@ const App = () => {
         isNewHighScore(weeklyData) ||
         isCloserToDailyChallenge())
     ) {
+      console.log("handle");
       handleNewHighScore();
     }
   }, [distance, horizontalVelocityRef.current]);
@@ -245,11 +260,9 @@ const App = () => {
   let lastTime;
   let animationFrameId;
   useEffect(() => {
-    
     const updatePosition = (time) => {
       if (lastTime !== undefined) {
         const timeDelta = (time - lastTime) / 7;
-
 
         // Apply physics
         verticalVelocityRef.current += gravity * timeDelta * gameSpeed; // gravity should be scaled properly
@@ -361,13 +374,13 @@ const App = () => {
     };
 
     // GAME LOOP
-    
+
     animationFrameId = requestAnimationFrame(updatePosition);
     return () => {
       cancelAnimationFrame(animationFrameId);
       lastTime = undefined;
     };
-  }, [bottomLimit, poros,  gameSpeed, poroHitCounter]);
+  }, [bottomLimit, poros, gameSpeed, poroHitCounter]);
 
   // SET PERFORMANCE TIME
   const handleMouseDown = () => {
