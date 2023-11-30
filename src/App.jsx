@@ -151,9 +151,9 @@ const App = () => {
     };
 
     const isCloserToDailyChallenge = () => {
-      console.log(dailyChallengeData, "tän se tsekkaa?");
+      
       const playerDifference = Math.abs(distance - dailyChallengeDistance);
-      console.log(playerDifference);
+      
       return dailyChallengeData.some(
         (score) =>
           playerDifference < Math.abs(score.distance - dailyChallengeDistance)
@@ -161,7 +161,7 @@ const App = () => {
     };
 
     const handleNewHighScore = async () => {
-      console.log("pisteet databaseen");
+      
       const data = {
         name: playerName,
         hitAngle: hitAngle,
@@ -243,7 +243,7 @@ const App = () => {
         isNewHighScore(weeklyData) ||
         isCloserToDailyChallenge())
     ) {
-      console.log("handle");
+      
       handleNewHighScore();
     }
   }, [distance, horizontalVelocityRef.current]);
