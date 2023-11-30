@@ -107,8 +107,7 @@ export const useGameInitialization = (
       setWeeklyData(top20WeeklyByDistance);
 
       // DAILY CHALLENGE TOP5
-      // DAILY CHALLENGE TOP5
-      const dailyResult = filterDataForDay(result);
+      let dailyResult = filterDataForDay(result);
 
       const dailyOneNameData = {};
       dailyResult.forEach((score) => {
@@ -126,6 +125,7 @@ export const useGameInitialization = (
         .slice(0, 5);
 
       setDailyChallengeData(dailyDataArray);
+      
 
     });
 
@@ -164,7 +164,7 @@ export function filterDataForWeek(data) {
 
 // Function to filter data from last day to current time
 export function filterDataForDay(data) {
-
+  
   const lastMonday = getLastDayInUTC();
   return data.filter((item) => {
     // Add 'Z' to indicate UTC time

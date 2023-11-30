@@ -718,7 +718,7 @@ input[type="range"]:focus::-ms-fill-upper {
 .dailyChallengeTop5 li {
   display: flex;
   justify-content: space-between;
-  margin-inline: 1rem;
+  margin-inline: 0rem;
 }
 
 .dailyChallengeTop5 ul {
@@ -849,6 +849,7 @@ input[type="range"]:focus::-ms-fill-upper {
   .highScoreBox h2 {
     font-size: 1rem;
     margin-bottom: 0.5rem;
+    justify-content: center;
   }
 
   .dailyChallengeContainer {
@@ -899,6 +900,11 @@ input[type="range"]:focus::-ms-fill-upper {
     font-size: 1rem;
     margin-bottom: 1rem;
   }
+ 
+  .dailyChallengeTop5 {
+    white-space: nowrap;
+  }
+  
 }
 
 @media only screen and (max-height: 600px) {
@@ -921,4 +927,5 @@ input[type="range"]:focus::-ms-fill-upper {
     font-size: 24px;
     font-family: Luckiest Guy;
   }
+  
 }
