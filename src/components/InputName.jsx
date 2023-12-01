@@ -50,6 +50,7 @@ const InputName = ({ setPlayerName }) => {
             placeholder=""
             value={name}
             onChange={handleInputChange}
+            autocomplete="off"
           /><br/><br/>
           <button
             type="submit"
