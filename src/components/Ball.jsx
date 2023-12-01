@@ -60,8 +60,8 @@ const Ball = ({
   };
 
   const distanceStyle = {
-    top: `${distanceTop}px`,
-    left: `${left + 10}px`,
+    bottom: `0px`,
+    left: `${left -10}px`,
   };
 
   const arrowStyle = {
