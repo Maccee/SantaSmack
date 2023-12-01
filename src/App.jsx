@@ -152,7 +152,6 @@ const App = () => {
 
     const isCloserToDailyChallenge = () => {
       if (dailyChallengeData.length === 0) {
-        console.log("it is null")
         return true;
       }
       const playerDifference = Math.abs(distance - dailyChallengeDistance);
@@ -164,7 +163,6 @@ const App = () => {
     };
 
     const handleNewHighScore = async () => {
-      console.log("handle new highscore")
       const data = {
         name: playerName,
         hitAngle: hitAngle,
