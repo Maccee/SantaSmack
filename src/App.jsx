@@ -92,7 +92,9 @@ const App = () => {
   const [allTimeData, setAllTimeData] = useState({});
   const [weeklyData, setWeeklyData] = useState({});
 
+
   const dailyChallengeDistance = 444;
+
   const [dailyChallengeData, setDailyChallengeData] = useState(null);
 
   // SCROLLING
@@ -151,9 +153,12 @@ const App = () => {
     };
 
     const isCloserToDailyChallenge = () => {
+
       if (dailyChallengeData.length === 0) {
         return true;
       }
+
+      
       const playerDifference = Math.abs(distance - dailyChallengeDistance);
       
       return dailyChallengeData.some(
@@ -163,6 +168,7 @@ const App = () => {
     };
 
     const handleNewHighScore = async () => {
+      
       const data = {
         name: playerName,
         hitAngle: hitAngle,
