@@ -92,7 +92,6 @@ const App = () => {
   const [allTimeData, setAllTimeData] = useState({});
   const [weeklyData, setWeeklyData] = useState({});
 
-
   const dailyChallengeDistance = 444;
 
   const [dailyChallengeData, setDailyChallengeData] = useState(null);
@@ -153,14 +152,10 @@ const App = () => {
     };
 
     const isCloserToDailyChallenge = () => {
-
-      if (dailyChallengeData.length === 0) {
+      if (dailyChallengeData.length < 5) {
         return true;
       }
-
-      
       const playerDifference = Math.abs(distance - dailyChallengeDistance);
-      
       return dailyChallengeData.some(
         (score) =>
           playerDifference < Math.abs(score.distance - dailyChallengeDistance)
@@ -168,7 +163,6 @@ const App = () => {
     };
 
     const handleNewHighScore = async () => {
-      
       const data = {
         name: playerName,
         hitAngle: hitAngle,
@@ -250,7 +244,6 @@ const App = () => {
         isNewHighScore(weeklyData) ||
         isCloserToDailyChallenge())
     ) {
-      
       handleNewHighScore();
     }
   }, [distance, horizontalVelocityRef.current]);
