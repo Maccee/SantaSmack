@@ -39,98 +39,93 @@ export const useGameInitialization = (
   setDailyChallengeData
 ) => {
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      keySequence.push(event.key);
-      keySequenceString = keySequence
-        .slice(-secretCode.length)
-        .join("")
-        .toLowerCase();
-      if (keySequenceString === secretCode) {
-        setJuhaMode((prevMode) => {
-          console.log("JuhaMode", !prevMode); // Log the new state
-          return !prevMode; // This toggles the mode
+    if (dailyChallengeDistance > 0) {
+      const handleKeyDown = (event) => {
+        keySequence.push(event.key);
+        keySequenceString = keySequence
+          .slice(-secretCode.length)
+          .join("")
+          .toLowerCase();
+        if (keySequenceString === secretCode) {
+          setJuhaMode((prevMode) => {
+            console.log("JuhaMode", !prevMode); // Log the new state
+            return !prevMode; // This toggles the mode
+          });
+          keySequence = [];
+        }
+        if (event.keyCode === 220 || event.keyCode === 192) {
+          toggleHUD();
+        }
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      if (gameAreaRef.current) {
+        const element = gameAreaRef.current;
+        element.scrollTop = element.scrollHeight - element.clientHeight;
+      }
+
+      getDataFromAzureFunction().then((result) => {
+        // ALLTIME TOP20
+        const onlyOneNameData = {};
+        result.forEach((item) => {
+          if (
+            !onlyOneNameData[item.name] ||
+            onlyOneNameData[item.name] < item.distance
+          ) {
+            onlyOneNameData[item.name] = item.distance;
+          }
         });
-        keySequence = [];
-      }
-      if (event.keyCode === 220 || event.keyCode === 192) {
-        toggleHUD();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    if (gameAreaRef.current) {
-      const element = gameAreaRef.current;
-      element.scrollTop = element.scrollHeight - element.clientHeight;
-      //gameAreaRef.current.focus();
+        const dataArray = Object.keys(onlyOneNameData).map((name) => {
+          return { name, distance: onlyOneNameData[name] };
+        });
+        const top20ByDistance = dataArray
+          .sort((a, b) => b.distance - a.distance)
+          .slice(0, 20);
+        setAllTimeData(top20ByDistance);
+
+        // WEEKLY TOP20
+        let weeklyResult = filterDataForWeek(result);
+        const weeklyOneNameData = {};
+        weeklyResult.forEach((item) => {
+          if (
+            !weeklyOneNameData[item.name] ||
+            weeklyOneNameData[item.name] < item.distance
+          ) {
+            weeklyOneNameData[item.name] = item.distance;
+          }
+        });
+        const weeklyDataArray = Object.keys(weeklyOneNameData).map((name) => {
+          return { name, distance: weeklyOneNameData[name] };
+        });
+        const top20WeeklyByDistance = weeklyDataArray
+          .sort((a, b) => b.distance - a.distance)
+          .slice(0, 20);
+        setWeeklyData(top20WeeklyByDistance);
+
+        // DAILY CHALLENGE TOP5
+        let dailyResult = filterDataForDay(result);
+        let dailyOneNameData = {};
+        
+        dailyResult.forEach((score) => {
+          let difference = Math.abs(score.distance - dailyChallengeDistance);
+          
+          if (
+            !dailyOneNameData[score.name] ||
+            dailyOneNameData[score.name].difference > difference
+          ) {
+            dailyOneNameData[score.name] = { ...score, difference };
+          }
+        });
+        
+        let dailyDataArray = Object.values(dailyOneNameData)
+          .sort((a, b) => a.difference - b.difference)
+          .slice(0, 5);
+        setDailyChallengeData(dailyDataArray);
+        
+      });
+
+      return () => window.removeEventListener("keydown", handleKeyDown);
     }
-
-    // ON REFRESH
-    getDataFromAzureFunction().then((result) => {
-      // ALLTIME TOP20
-      const onlyOneNameData = {};
-      result.forEach((item) => {
-        if (
-          !onlyOneNameData[item.name] ||
-          onlyOneNameData[item.name] < item.distance
-        ) {
-          onlyOneNameData[item.name] = item.distance;
-        }
-      });
-      const dataArray = Object.keys(onlyOneNameData).map((name) => {
-        return { name, distance: onlyOneNameData[name] };
-      });
-      const top20ByDistance = dataArray
-        .sort((a, b) => b.distance - a.distance)
-        .slice(0, 20);
-      setAllTimeData(top20ByDistance);
-
-      // WEEKLY TOP20
-      let weeklyResult = filterDataForWeek(result);
-      const weeklyOneNameData = {};
-
-      weeklyResult.forEach((item) => {
-        if (
-          !weeklyOneNameData[item.name] ||
-          weeklyOneNameData[item.name] < item.distance
-        ) {
-          weeklyOneNameData[item.name] = item.distance;
-        }
-      });
-
-      const weeklyDataArray = Object.keys(weeklyOneNameData).map((name) => {
-        return { name, distance: weeklyOneNameData[name] };
-      });
-
-      const top20WeeklyByDistance = weeklyDataArray
-        .sort((a, b) => b.distance - a.distance)
-        .slice(0, 20);
-
-      setWeeklyData(top20WeeklyByDistance);
-
-      // DAILY CHALLENGE TOP5
-      let dailyResult = filterDataForDay(result);
-
-      const dailyOneNameData = {};
-      dailyResult.forEach((score) => {
-        const difference = Math.abs(score.distance - dailyChallengeDistance);
-        if (
-          !dailyOneNameData[score.name] ||
-          dailyOneNameData[score.name].difference > difference
-        ) {
-          dailyOneNameData[score.name] = { ...score, difference };
-        }
-      });
-
-      const dailyDataArray = Object.values(dailyOneNameData)
-        .sort((a, b) => a.difference - b.difference)
-        .slice(0, 5);
-
-      setDailyChallengeData(dailyDataArray);
-      
-
-    });
-
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [dailyChallengeDistance]);
 };
 
 function getLastMondayInUTC() {
@@ -164,7 +159,6 @@ export function filterDataForWeek(data) {
 
 // Function to filter data from last day to current time
 export function filterDataForDay(data) {
-  
   const lastMonday = getLastDayInUTC();
   return data.filter((item) => {
     // Add 'Z' to indicate UTC time
@@ -183,4 +177,17 @@ function getLastDayInUTC() {
   );
   nowUtc.setUTCHours(0, 0, 0, 0); // Set to start of the day (00:00:00)
   return nowUtc;
+}
+
+export function generateSeedFromDate(date) {
+  var seedStr =
+    date.getUTCFullYear().toString() +
+    (date.getUTCMonth() + 1).toString().padStart(2, "0") +
+    date.getUTCDate().toString().padStart(2, "0");
+  var seed = parseInt(seedStr);
+  return seed;
+}
+export function seededRandom(min, max, seed) {
+  var x = Math.sin(seed++) * 10000;
+  return Math.floor((x - Math.floor(x)) * (max - min + 1)) + min;
 }
