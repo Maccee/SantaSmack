@@ -2,7 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import { postDataToAzureFunction, getDataFromAzureFunction } from "./ApiUtils";
 import { calculateHitStrength, defineHitStrength, resetGame } from "./Utils";
-import { filterDataForWeek, filterDataForDay } from "./Utilities/eventHandlers";
+import {
+  filterDataForWeek,
+  filterDataForDay,
+  seededRandom,
+  generateSeedFromDate,
+} from "./Utilities/eventHandlers";
 
 import {
   useWindowEventHandlers,
@@ -91,11 +96,14 @@ const App = () => {
   // HIGHSCORE
   const [allTimeData, setAllTimeData] = useState({});
   const [weeklyData, setWeeklyData] = useState({});
-
-
-  const dailyChallengeDistance = 444;
-
-  const [dailyChallengeData, setDailyChallengeData] = useState(null);
+  const [dailyChallengeData, setDailyChallengeData] = useState({});
+  const [dailyChallengeDistance, setDailyChallengeDistance] = useState(-1);
+  useEffect(() => {
+    var today = new Date();
+    var seed = generateSeedFromDate(today);
+    var randomDistance = seededRandom(100, 999, seed);
+    setDailyChallengeDistance(randomDistance);
+  }, []);
 
   // SCROLLING
   const gameAreaRef = useRef(null);
@@ -153,22 +161,31 @@ const App = () => {
     };
 
     const isCloserToDailyChallenge = () => {
-
-      if (dailyChallengeData.length === 0) {
-        return true;
-      }
-
-      
       const playerDifference = Math.abs(distance - dailyChallengeDistance);
-      
-      return dailyChallengeData.some(
-        (score) =>
-          playerDifference < Math.abs(score.distance - dailyChallengeDistance)
+      // Find the current player's existing score in dailyChallengeData
+      const currentPlayerScore = dailyChallengeData.find(
+        (score) => score.name === playerName
       );
+      // Calculate the difference for the existing score, if it exists
+      const existingPlayerDifference = currentPlayerScore
+        ? Math.abs(currentPlayerScore.distance - dailyChallengeDistance)
+        : null;
+      // Compare the new score with the existing score
+      const isCloser =
+        existingPlayerDifference === null ||
+        playerDifference < existingPlayerDifference;
+      // Debugging logs
+      //console.log(`Player name: ${playerName}`);
+      //console.log(`New distance: ${distance}`);
+      //console.log(`Existing distance: ${currentPlayerScore ? currentPlayerScore.distance : 'No existing score'}`);
+      //console.log(`Daily challenge distance: ${dailyChallengeDistance}`);
+      //console.log(`New score difference from challenge: ${playerDifference}`);
+      //console.log(`Existing score difference from challenge: ${existingPlayerDifference}`);
+      //console.log(`Is new score closer to daily challenge than existing score? ${isCloser}`);
+      return isCloser;
     };
 
     const handleNewHighScore = async () => {
-      
       const data = {
         name: playerName,
         hitAngle: hitAngle,
@@ -221,10 +238,7 @@ const App = () => {
       // DAILY CHALLENGE PROCESSING
       const dailyOneNameData = {};
       filterDataForDay(updatedScores).forEach((item) => {
-        // Calculate the difference for each score
         const difference = Math.abs(item.distance - dailyChallengeDistance);
-
-        // Check if this name is already in the data, and if this score is better
         if (
           !dailyOneNameData[item.name] ||
           dailyOneNameData[item.name].difference > difference
@@ -232,12 +246,9 @@ const App = () => {
           dailyOneNameData[item.name] = { ...item, difference };
         }
       });
-
-      // Convert to array and sort to find the top 5
       const dailyDataArray = Object.values(dailyOneNameData)
         .sort((a, b) => a.difference - b.difference)
         .slice(0, 5);
-
       setDailyChallengeData(dailyDataArray);
     };
 
@@ -250,10 +261,9 @@ const App = () => {
         isNewHighScore(weeklyData) ||
         isCloserToDailyChallenge())
     ) {
-      
       handleNewHighScore();
     }
-  }, [distance, horizontalVelocityRef.current]);
+  }, [distance, horizontalVelocityRef.current, dailyChallengeDistance]);
 
   // Dynamically generate gamearea
   useEffect(() => {

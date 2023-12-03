@@ -66,7 +66,9 @@ const Navbar = ({
                 <div className="highScoreBox">
                   <div className="dailyChallengeContainer">
                     <div className="dailyChallenge">
-                      <h2>DAILY CHALLENGE <QuestionMarkPopup /></h2>
+                      <h2>
+                        DAILY CHALLENGE <QuestionMarkPopup />
+                      </h2>
 
                       <div className="dailyChallengeDistance">
                         CLOSEST TO <br />
@@ -76,12 +78,10 @@ const Navbar = ({
                     <div className="dailyChallengeTop5">
                       <h2>DAILY CHALLENGE TOP5</h2>
                       <ul>
-                        {dailyChallengeData.map((entry, index) => {
-                          // Calculate the difference from the dailyChallengeDistance
+                        {dailyChallengeDistance !== -1 && dailyChallengeData.map((entry, index) => {
+                          
                           const difference =
                             entry.distance - dailyChallengeDistance;
-
-                          // Determine the sign to display based on whether the distance is over or under
                           const sign = difference > 0 ? "+" : "-";
 
                           return (
