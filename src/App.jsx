@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import { postDataToAzureFunction, getDataFromAzureFunction } from "./ApiUtils";
-import { calculateHitStrength, defineHitStrength, resetGame } from "./Utils";
+import { defineHitStrength, resetGame } from "./Utils";
 import {
   filterDataForWeek,
   filterDataForDay,
@@ -30,7 +30,6 @@ import OrientationWarning from "./components/OrientationWarning";
 // APP COMPONENT
 const App = () => {
   // HAS SET PLAYER NAME
-
   const [playerName, setPlayerName] = useState(
     localStorage.getItem("playerName") || null
   );
