@@ -1,14 +1,14 @@
 import React, { useMemo } from "react";
-import KylttiImg from "../assets/kyltti-lp-silver.webp"; // Picture of a sign where distance is displayed in game area.
+import KylttiImg from "../assets/kyltti-lp-silver.webp"; 
 
 const Markers = ({ gameAreaWidth, gameAreaHeight }) => {
-  // Only recalculate markers if gameAreaWidth changes
+  
   const markers = useMemo(() => {
-    const interval = 1000; // Distance between markers
+    const interval = 1000; 
     const count = Math.floor(gameAreaWidth / interval);
-    // Generate the markers array
+    
     return Array.from({ length: count }, (_, index) => (index + 1) * interval);
-  }, [gameAreaWidth]); // Dependencies array
+  }, [gameAreaWidth]); 
 
   return (
     <>

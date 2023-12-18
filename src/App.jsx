@@ -34,22 +34,21 @@ const App = () => {
     localStorage.getItem("playerName") || null
   );
 
-  // Define game area width, height and ground level
-  const [gameAreaWidth, setGameAreaWidth] = useState(10000); // in px
-  const [gameAreaHeight, setGameAreaHeight] = useState(window.innerHeight); // Client browser window height
+  // GAMEAREA
+  const [gameAreaWidth, setGameAreaWidth] = useState(10000); // PX
+  const [gameAreaHeight, setGameAreaHeight] = useState(window.innerHeight);
   const [bottomLimit, setBottomLimit] = useState(gameAreaHeight - 50);
 
   // BALL MOVEMENT
-  // Ball position, start position set 250px from bottom and 100px from left
   const [ballPosition, setBallPosition] = useState({
     top: bottomLimit - 250,
     left: 100,
   });
-  const [verticalVelocity, setVerticalVelocity] = useState(-7); // Ball vertical speed, set to -7 for upward movement before swing
-  const [horizontalVelocity, setHorizontalVelocity] = useState(0); // Ball horizontal speed
-  const [hitAngle, setHitAngle] = useState(0); // Hit angle calculated between -90 and 90 deg.
-  const [isHit, setIsHit] = useState(false); // Check if swinged
-  const [isSpinning, setIsSpinning] = useState(false); // Ball spinning after swing
+  const [verticalVelocity, setVerticalVelocity] = useState(-7);
+  const [horizontalVelocity, setHorizontalVelocity] = useState(0);
+  const [hitAngle, setHitAngle] = useState(0);
+  const [isHit, setIsHit] = useState(false);
+  const [isSpinning, setIsSpinning] = useState(false);
 
   const verticalVelocityRef = useRef(verticalVelocity);
   const horizontalVelocityRef = useRef(horizontalVelocity);
@@ -62,22 +61,22 @@ const App = () => {
   const [distance, setDistance] = useState(0);
 
   // Hitbox
-  const [showHitbox, setShowHitbox] = useState(false); // Toggle hitbox visibility
-  const [hitboxEntryTime, setHitboxEntryTime] = useState(null); // Time when ball enters hitbox in ms since refresh
-  const [hitboxExitTime, setHitboxExitTime] = useState(null); // Time when ball exits hitbox in ms since refresh
-  const hitboxTopBoundary = bottomLimit - 160; // Hitbox top
-  const hitboxBottomBoundary = bottomLimit + 40; // Hitbox bottom
-  const hitboxTransitTime = 152; // The time in ms the ball travels through hitbox
+  const [showHitbox, setShowHitbox] = useState(false);
+  const [hitboxEntryTime, setHitboxEntryTime] = useState(null);
+  const [hitboxExitTime, setHitboxExitTime] = useState(null);
+  const hitboxTopBoundary = bottomLimit - 160;
+  const hitboxBottomBoundary = bottomLimit + 40;
+  const hitboxTransitTime = 152;
 
   // Physics
-  const gravity = 0.1; // Downward force that pulls ball down while flying
-  const airResistance = 0.001; // Resistance to slow the ball in the air
-  const bounce = 0.5; // 50% bounce strength
+  const gravity = 0.1;
+  const airResistance = 0.001;
+  const bounce = 0.5;
   const [gameSpeed, setGameSpeed] = useState(1);
 
   // For hitStrength calculations
   const [hitStrength, setHitStrength] = useState(0);
-  const [mouseDownTime, setMouseDownTime] = useState(0); // The performance.now time when mouse is pressed down
+  const [mouseDownTime, setMouseDownTime] = useState(0);
 
   // MUSAT
   const [mute, setMute] = useState(false);
@@ -87,7 +86,7 @@ const App = () => {
   const ballDiameter = 50;
   const poroWidth = 150;
   const poroHeight = 250;
-  const hitPorosRef = useRef(new Set()); // Ref to keep track of hit poros
+  const hitPorosRef = useRef(new Set());
   const [poroHits, setPoroHits] = useState(0);
   const [consecutivePoroHits, setConsecutivePoroHits] = useState(0);
   const [poroHitCounter, setPoroHitCounter] = useState(0);
@@ -173,7 +172,7 @@ const App = () => {
       const isCloser =
         existingPlayerDifference === null ||
         playerDifference < existingPlayerDifference;
-      // Debugging logs
+
       //console.log(`Player name: ${playerName}`);
       //console.log(`New distance: ${distance}`);
       //console.log(`Existing distance: ${currentPlayerScore ? currentPlayerScore.distance : 'No existing score'}`);
@@ -281,7 +280,7 @@ const App = () => {
         const timeDelta = (time - lastTime) / 7;
 
         // Apply physics
-        verticalVelocityRef.current += gravity * timeDelta * gameSpeed; // gravity should be scaled properly
+        verticalVelocityRef.current += gravity * timeDelta * gameSpeed;
         horizontalVelocityRef.current *= Math.pow(
           1 - airResistance,
           timeDelta * gameSpeed
@@ -331,7 +330,7 @@ const App = () => {
               poroHitAudio.play();
             }
 
-            hitPorosRef.current.add(index); // Mark this poro as hit
+            hitPorosRef.current.add(index);
           } else if (!isInCollision && hitPorosRef.current.has(index)) {
             hitPorosRef.current.delete(index);
           }
@@ -478,7 +477,7 @@ const App = () => {
     }
   };
   const blurStyle = {
-    filter: "blur(5px)", // You can adjust the blur intensity as needed
+    filter: "blur(5px)",
   };
 
   // APP RENDER

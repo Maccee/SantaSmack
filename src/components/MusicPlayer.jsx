@@ -10,7 +10,7 @@ const MusicPlayer = ({ mute, setMute, musicVolume }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
 
-  // Initialize and handle track change
+  
   useEffect(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio(`${currentTrackIndex + 1}.mp3`);
@@ -34,7 +34,7 @@ const MusicPlayer = ({ mute, setMute, musicVolume }) => {
     };
   }, [currentTrackIndex, isPlaying]);
 
-  // Update volume
+  
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = musicVolume;

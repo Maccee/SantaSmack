@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import PoroImg from "../assets/poro.webp"; // Assuming you have an image named poro.png
-import HitPoroImg from "../assets/poro-potku.webp"; // Assuming you have an image named poro.png
+import PoroImg from "../assets/poro.webp"; 
+import HitPoroImg from "../assets/poro-potku.webp"; 
 
 const Porot = ({ hitPorosRef, setPoros, gameAreaHeight, ballPositionRef }) => {
-  const [lastPoroPosition, setLastPoroPosition] = useState(500); // Starting position for the first poro
-  const [poros, setLocalPoros] = useState([]); // Local state to manage poros for rendering
+  const [lastPoroPosition, setLastPoroPosition] = useState(500); 
+  const [poros, setLocalPoros] = useState([]); 
 
   useEffect(() => {
     const addNewPoro = () => {
@@ -21,7 +21,7 @@ const Porot = ({ hitPorosRef, setPoros, gameAreaHeight, ballPositionRef }) => {
       };
 
       setLocalPoros((prevPoros) => [...prevPoros, newPoro]);
-      setPoros((prevPoros) => [...prevPoros, newPoro]); // Update parent state
+      setPoros((prevPoros) => [...prevPoros, newPoro]);
       setLastPoroPosition(newPoroPosition);
     };
 

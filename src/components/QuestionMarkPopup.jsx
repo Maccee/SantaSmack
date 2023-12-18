@@ -22,7 +22,7 @@ const QuestionMarkPopup = () => {
       <button
         className="questionMarkButton"
         onClick={(event) => {
-          event.stopPropagation(); // Stop event propagation
+          event.stopPropagation();
           setShowQuestionMarkPopup((prev) => !prev);
         }}
       >

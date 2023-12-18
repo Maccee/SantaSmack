@@ -48,8 +48,8 @@ export const useGameInitialization = (
           .toLowerCase();
         if (keySequenceString === secretCode) {
           setJuhaMode((prevMode) => {
-            console.log("JuhaMode", !prevMode); // Log the new state
-            return !prevMode; // This toggles the mode
+            console.log("JuhaMode", !prevMode);
+            return !prevMode;
           });
           keySequence = [];
         }
@@ -104,10 +104,10 @@ export const useGameInitialization = (
         // DAILY CHALLENGE TOP5
         let dailyResult = filterDataForDay(result);
         let dailyOneNameData = {};
-        
+
         dailyResult.forEach((score) => {
           let difference = Math.abs(score.distance - dailyChallengeDistance);
-          
+
           if (
             !dailyOneNameData[score.name] ||
             dailyOneNameData[score.name].difference > difference
@@ -115,12 +115,11 @@ export const useGameInitialization = (
             dailyOneNameData[score.name] = { ...score, difference };
           }
         });
-        
+
         let dailyDataArray = Object.values(dailyOneNameData)
           .sort((a, b) => a.difference - b.difference)
           .slice(0, 5);
         setDailyChallengeData(dailyDataArray);
-        
       });
 
       return () => window.removeEventListener("keydown", handleKeyDown);
@@ -139,32 +138,28 @@ function getLastMondayInUTC() {
       new Date().getUTCSeconds()
     )
   );
-  let dayOfWeek = nowUtc.getUTCDay(); // Sunday - 0, Monday - 1, etc.
-  let difference = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // If it's Sunday in UTC, go back 6 days, else go to the last Monday
+  let dayOfWeek = nowUtc.getUTCDay();
+  let difference = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
   nowUtc.setUTCDate(nowUtc.getUTCDate() + difference);
-  nowUtc.setUTCHours(0, 0, 0, 0); // Set to start of the day (00:00:00)
+  nowUtc.setUTCHours(0, 0, 0, 0);
   return nowUtc;
 }
 
-// Function to filter data from last Monday to current time
 export function filterDataForWeek(data) {
   const lastMonday = getLastMondayInUTC();
   return data.filter((item) => {
-    // Add 'Z' to indicate UTC time
     const itemDateUtc = new Date(item.dateTime + "Z");
 
-    return itemDateUtc >= lastMonday && itemDateUtc <= new Date(); // Checks if the date falls in the current week
+    return itemDateUtc >= lastMonday && itemDateUtc <= new Date();
   });
 }
 
-// Function to filter data from last day to current time
 export function filterDataForDay(data) {
   const lastMonday = getLastDayInUTC();
   return data.filter((item) => {
-    // Add 'Z' to indicate UTC time
     const itemDateUtc = new Date(item.dateTime + "Z");
 
-    return itemDateUtc >= lastMonday && itemDateUtc <= new Date(); // Checks if the date falls in the current day
+    return itemDateUtc >= lastMonday && itemDateUtc <= new Date();
   });
 }
 function getLastDayInUTC() {
@@ -175,7 +170,7 @@ function getLastDayInUTC() {
       new Date().getUTCDate()
     )
   );
-  nowUtc.setUTCHours(0, 0, 0, 0); // Set to start of the day (00:00:00)
+  nowUtc.setUTCHours(0, 0, 0, 0);
   return nowUtc;
 }
 

@@ -16,9 +16,9 @@ const Settings = ({ gameSpeed, setGameSpeed, setMusicVolume, musicVolume }) => {
       }
     };
 
-    document.addEventListener("click", handleClickOutside); // Use click event
+    document.addEventListener("click", handleClickOutside); 
     return () => {
-      document.removeEventListener("click", handleClickOutside); // Use click event
+      document.removeEventListener("click", handleClickOutside); 
     };
   }, []);
 
@@ -28,7 +28,7 @@ const Settings = ({ gameSpeed, setGameSpeed, setMusicVolume, musicVolume }) => {
         ref={buttonRef}
         className="settings-button"
         onClick={(event) => {
-          event.stopPropagation(); // Stop event propagation
+          event.stopPropagation(); 
           setShowSettings((prev) => !prev);
         }}
       >

@@ -1,4 +1,3 @@
-// Utils.js
 export const calculateHitStrength = (
   reactionTime,
   minReactionTime,
@@ -23,7 +22,7 @@ export const defineHitStrength = (juhamode, mute) => {
   const hitStrength = (Math.random() * (55 - 50) + 50).toFixed(2);
   const parsedHitStrength = parseFloat(hitStrength);
   const test = 150;
-  // Play audio if hitStrength is above the threshold
+
   if (!mute) {
     playAudio(juhamode);
   }
@@ -32,22 +31,18 @@ export const defineHitStrength = (juhamode, mute) => {
 };
 
 const playAudio = (juhamode) => {
-  // Default audio file
   let audioFile = "punch.mp3";
 
-  // Array of audio files for juhamode
   const juhamodeFiles = [
     "./iddqd/kympinkahenkympin.mp3",
     "./iddqd/eivarmastimeeohimaalista.mp3",
   ];
 
   if (juhamode) {
-    // If juhamode is true, select a random file from the juhamodeFiles array
     const randomIndex = Math.floor(Math.random() * juhamodeFiles.length);
     audioFile = juhamodeFiles[randomIndex];
   }
 
-  // Play the audio file
   const audio = new Audio(audioFile);
   audio.play();
 };
@@ -92,7 +87,6 @@ export const resetGame = (
   setPoroHits(0);
   setConsecutivePoroHits(0);
 
-  // Update refs
   ballPositionRef.current = {
     top: resetTop,
     left: resetLeft,

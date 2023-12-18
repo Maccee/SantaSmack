@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-// Audio initialized outside the component
+
 const audio = new Audio("wow.mp3");
 
 const Hype = ({ mute }) => {
@@ -9,13 +9,13 @@ const Hype = ({ mute }) => {
   useEffect(() => {
     const playAudio = () => {
       audio.play();
-      setSoundPlayed(true); // Mark as played
+      setSoundPlayed(true); 
     };
 
     if (!mute && !soundPlayed) {
       playAudio();
     }
-  }, [ mute, soundPlayed]); // Depend on these props and state
+  }, [ mute, soundPlayed]);
 
   return (
     <>

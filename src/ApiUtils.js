@@ -1,15 +1,12 @@
-// ApiUtils.js
-
-import axios from "axios"; // If you're using axios for HTTP requests
+import axios from "axios";
 
 const hashData = (data) => {
   return CryptoJS.SHA256(JSON.stringify(data)).toString();
 };
 
 const AZURE_FUNCTION_URL =
-  "https://joulupeliapi.azurewebsites.net/api/highscore?"; // Replace with your actual Azure Function URL
+  "https://joulupeliapi.azurewebsites.net/api/highscore?";
 
-// Function to post data to Azure Function App
 const postDataToAzureFunction = async (data) => {
   try {
     const hashedData = hashData(data);
@@ -21,8 +18,6 @@ const postDataToAzureFunction = async (data) => {
   }
 };
 
-
-// Function to get data from Azure Function App
 const getDataFromAzureFunction = async () => {
   try {
     const response = await axios.get(AZURE_FUNCTION_URL);

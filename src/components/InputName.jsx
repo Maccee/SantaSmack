@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const InputName = ({ setPlayerName }) => {
-  const [name, setName] = useState(""); // Initialize with an empty string
+  const [name, setName] = useState("");
   const [isValid, setIsValid] = useState(true);
 
   const handleInputChange = (event) => {
